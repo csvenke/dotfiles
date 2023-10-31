@@ -1,3 +1,13 @@
+[credential "https://github.com"]
+  helper =
+  helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+  helper =
+  helper = !/usr/bin/gh auth git-credential
 [user]
   name = csvenke
   email = csvenke@users.noreply.github.com
+[pull]
+  rebase = true
+[rebase]
+  autoStash = true
