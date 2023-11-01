@@ -1,5 +1,16 @@
 # dotfiles
 
+## Requirements
+
+- Install zsh and [oh-my-zsh](https://ohmyz.sh/#install)
+- Install [nix](https://nixos.org/download)
+- Install [direnv](https://direnv.net/)
+
+  ```sh
+  echo "use nix" > .envrc
+  direnv allow .
+  ```
+
 ## Setup
 
 Clone repository
@@ -8,10 +19,8 @@ Clone repository
 git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 ```
 
-Create symlinks
+Run link script
 
 ```sh
-ln -s ~/.dotfiles/.config/nvim ~/.config/nvim
-ln -s ~/.dotfiles/.config/tmux ~/.config/tmux
-ln -s ~/.dotfiles/.gitconfig ~/.gitconfig
+nix-shell .dotfiles --command dotfiles-link
 ```
