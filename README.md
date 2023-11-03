@@ -6,10 +6,6 @@
 - Install [nix](https://nixos.org/download)
 - Install [direnv](https://direnv.net/)
 
-```sh
-echo "use nix" > .envrc && direnv allow .
-```
-
 ## Setup
 
 Clone repository
@@ -18,8 +14,8 @@ Clone repository
 git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 ```
 
-Run link script
+Run init script
 
 ```sh
-nix-shell ~/.dotfiles --command dotfiles-link
+nix-shell ~/.dotfiles --command dotfiles-init
 ```

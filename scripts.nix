@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}}:
+{ pkgs ? import <nixpkgs> { } }:
 
 let
   home = builtins.getEnv "HOME";
@@ -39,21 +39,40 @@ let
     '';
   };
 
-  cleanScript = pkgs.writeShellApplication {
-    name = "dotfiles-clean";
+  unlinkScript = pkgs.writeShellApplication {
+    name = "dotfiles-unlink";
     runtimeInputs = [ pkgs.coreutils ];
     text = ''
       for path in ${toString paths}; do
         to="${home}/$path"
 
         if [ -L "$to" ]; then
-          echo "Removing: $to"
+          echo "Unlinking: $to"
           unlink $to
         fi
       done
     '';
   };
+
+  initScript = pkgs.writeShellApplication {
+    name = "dotfiles-init";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.direnv
+      linkScript
+    ];
+    text = ''
+      envrc="${home}/.envrc"
+
+      if [ ! -e "$envrc" ]; then
+        echo "use nix" > "$envrc"
+        direnv allow "$envrc"
+      fi
+
+      dotfiles-link
+    '';
+  };
 in
 
-[linkScript cleanScript]
+[ linkScript unlinkScript initScript ]
 

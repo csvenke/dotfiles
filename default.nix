@@ -3,11 +3,24 @@
 let
   cwd = builtins.toString ./.;
   dotfilesScripts = pkgs.callPackage "${cwd}/scripts.nix" { };
+  tmuxPluginManagerSrc = pkgs.stdenv.mkDerivation {
+    name = "tmux plugin manager";
+    src = builtins.fetchGit {
+      url = "https://github.com/tmux-plugins/tpm";
+      ref = "master";
+      rev = "99469c4a9b1ccf77fade25842dc7bafbc8ce9946";
+    };
+    installPhase = ''
+      mkdir -p $out
+      cp -r ./* $out/
+    '';
+  };
 in
 
 pkgs.mkShell {
   buildInputs = [
     dotfilesScripts
+    pkgs.coreutils
     pkgs.tree-sitter
     pkgs.nodejs
     pkgs.dotnet-sdk_7
@@ -28,8 +41,8 @@ pkgs.mkShell {
   ];
 
   DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
+  TPM_BIN = "${tmuxPluginManagerSrc}/tpm";
 
   shellHook = ''
-    echo "Welcome to the machine"
   '';
 }
