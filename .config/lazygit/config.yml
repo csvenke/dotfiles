@@ -1,2 +1,6 @@
 gui:
   showRandomTip: false
+  showCommandLog: false
+git:
+  paging:
+    pager: delta --dark --paging=never
