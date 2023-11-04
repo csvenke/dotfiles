@@ -2,8 +2,10 @@
 
 let
   cwd = builtins.toString ./.;
+
   dotfilesScripts = pkgs.callPackage "${cwd}/scripts.nix" { };
-  tmuxPluginManagerSrc = pkgs.stdenv.mkDerivation {
+
+  tmuxPluginManagerDrv = pkgs.stdenv.mkDerivation {
     name = "tmux plugin manager";
     src = builtins.fetchGit {
       url = "https://github.com/tmux-plugins/tpm";
@@ -29,9 +31,11 @@ pkgs.mkShell {
     pkgs.python3
     pkgs.htop
     pkgs.unzip
+    pkgs.gzip
     pkgs.fd
     pkgs.ripgrep
     pkgs.curl
+    pkgs.wget
     pkgs.git
     pkgs.gh
     pkgs.lazygit
@@ -41,7 +45,7 @@ pkgs.mkShell {
   ];
 
   DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
-  TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerSrc}/tpm";
+  TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerDrv}/tpm";
 
   shellHook = ''
   '';
