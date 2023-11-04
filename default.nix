@@ -41,7 +41,7 @@ pkgs.mkShell {
   ];
 
   DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
-  TPM_BIN = "${tmuxPluginManagerSrc}/tpm";
+  TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerSrc}/tpm";
 
   shellHook = ''
   '';
