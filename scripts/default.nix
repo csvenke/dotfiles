@@ -15,10 +15,44 @@ let
     ".config/tmux"
   ];
 
-  linkScript = pkgs.writeShellApplication {
-    name = "dotfiles-link";
-    runtimeInputs = [ pkgs.coreutils ];
+  envrcPath = "${home}/.envrc";
+
+  cleanScript = pkgs.writeShellApplication {
+    name = "dotfiles-clean";
+    runtimeInputs = [
+      pkgs.coreutils
+    ];
     text = ''
+      # unlink paths
+      for path in ${toString paths}; do
+        to="${home}/$path"
+
+        if [ -L "$to" ]; then
+          echo "Unlinking: $to"
+          unlink $to
+        fi
+      done
+
+      # clean envrc
+      if [ -e ${envrcPath} ]; then
+        rm ${envrcPath}
+      fi
+    '';
+  };
+
+  initScript = pkgs.writeShellApplication {
+    name = "dotfiles-init";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.direnv
+    ];
+    text = ''
+      # create .config directory
+      if [ ! -e "$HOME/.config" ]; then
+        mkdir "$HOME/.config"
+      fi
+
+      # symlink paths
       for path in ${toString paths}; do
         from="${root}/$path"
         to="${home}/$path"
@@ -36,48 +70,19 @@ let
         echo "Creating symlink: $from -> $to"
         ln -s "$from" "$to"
       done
-    '';
-  };
 
-  unlinkScript = pkgs.writeShellApplication {
-    name = "dotfiles-unlink";
-    runtimeInputs = [ pkgs.coreutils ];
-    text = ''
-      for path in ${toString paths}; do
-        to="${home}/$path"
-
-        if [ -L "$to" ]; then
-          echo "Unlinking: $to"
-          unlink $to
-        fi
-      done
-    '';
-  };
-
-  initScript = pkgs.writeShellApplication {
-    name = "dotfiles-init";
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.direnv
-      linkScript
-    ];
-    text = ''
-      dotfiles-link
-
-      envrc="${home}/.envrc"
-
-      if [ ! -e "$envrc" ]; then
-        echo "use nix" > "$envrc"
-        direnv allow "$envrc"
+      # init .envrc
+      if [ ! -e ${envrcPath} ]; then
+        echo "use nix" > ${envrcPath}
       fi
+      direnv allow ${envrcPath}
     '';
   };
 in
 
 pkgs.mkShell {
   buildInputs = [
-    linkScript
-    unlinkScript
+    cleanScript
     initScript
   ];
 }
