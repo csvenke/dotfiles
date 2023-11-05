@@ -47,34 +47,6 @@ return {
       { "<C-K>", "<cmd>TmuxNavigateUp<cr>", desc = "window up" },
     },
   },
-  {
-    "folke/edgy.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.opt.laststatus = 3
-      vim.opt.splitkeep = "screen"
-    end,
-    opts = {
-      left = {
-        {
-          title = "File explorer",
-          ft = "neo-tree",
-          filter = function(buf)
-            return vim.b[buf].neo_tree_source == "filesystem"
-          end,
-          pinned = true,
-          open = function()
-            vim.api.nvim_input("<esc><space>e")
-          end,
-          size = { height = 0.5 },
-        },
-        "neo-tree",
-      },
-      animate = {
-        enabled = false,
-      },
-    },
-  },
 
   -- Diffview
   {
