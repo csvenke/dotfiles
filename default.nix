@@ -16,27 +16,27 @@ let
 in
 
 pkgs.mkShell {
-  packages = [
-    pkgs.coreutils
-    pkgs.tree-sitter
-    pkgs.nodejs
-    pkgs.dotnet-sdk_7
-    pkgs.gcc
-    pkgs.rustup
-    pkgs.python3
-    pkgs.htop
-    pkgs.unzip
-    pkgs.gzip
-    pkgs.fd
-    pkgs.ripgrep
-    pkgs.curl
-    pkgs.wget
-    pkgs.git
-    pkgs.gh
-    pkgs.lazygit
-    pkgs.tmux
-    pkgs.delta
-    pkgs.neovim
+  packages = with pkgs; [
+    coreutils
+    tree-sitter
+    nodejs
+    dotnet-sdk_7
+    gcc
+    rustup
+    python3
+    htop
+    unzip
+    gzip
+    fd
+    ripgrep
+    curl
+    wget
+    git
+    gh
+    lazygit
+    tmux
+    delta
+    neovim
   ];
 
   DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
