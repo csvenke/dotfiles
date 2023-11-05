@@ -3,7 +3,7 @@
 let
   home = builtins.getEnv "HOME";
 
-  cwd = builtins.toString ./.;
+  root = builtins.toString ../.;
 
   paths = [
     "default.nix"
@@ -20,7 +20,7 @@ let
     runtimeInputs = [ pkgs.coreutils ];
     text = ''
       for path in ${toString paths}; do
-        from="${cwd}/$path"
+        from="${root}/$path"
         to="${home}/$path"
 
         if [ -L "$to" ]; then
