@@ -17,5 +17,5 @@ git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 Run init script
 
 ```sh
-nix-shell ~/.dotfiles --command dotfiles-init
+nix-shell ~/.dotfiles/scripts --command dotfiles-init
 ```

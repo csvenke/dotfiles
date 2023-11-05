@@ -1,10 +1,6 @@
 { pkgs ? import <nixpkgs> {} }:
 
 let
-  cwd = builtins.toString ./.;
-
-  dotfilesScripts = pkgs.callPackage "${cwd}/scripts.nix" { };
-
   tmuxPluginManagerDrv = pkgs.stdenv.mkDerivation {
     name = "tmux plugin manager";
     src = builtins.fetchGit {
@@ -20,8 +16,7 @@ let
 in
 
 pkgs.mkShell {
-  buildInputs = [
-    dotfilesScripts
+  packages = [
     pkgs.coreutils
     pkgs.tree-sitter
     pkgs.nodejs

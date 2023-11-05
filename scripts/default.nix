@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> {} }:
 
 let
   home = builtins.getEnv "HOME";
@@ -62,17 +62,23 @@ let
       linkScript
     ];
     text = ''
+      dotfiles-link
+
       envrc="${home}/.envrc"
 
       if [ ! -e "$envrc" ]; then
         echo "use nix" > "$envrc"
         direnv allow "$envrc"
       fi
-
-      dotfiles-link
     '';
   };
 in
 
-[ linkScript unlinkScript initScript ]
+pkgs.mkShell {
+  buildInputs = [
+    linkScript
+    unlinkScript
+    initScript
+  ];
+}
 
