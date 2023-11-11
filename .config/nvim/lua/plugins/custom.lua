@@ -35,6 +35,32 @@ return {
       },
     },
   },
+  {
+    "ThePrimeagen/refactoring.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("refactoring").setup({})
+    end,
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    event = "VeryLazy",
+    opts = function(_, opts)
+      local builtins = require("null-ls").builtins
+      local utils = require("null-ls.utils")
+      opts.root_dir = opts.root_dir or utils.root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
+      opts.sources = vim.list_extend(opts.sources or {}, {
+        builtins.formatting.stylua,
+        builtins.formatting.shfmt,
+        builtins.formatting.prettier,
+        builtins.formatting.alejandra,
+        builtins.code_actions.refactoring,
+      })
+    end,
+  },
 
   -- Editor
   {

@@ -1,6 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
-
-let
+{pkgs ? import <nixpkgs> {}}: let
   tmuxPluginManagerDrv = pkgs.stdenv.mkDerivation {
     name = "tmux plugin manager";
     src = builtins.fetchGit {
@@ -19,6 +17,7 @@ let
       coreutils
       tree-sitter
       nodejs
+      alejandra
       dotnet-sdk_7
       gcc
       rustup
@@ -39,11 +38,10 @@ let
     ];
   };
 in
-
-pkgs.mkShell {
-  packages = [
-    nvimEnv
-  ];
-  DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
-  TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerDrv}/tpm";
-}
+  pkgs.mkShell {
+    packages = [
+      nvimEnv
+    ];
+    DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
+    TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerDrv}/tpm";
+  }

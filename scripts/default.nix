@@ -1,6 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
-
-let
+{pkgs ? import <nixpkgs> {}}: let
   home = builtins.getEnv "HOME";
 
   root = builtins.toString ../.;
@@ -79,11 +77,9 @@ let
     '';
   };
 in
-
-pkgs.mkShell {
-  buildInputs = [
-    cleanScript
-    initScript
-  ];
-}
-
+  pkgs.mkShell {
+    buildInputs = [
+      cleanScript
+      initScript
+    ];
+  }
