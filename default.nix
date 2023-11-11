@@ -16,7 +16,10 @@
     paths = with pkgs; [
       coreutils
       tree-sitter
+      bun
       nodejs
+      nodePackages.pnpm
+      nodePackages.prettier
       alejandra
       dotnet-sdk_7
       gcc
@@ -35,6 +38,7 @@
       tmux
       delta
       neovim
+      shell_gpt
     ];
   };
 in
