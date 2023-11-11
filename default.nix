@@ -13,35 +13,37 @@ let
       cp -r ./* $out/
     '';
   };
+  nvimEnv = pkgs.buildEnv {
+    name = "neovim developer environment";
+    paths = with pkgs; [
+      coreutils
+      tree-sitter
+      nodejs
+      dotnet-sdk_7
+      gcc
+      rustup
+      python3
+      htop
+      unzip
+      gzip
+      fd
+      ripgrep
+      curl
+      wget
+      git
+      gh
+      lazygit
+      tmux
+      delta
+      neovim
+    ];
+  };
 in
 
 pkgs.mkShell {
-  packages = with pkgs; [
-    coreutils
-    tree-sitter
-    nodejs
-    dotnet-sdk_7
-    gcc
-    rustup
-    python3
-    htop
-    unzip
-    gzip
-    fd
-    ripgrep
-    curl
-    wget
-    git
-    gh
-    lazygit
-    tmux
-    delta
-    neovim
+  packages = [
+    nvimEnv
   ];
-
   DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
   TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerDrv}/tpm";
-
-  shellHook = ''
-  '';
 }
