@@ -15,6 +15,33 @@
 
   envrcPath = "${home}/.envrc";
 
+  checkScript = pkgs.writeShellApplication {
+    name = "dotfiles-check";
+    runtimeInputs = [
+      pkgs.coreutils
+    ];
+    text = ''
+      for path in ${toString paths}; do
+        to="${home}/$path"
+
+        if [ ! -L "$to" ]; then
+          echo "ERROR $to"
+          exit 1
+        fi
+
+        echo "OK $to"
+      done
+
+
+      if head -n 5 "${envrcPath}" | grep -q "use nix"; then
+        echo "OK ${envrcPath}"
+      else
+        echo "ERROR ${envrcPath}"
+        exit 1
+      fi
+    '';
+  };
+
   cleanScript = pkgs.writeShellApplication {
     name = "dotfiles-clean";
     runtimeInputs = [
@@ -71,6 +98,7 @@
 
       # init .envrc
       if [ ! -e ${envrcPath} ]; then
+        echo "Creating .envrc"
         echo "use nix" > ${envrcPath}
       fi
       direnv allow ${envrcPath}
@@ -81,5 +109,6 @@ in
     buildInputs = [
       cleanScript
       initScript
+      checkScript
     ];
   }
