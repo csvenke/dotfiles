@@ -11,21 +11,50 @@
       cp -r ./* $out/
     '';
   };
-  nvimEnv = pkgs.buildEnv {
-    name = "neovim developer environment";
+  jvmEnv = pkgs.buildEnv {
+    name = "jvm env";
+    paths = with pkgs; [
+      jdk
+      maven
+      gradle
+    ];
+  };
+  dotnetEnv = pkgs.buildEnv {
+    name = "dotnet env";
+    paths = with pkgs; [
+      dotnet-sdk_7
+    ];
+  };
+  rustEnv = pkgs.buildEnv {
+    name = "rust env";
+    paths = with pkgs; [
+      rustup
+    ];
+  };
+  nodejsEnv = pkgs.buildEnv {
+    name = "nodejs env";
+    paths = with pkgs; [
+      nodejs
+      bun
+      yarn
+      nodePackages.pnpm
+      nodePackages.prettier
+    ];
+  };
+  pythonEnv = pkgs.buildEnv {
+    name = "python env";
+    paths = with pkgs; [
+      python3
+      python311Packages.pip
+    ];
+  };
+  neovimEnv = pkgs.buildEnv {
+    name = "neovim env";
     paths = with pkgs; [
       coreutils
       tree-sitter
-      bun
-      nodejs
-      nodePackages.pnpm
-      nodePackages.prettier
       alejandra
-      dotnet-sdk_7
       gcc
-      rustup
-      python3
-      htop
       unzip
       gzip
       fd
@@ -44,7 +73,12 @@
 in
   pkgs.mkShell {
     packages = [
-      nvimEnv
+      neovimEnv
+      dotnetEnv
+      jvmEnv
+      nodejsEnv
+      rustEnv
+      pythonEnv
     ];
     DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
     TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerDrv}/tpm";
