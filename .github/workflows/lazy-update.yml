@@ -1,0 +1,13 @@
+name: Neovim Lazy Update
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    container: ghcr.io/csvenke/dotfiles:latest
+    steps:
+      - name: Update
+        run: nix-shell --command nvim --headless "+Lazy! sync" +qa
