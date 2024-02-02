@@ -34,7 +34,7 @@
   nodejsEnv = pkgs.buildEnv {
     name = "nodejs env";
     paths = with pkgs; [
-      nodejs
+      fnm
       bun
       yarn
       nodePackages.pnpm
@@ -46,6 +46,15 @@
     paths = with pkgs; [
       python3
       python311Packages.pip
+    ];
+  };
+  haskellEnv = pkgs.buildEnv {
+    name = "haskell env";
+    paths = with pkgs; [
+      ghc
+      cabal-install
+      stack
+      haskell-language-server
     ];
   };
   neovimEnv = pkgs.buildEnv {
@@ -79,7 +88,12 @@ in
       nodejsEnv
       rustEnv
       pythonEnv
+      haskellEnv
     ];
     DOTNET_ROOT = "${pkgs.dotnet-sdk_7}";
     TMUX_PLUGIN_MANAGER_SCRIPT = "${tmuxPluginManagerDrv}/tpm";
+
+    shellHook = ''
+      eval "$(fnm env --use-on-cd)"
+    '';
   }
