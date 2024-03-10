@@ -42,7 +42,9 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     config = function()
-      require("refactoring").setup({})
+      require("refactoring").setup({
+        show_success_message = false,
+      })
     end,
   },
   {
@@ -71,6 +73,22 @@ return {
       { "<C-L>", "<cmd>TmuxNavigateRight<cr>", desc = "window right" },
       { "<C-J>", "<cmd>TmuxNavigateDown<cr>", desc = "window down" },
       { "<C-K>", "<cmd>TmuxNavigateUp<cr>", desc = "window up" },
+    },
+  },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    opts = {
+      filesystem = {
+        filtered_items = {
+          visible = true,
+          show_hidden_count = true,
+          hide_dotfiles = false,
+          hide_gitignored = true,
+          never_show = {
+            ".git",
+          },
+        },
+      },
     },
   },
 
