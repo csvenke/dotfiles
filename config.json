@@ -2,14 +2,12 @@
   "paths": [
     ".zshrc",
     ".gitconfig",
+    ".gitignore",
     ".config/direnv",
     ".config/lazygit",
     ".config/nix",
     ".config/nvim",
     ".config/tmux"
   ],
-  "oldPaths": [
-    "default.nix"
-  ]
+  "oldPaths": ["default.nix"]
 }
-

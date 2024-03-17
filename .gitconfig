@@ -13,3 +13,4 @@
   autoStash = true
 [core]
   pager = delta
+  excludesfile = ~/.gitignore
