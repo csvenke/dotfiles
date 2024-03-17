@@ -16,7 +16,7 @@ git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 Run install script
 
 ```sh
-sh ~/.dotfiles/scripts/install.sh
+nix-shell ~/.dotfiles/scripts/install.sh
 ```
 
 ## Removing
@@ -24,7 +24,7 @@ sh ~/.dotfiles/scripts/install.sh
 Run clean script
 
 ```sh
-sh ~/.dotfiles/scripts/clean.sh
+nix-shell ~/.dotfiles/scripts/clean.sh
 ```
 
 Remove repository

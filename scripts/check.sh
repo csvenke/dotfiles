@@ -1,6 +1,5 @@
-#!/bin/sh
-
-umask 0022
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash -p bash jq
 
 home="$HOME"
 root="$HOME/.dotfiles"

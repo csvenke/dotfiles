@@ -1,6 +1,5 @@
-#!/bin/sh
-
-umask 0022
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash -p bash jq
 
 home="$HOME"
 root="$HOME/.dotfiles"
@@ -9,7 +8,7 @@ paths=$(jq -r '.paths[]' $configFile)
 oldPaths=$(jq -r '.oldPaths[]' $configFile)
 
 # Install nix default environment
-nix-env -if ~/.dotfiles/env.nix
+nix-env -if $root/env.nix
 
 # unlink old paths
 for path in $oldPaths; do

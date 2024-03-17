@@ -61,9 +61,5 @@ in
       pkgs.tmux
       tpmWrapper
       tpmInstallWrapper
-
-      # Tools
-      pkgs.jq
-      pkgs.yq
     ];
   }
