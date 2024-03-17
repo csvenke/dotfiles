@@ -131,8 +131,11 @@ return {
       "nvim-telescope/telescope.nvim",
     },
     keys = {
-      { "<leader>cc", "<cmd>ChatGPT<cr>", desc = "AI Prompt" },
-      { "<leader>ce", "<cmd>ChatGPTEditWithInstruction<cr>", desc = "AI Edit", mode = { "n", "v" } },
+      { "<leader>a", desc = "AI" },
+      { "<leader>ap", "<cmd>ChatGPT<cr>", desc = "Prompt" },
+      { "<leader>ah", "<cmd>ChatGPTRun explain_code<cr>", desc = "Explain code" },
+      { "<leader>ar", "<cmd>ChatGPTRun code_readability_analysis<cr>", desc = "Code readability analysis" },
+      { "<leader>ae", "<cmd>ChatGPTEditWithInstruction<cr>", desc = "Edit with instructions", mode = { "n", "v" } },
     },
   },
 }
