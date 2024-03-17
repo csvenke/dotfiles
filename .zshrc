@@ -8,3 +8,5 @@ ZSH_THEME="robbyrussell"
 plugins=(direnv git)
 
 source $ZSH/oh-my-zsh.sh
+
+eval "$(fnm env --use-on-cd)"

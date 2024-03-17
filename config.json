@@ -1,0 +1,15 @@
+{
+  "paths": [
+    ".zshrc",
+    ".gitconfig",
+    ".config/direnv",
+    ".config/lazygit",
+    ".config/nix",
+    ".config/nvim",
+    ".config/tmux"
+  ],
+  "oldPaths": [
+    "default.nix"
+  ]
+}
+
