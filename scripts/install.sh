@@ -7,10 +7,14 @@ configFile="$root/config.json"
 paths=$(jq -r '.paths[]' $configFile)
 oldPaths=$(jq -r '.oldPaths[]' $configFile)
 
-# Install nix default environment
+# Install default environment
 nix-env -if $root/env.nix
 
-# unlink old paths
+# Setup node with fnm
+eval "$(fnm env --use-on-cd)"
+fnm use --install-if-missing --silent-if-unchanged 20
+
+# Unlink old paths if exists
 for path in $oldPaths; do
 	to="$home/$path"
 
@@ -20,12 +24,12 @@ for path in $oldPaths; do
 	fi
 done
 
-# create .config directory
+# Create .config directory if missing
 if [ ! -e "$HOME/.config" ]; then
 	mkdir "$HOME/.config"
 fi
 
-# symlink paths
+# Symlink paths if missing
 for path in $paths; do
 	from="$root/$path"
 	to="$home/$path"
@@ -47,6 +51,5 @@ done
 # Install tmux plugins with tpm
 tpm-install-plugins
 
-# Setup node with fnm
-fnm install --lts
-fnm use --silent-if-unchanged $(node -v)
+# Install neovim plugins from lockfile
+nvim --headless "+Lazy! restore" +qa

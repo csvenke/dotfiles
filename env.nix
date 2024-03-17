@@ -41,6 +41,7 @@ in
 
       # Neovim
       pkgs.coreutils
+      pkgs.gnumake
       pkgs.tree-sitter
       pkgs.alejandra
       pkgs.cargo

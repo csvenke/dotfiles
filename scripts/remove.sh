@@ -15,3 +15,6 @@ for path in $paths; do
 		unlink $to
 	fi
 done
+
+# Uninstall everything
+nix-env --uninstall '.*'

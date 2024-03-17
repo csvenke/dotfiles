@@ -21,13 +21,13 @@ nix-shell ~/.dotfiles/scripts/install.sh
 
 ## Removing
 
-Run clean script
+Run remove script
 
 ```sh
-nix-shell ~/.dotfiles/scripts/clean.sh
+nix-shell ~/.dotfiles/scripts/remove.sh
 ```
 
-Remove repository
+Delete repository
 
 ```sh
 rm -rf .dotfiles
