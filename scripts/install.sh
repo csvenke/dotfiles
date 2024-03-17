@@ -46,3 +46,7 @@ done
 
 # Install tmux plugins with tpm
 tpm-install-plugins
+
+# Setup node with fnm
+fnm install --lts
+fnm use --silent-if-unchanged $(node -v)
