@@ -32,5 +32,5 @@ nix-shell ~/.dotfiles/scripts/uninstall.sh
 - Delete repository
 
 ```sh
-rm -rf .dotfiles
+rm -rf ~/.dotfiles
 ```
