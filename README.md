@@ -5,20 +5,18 @@
 ### Prerequisites
 
 - Install [nix](https://nixos.org/download)
-- Install zsh
-- Install [oh-my-zsh](https://ohmyz.sh/#install)
 
 ### Install
 
 - Clone repository
 
-```sh
+```bash
 git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 ```
 
 - Run install script
 
-```sh
+```bash
 nix-shell ~/.dotfiles/scripts/install.sh
 ```
 
@@ -26,12 +24,12 @@ nix-shell ~/.dotfiles/scripts/install.sh
 
 - Run uninstall script
 
-```sh
+```bash
 nix-shell ~/.dotfiles/scripts/uninstall.sh
 ```
 
 - Delete repository
 
-```sh
+```bash
 rm -rf ~/.dotfiles
 ```

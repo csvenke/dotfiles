@@ -74,5 +74,7 @@ in
 
       # Tools
       pkgs.fzf
+      pkgs.bat
+      pkgs.silver-searcher
     ];
   }
