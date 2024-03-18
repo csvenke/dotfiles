@@ -5,7 +5,7 @@ dotfiles="$HOME/.dotfiles"
 configFile="$dotfiles/config.json"
 paths=$(jq -r '.paths[]' $configFile)
 
-echo "(1/2) Unlink paths"
+echo "(1/3) Unlink paths"
 for path in $paths; do
 	to="$HOME/$path"
 
@@ -15,5 +15,10 @@ for path in $paths; do
 	fi
 done
 
-echo "(2/2) Uninstall everything"
+echo "(2/3) Removing oh-my-bash"
+if [ -e "$HOME/.oh-my-bash" ]; then
+	rm -rf $HOME/.oh-my-bash
+fi
+
+echo "(3/3) Uninstall everything"
 nix-env --uninstall '.*'

@@ -1,6 +1,7 @@
 {
   "paths": [
-    ".zshrc",
+    ".bashrc",
+    ".bash_profile",
     ".gitconfig",
     ".gitconfig.personal",
     ".gitignore",
@@ -10,5 +11,5 @@
     ".config/nvim",
     ".config/tmux"
   ],
-  "oldPaths": ["default.nix"]
+  "oldPaths": ["default.nix", ".zshrc"]
 }
