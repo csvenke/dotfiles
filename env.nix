@@ -25,6 +25,7 @@ in
   pkgs.buildEnv {
     name = "My default environment";
     paths = [
+      pkgs.coreutils
       pkgs.direnv
       pkgs.nix-direnv
 
@@ -33,18 +34,20 @@ in
       pkgs.python311Packages.pip
 
       # Node
+      pkgs.nodejs
       pkgs.fnm
       pkgs.bun
       pkgs.yarn
       pkgs.nodePackages.pnpm
-      pkgs.nodePackages.prettier
+
+      # Rust
+      pkgs.cargo
+      pkgs.rustc
 
       # Neovim
-      pkgs.coreutils
       pkgs.gnumake
       pkgs.tree-sitter
       pkgs.alejandra
-      pkgs.cargo
       pkgs.gcc
       pkgs.unzip
       pkgs.gzip

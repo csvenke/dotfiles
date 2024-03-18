@@ -1,5 +1,5 @@
 {
-  description = "Node development environment";
+  description = "Fast node manager development environment";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -15,11 +15,13 @@
       in {
         devShell = pkgs.mkShell {
           packages = [
-            pkgs.nodejs
-            pkgs.bun
-            pkgs.yarn
-            pkgs.nodePackages.pnpm
+            pkgs.fnm
           ];
+
+          shellHook = ''
+            eval "$(fnm env --use-on-cd)"
+            fnm use --install-if-missing --silent-if-unchanged
+          '';
         };
       }
     );

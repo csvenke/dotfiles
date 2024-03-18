@@ -10,10 +10,6 @@ oldPaths=$(jq -r '.oldPaths[]' $configFile)
 # Install default environment
 nix-env -if $root/env.nix
 
-# Setup node with fnm
-eval "$(fnm env --use-on-cd)"
-fnm use --install-if-missing --silent-if-unchanged 20
-
 # Unlink old paths if exists
 for path in $oldPaths; do
 	to="$home/$path"
