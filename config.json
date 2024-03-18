@@ -2,6 +2,7 @@
   "paths": [
     ".zshrc",
     ".gitconfig",
+    ".gitconfig.personal",
     ".gitignore",
     ".config/direnv",
     ".config/lazygit",

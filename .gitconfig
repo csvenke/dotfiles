@@ -1,16 +1,15 @@
-[credential "https://github.com"]
-  helper =
-  helper = !$(which gh) auth git-credential
-[credential "https://gist.github.com"]
-  helper =
-  helper = !$(which gh) auth git-credential
-[user]
-  name = csvenke
-  email = csvenke@users.noreply.github.com
+[includeIf "gitdir:~/"]
+  path = ~/.gitconfig.personal
+
+[includeIf "gitdir:~/projects/work/"]
+  path = ~/.gitconfig.work
+
 [pull]
   rebase = true
+
 [rebase]
   autoStash = true
+
 [core]
   pager = delta
   excludesfile = ~/.gitignore
