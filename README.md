@@ -4,8 +4,9 @@
 
 ### Prerequisites
 
-- Install zsh and [oh-my-zsh](https://ohmyz.sh/#install)
 - Install [nix](https://nixos.org/download)
+- Install zsh
+- Install [oh-my-zsh](https://ohmyz.sh/#install)
 
 ### Install
 

@@ -1,14 +1,13 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i bash -p bash jq
 
-home="$HOME"
-root="$HOME/.dotfiles"
-configFile="$root/config.json"
+dotfiles="$HOME/.dotfiles"
+configFile="$dotfiles/config.json"
 paths=$(jq -r '.paths[]' $configFile)
 
-# unlink paths
+echo "(1/2) Unlink paths"
 for path in $paths; do
-	to="$home/$path"
+	to="$HOME/$path"
 
 	if [ -L "$to" ]; then
 		echo "Unlinking: $to"
@@ -16,5 +15,5 @@ for path in $paths; do
 	fi
 done
 
-# Uninstall everything
+echo "(2/2) Uninstall everything"
 nix-env --uninstall '.*'

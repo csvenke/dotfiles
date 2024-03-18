@@ -71,5 +71,8 @@ in
       pkgs.tmux
       tpmWrapper
       tpmInstallWrapper
+
+      # Tools
+      pkgs.fzf
     ];
   }
