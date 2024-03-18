@@ -21,21 +21,23 @@ let
   tpmInstallWrapper = pkgs.writeShellScriptBin "tpm-install-plugins" ''
     bash ${tpmRepo}/scripts/install_plugins.sh
   '';
+
+  python3 = pkgs.python3.withPackages (ps: [
+    ps.pip
+    ps.pipx
+  ]);
 in
   pkgs.buildEnv {
     name = "My default environment";
     paths = [
-      pkgs.coreutils
       pkgs.direnv
       pkgs.nix-direnv
 
       # Python
-      pkgs.python3
-      pkgs.python311Packages.pip
+      python3
 
       # Node
       pkgs.nodejs
-      pkgs.fnm
       pkgs.bun
       pkgs.yarn
       pkgs.nodePackages.pnpm
@@ -45,10 +47,14 @@ in
       pkgs.rustc
 
       # Neovim
-      pkgs.gnumake
+      pkgs.coreutils
       pkgs.tree-sitter
       pkgs.alejandra
       pkgs.gcc
+      pkgs.gnumake
+      pkgs.gnutar
+      pkgs.gnused
+      pkgs.gnugrep
       pkgs.unzip
       pkgs.gzip
       pkgs.fd
