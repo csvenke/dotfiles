@@ -21,20 +21,12 @@ let
   tpmInstallWrapper = pkgs.writeShellScriptBin "tpm-install-plugins" ''
     bash ${tpmRepo}/scripts/install_plugins.sh
   '';
-
-  python3 = pkgs.python3.withPackages (ps: [
-    ps.pip
-    ps.pipx
-  ]);
 in
   pkgs.buildEnv {
     name = "My default environment";
     paths = [
       pkgs.direnv
       pkgs.nix-direnv
-
-      # Python
-      python3
 
       # Node
       pkgs.nodejs
