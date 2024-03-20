@@ -1,5 +1,5 @@
 {
-  "paths": [
+  "dotfiles": [
     ".bashrc",
     ".bash_profile",
     ".gitconfig",
@@ -11,5 +11,6 @@
     ".config/nvim",
     ".config/tmux"
   ],
-  "oldPaths": ["default.nix", ".zshrc"]
+  "manualDotfiles": [".bashrc.secrets.sh", ".gitconfig.work"],
+  "oldDotfiles": ["default.nix", "shell.nix", "flake.nix", ".zshrc"]
 }

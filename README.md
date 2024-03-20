@@ -17,7 +17,7 @@ git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 - Run install script
 
 ```bash
-nix-shell ~/.dotfiles/scripts/install.sh
+nix-shell ~/.dotfiles/scripts/install.py
 ```
 
 ### Uninstall
@@ -25,7 +25,7 @@ nix-shell ~/.dotfiles/scripts/install.sh
 - Run uninstall script
 
 ```bash
-nix-shell ~/.dotfiles/scripts/uninstall.sh
+nix-shell ~/.dotfiles/scripts/uninstall.py
 ```
 
 - Delete repository
