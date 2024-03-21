@@ -14,10 +14,11 @@ export OSH_THEME="robbyrussell"
 export OMB_USE_SUDO=true
 export DOTFILES="$HOME/.dotfiles"
 export DOTFLAKES="$HOME/.dotfiles/flakes"
-export EDITOR="vim"
+export EDITOR="nvim --clean"
 
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles/"
+alias vim="nvim --clean"
 
 source_if_exists $OSH/oh-my-bash.sh
 
