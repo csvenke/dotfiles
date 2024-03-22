@@ -1,0 +1,22 @@
+# git
+.git
+
+# nix
+.direnv
+
+# dotnet
+.aspnet
+.dotnet
+.nuget
+
+# rust
+.cargo
+
+# node
+.angular
+.npm
+node_modules
+
+# unknown
+.local
+.cache

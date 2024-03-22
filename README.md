@@ -33,3 +33,24 @@ nix-shell ~/.dotfiles/scripts/uninstall.py
 ```bash
 rm -rf ~/.dotfiles
 ```
+
+## Dotflakes
+
+Included nix flakes for setting up development environments per project. They can be accessed through the `$DOTFLAKES` environment variable.
+
+> Note: These are useful for projects where you cannot have the `flake.nix` and `flake.lock` in source control
+
+From the terminal
+
+```bash
+nix develop path:$DOTFLAKES/python3
+```
+
+From `.envrc` file
+
+> Note: As a security mechanism you have to run `direnv allow` once per change
+
+```
+use flake path:$DOTFLAKES/node
+use flake path:$DOTFLAKES/dotnet
+```

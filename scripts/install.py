@@ -32,12 +32,15 @@ def main():
     print(">>> Install tmux plugins <<<")
     run_shell_command("tmux-plugin-manager-install")
 
-    print(">>> Sync neovim plugins <<<")
-    run_shell_command('nvim --headless "+Lazy! sync" +qa')
+    print(">>> Restore neovim plugins <<<")
+    run_shell_command('nvim --headless "+Lazy! restore" +qa')
 
     print(">>> Source .bashrc <<<")
     bashrc = Path(Path.home(), ".bashrc")
     run_shell_command(f"source {bashrc}")
+
+    print(">>> DONE <<<")
+    print("Restart shell for changes to take effect")
 
 
 if __name__ == "__main__":

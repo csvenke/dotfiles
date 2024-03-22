@@ -21,9 +21,7 @@ alias dot="cd ~/.dotfiles/"
 alias vim="nvim --clean"
 
 source_if_exists $OSH/oh-my-bash.sh
-
 source_if_exists $DOTFILES/.bashrc.fzf.sh
 source_if_exists $DOTFILES/.bashrc.git.sh
 source_if_exists $DOTFILES/.bashrc.direnv.sh
-
 source_if_exists $HOME/.bashrc.secrets.sh
