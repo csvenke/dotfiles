@@ -1,6 +1,4 @@
-let
-  pkgs = import <nixpkgs> {};
-
+{pkgs ? import <nixpkgs-unstable> {}}: let
   tpmRepo = pkgs.stdenv.mkDerivation {
     name = "tmux plugin manager";
     src = builtins.fetchGit {
@@ -38,7 +36,6 @@ let
 
   python3 = pkgs.python3.withPackages (ps: [
     ps.pip
-    ps.pipx
   ]);
 in
   pkgs.buildEnv {

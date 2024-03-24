@@ -6,6 +6,11 @@
 
 - Install [nix](https://nixos.org/download)
 
+```bash
+nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
+nix-channel --update
+```
+
 ### Install
 
 - Clone repository
