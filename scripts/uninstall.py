@@ -1,18 +1,15 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i python -p python3
 
-from utils.dotfiles import Dotfiles
-from utils.nix import NixEnvironment
+from utils.scriptargs import ScriptArgs
+from utils.dotfiles import DotfilesManager
 
 
 def main():
-    print(">>> Removing all dotfiles <<<")
-    all_dotfiles = [*Dotfiles.get(), *Dotfiles.get_old(), *Dotfiles.get_manual()]
-    for dotfile in all_dotfiles:
-        dotfile.remove()
+    dotfiles = DotfilesManager.from_script_args(ScriptArgs.parse())
 
-    print(">>> Uninstalling nix environment <<<")
-    NixEnvironment.uninstall()
+    print(">>> Uninstalling all dotfiles <<<")
+    dotfiles.uninstall_all()
 
 
 if __name__ == "__main__":
