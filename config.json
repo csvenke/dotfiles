@@ -1,17 +1,20 @@
 {
-  "dotfiles": [
-    ".bashrc",
-    ".bash_profile",
-    ".agignore",
-    ".gitconfig",
-    ".gitconfig.personal",
-    ".gitignore",
-    ".config/direnv",
-    ".config/lazygit",
-    ".config/nix",
-    ".config/nvim",
-    ".config/tmux"
-  ],
-  "manualDotfiles": [".bashrc.secrets.sh", ".gitconfig.work"],
-  "oldDotfiles": ["default.nix", "shell.nix", "flake.nix", ".zshrc"]
+  "dotfiles": {
+    "symlink": [
+      ".bashrc",
+      ".bash_profile",
+      ".agignore",
+      ".gitconfig",
+      ".gitconfig.personal",
+      ".gitignore",
+      ".config/direnv",
+      ".config/lazygit",
+      ".config/nix",
+      ".config/nvim",
+      ".config/tmux"
+    ],
+    "copy": [],
+    "manual": [".bashrc.secrets.sh", ".gitconfig.work"],
+    "deprecated": ["default.nix", "shell.nix", "flake.nix", ".zshrc"]
+  }
 }

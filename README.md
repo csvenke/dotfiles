@@ -5,6 +5,7 @@
 ### Prerequisites
 
 - Install [nix](https://nixos.org/download)
+- Add nixpkgs-unstable channel
 
 ```bash
 nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable

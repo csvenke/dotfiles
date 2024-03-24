@@ -1,15 +1,13 @@
-from pathlib import Path
-from utils.config import Config
-from utils.shell import run_shell_command
+from utils.dotfiles import DotfilesManager
+from utils.shell import Shell
 
 
 class NixEnvironment:
-    @staticmethod
-    def install(config: Config):
-        path = Path(config.dotfilesFolder(), "env.nix")
-        if path.exists():
-            run_shell_command(f"nix-env -if {path}")
+    def __init__(self, dotfiles: DotfilesManager):
+        self.path = dotfiles.get_path("env.nix")
 
-    @staticmethod
-    def uninstall():
-        run_shell_command("nix-env --uninstall '.*'")
+    def install(self):
+        if self.path.exists():
+            Shell.run(f"nix-env -if {self.path}")
+        else:
+            print("env.nix does not exist. Doing nothing")
