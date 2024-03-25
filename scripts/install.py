@@ -24,7 +24,7 @@ def main():
     dotfiles.install_all()
 
     print(">>> Install tmux plugins <<<")
-    Shell.run("tmux-plugin-manager-install")
+    Shell.run("tpm-install-plugins")
 
     print(">>> Restore neovim plugins <<<")
     Shell.run('nvim --headless "+Lazy! restore" +qa')
