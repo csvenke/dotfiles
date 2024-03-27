@@ -1,4 +1,6 @@
 return {
+  { "direnv/direnv.vim" },
+
   -- Themes
   {
     "AlexvZyl/nordic.nvim",
@@ -73,6 +75,12 @@ return {
           },
         },
       },
+    },
+  },
+  {
+    "ahmedkhalf/project.nvim",
+    opts = {
+      manual_mode = false,
     },
   },
 

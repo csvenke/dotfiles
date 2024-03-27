@@ -1,13 +1,18 @@
 {pkgs ? import <nixpkgs-unstable> {}}: let
   configuration = import ./configuration.nix {inherit pkgs;};
+  scripts = import ./scripts.nix {inherit pkgs;};
 in
   pkgs.buildEnv {
-    name = "My default environment";
+    name = "Home environment";
     paths = [
       configuration
+      scripts
 
       pkgs.direnv
       pkgs.nix-direnv
+
+      # Rice
+      pkgs.starship
 
       # Python
       (pkgs.python3.withPackages (ps: [ps.pip]))
@@ -24,6 +29,7 @@ in
 
       # Neovim
       pkgs.coreutils
+      pkgs.findutils
       pkgs.tree-sitter
       pkgs.alejandra
       pkgs.gcc
@@ -46,6 +52,7 @@ in
       pkgs.tmux
 
       # Tools
+      pkgs.eza
       pkgs.fzf
       pkgs.bat
       pkgs.silver-searcher
