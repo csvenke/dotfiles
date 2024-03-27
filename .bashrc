@@ -1,3 +1,3 @@
-if [ -f "$(which nix-bashrc)" ]; then
-	source $(which nix-bashrc)
+if [ -f "$(which configure-bash)" ]; then
+	source $(which configure-bash)
 fi

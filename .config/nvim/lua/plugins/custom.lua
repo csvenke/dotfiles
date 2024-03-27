@@ -1,4 +1,6 @@
 return {
+  { "direnv/direnv.vim" },
+
   -- Themes
   {
     "AlexvZyl/nordic.nvim",
@@ -33,6 +35,13 @@ return {
       diagnostics = {
         underline = false,
       },
+    },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      auto_install = false,
+      ensure_installed = {},
     },
   },
   {
@@ -73,6 +82,12 @@ return {
           },
         },
       },
+    },
+  },
+  {
+    "ahmedkhalf/project.nvim",
+    opts = {
+      manual_mode = false,
     },
   },
 

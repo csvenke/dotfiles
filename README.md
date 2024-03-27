@@ -9,6 +9,9 @@
 
 ```bash
 nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
+```
+
+```bash
 nix-channel --update
 ```
 
@@ -20,10 +23,10 @@ nix-channel --update
 git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 ```
 
-- Run install script
+- Run bootstrap script
 
 ```bash
-nix-shell ~/.dotfiles/scripts/install.py
+bash ~/.dotfiles/install.bash
 ```
 
 ### Uninstall
@@ -31,13 +34,7 @@ nix-shell ~/.dotfiles/scripts/install.py
 - Run uninstall script
 
 ```bash
-nix-shell ~/.dotfiles/scripts/uninstall.py
-```
-
-- Delete repository
-
-```bash
-rm -rf ~/.dotfiles
+bash ~/.dotfiles/uninstall.bash
 ```
 
 ## Dotflakes
@@ -56,7 +53,7 @@ From `.envrc` file
 
 > Note: As a security mechanism you have to run `direnv allow` once per change
 
-```
+```bash
 use flake path:$DOTFLAKES/node
 use flake path:$DOTFLAKES/dotnet
 ```

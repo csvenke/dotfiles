@@ -1,13 +1,22 @@
 {pkgs ? import <nixpkgs-unstable> {}}: let
   configuration = import ./configuration.nix {inherit pkgs;};
+  scripts = import ./scripts {inherit pkgs;};
+  treesitterParsers = pkgs.symlinkJoin {
+    name = "treesitter-parsers";
+    paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+  };
 in
   pkgs.buildEnv {
-    name = "My default environment";
+    name = "Home environment";
     paths = [
       configuration
+      scripts
 
       pkgs.direnv
       pkgs.nix-direnv
+
+      # Rice
+      pkgs.starship
 
       # Python
       (pkgs.python3.withPackages (ps: [ps.pip]))
@@ -24,6 +33,7 @@ in
 
       # Neovim
       pkgs.coreutils
+      pkgs.findutils
       pkgs.tree-sitter
       pkgs.alejandra
       pkgs.gcc
@@ -40,15 +50,27 @@ in
       pkgs.git
       pkgs.lazygit
       pkgs.delta
-      pkgs.neovim
+      (pkgs.neovim.override {
+        configure = {
+          customRC = ''
+            luafile ~/.config/nvim/init.lua
+            lua vim.opt.runtimepath:prepend("${treesitterParsers}")
+          '';
+          packages.myPlugins.start = [
+            pkgs.vimPlugins.nvim-treesitter.withAllGrammars
+          ];
+        };
+      })
 
       # tmux
       pkgs.tmux
 
       # Tools
+      pkgs.eza
       pkgs.fzf
       pkgs.bat
       pkgs.silver-searcher
       pkgs.gh
+      pkgs.tldr
     ];
   }
