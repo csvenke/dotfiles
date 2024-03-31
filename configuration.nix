@@ -66,7 +66,7 @@
     alias vim="nvim --clean"
     alias ggpush='command git push origin "$(git branch --show-current)"'
     alias ggpull='command git pull origin "$(git branch --show-current)"'
-    alias ls='eza --icons --colour=auto --sort=type --group-directories-first --modified --created --git --binary --group'
+    alias ls='eza --icons --colour=auto --sort=type --group-directories-first'
     alias la='ls -a'
     alias ll='ls -al'
     alias cat='bat --style=plain'
