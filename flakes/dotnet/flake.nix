@@ -12,10 +12,15 @@
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
+        combined-dotnet-sdks = with pkgs.dotnetCorePackages; combinePackages [
+          sdk_6_0
+          sdk_7_0
+          sdk_8_0
+        ];
       in {
         devShell = pkgs.mkShell {
           packages = [
-            pkgs.dotnet-sdk
+            combined-dotnet-sdks
           ];
         };
       }
