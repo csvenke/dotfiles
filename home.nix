@@ -55,6 +55,7 @@ in
           customRC = ''
             luafile ~/.config/nvim/init.lua
             lua vim.opt.runtimepath:prepend("${treesitterParsers}")
+            lua vim.opt.runtimepath:prepend("~/.local/share/nvim/lazy/nvim-treesitter")
           '';
           packages.myPlugins.start = [
             pkgs.vimPlugins.nvim-treesitter.withAllGrammars
