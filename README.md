@@ -9,9 +9,6 @@
 
 ```bash
 nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
-```
-
-```bash
 nix-channel --update
 ```
 
@@ -23,10 +20,10 @@ nix-channel --update
 git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 ```
 
-- Run bootstrap script
+- Run install script
 
 ```bash
-bash ~/.dotfiles/install.bash
+nix-shell ~/.dotfiles/scripts/dotstrap/script.py install
 ```
 
 ### Uninstall
@@ -34,7 +31,7 @@ bash ~/.dotfiles/install.bash
 - Run uninstall script
 
 ```bash
-bash ~/.dotfiles/uninstall.bash
+nix-shell ~/.dotfiles/scripts/dotstrap/script.py uninstall
 ```
 
 ## Dotflakes

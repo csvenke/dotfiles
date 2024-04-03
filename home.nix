@@ -52,7 +52,7 @@ in
       pkgs.delta
       (pkgs.neovim.override {
         configure = {
-          customRC = ''
+          customRC = /* vim */ ''
             luafile ~/.config/nvim/init.lua
             lua vim.opt.runtimepath:prepend("${treesitterParsers}")
             lua vim.opt.runtimepath:prepend("~/.local/share/nvim/lazy/nvim-treesitter")
