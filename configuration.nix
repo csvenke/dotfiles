@@ -55,6 +55,12 @@
     		source "$1"
     	fi
     }
+    git_current_branch() {
+      git branch --show-current
+    }
+    git_main_branch() {
+      git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+    }
 
     # What the fuck Apple
     export BASH_SILENCE_DEPRECATION_WARNING=1
@@ -70,8 +76,9 @@
     alias src="source ~/.bashrc"
     alias dot="cd ~/.dotfiles/"
     alias vim="nvim --clean"
-    alias ggpush='command git push origin "$(git branch --show-current)"'
-    alias ggpull='command git pull origin "$(git branch --show-current)"'
+    alias ggpush='git push origin "$(git_current_branch)"'
+    alias ggpull='git pull origin "$(git_current_branch)"'
+    alias ggsync='git pull origin "$(git_main_branch)"'
     alias ls='eza --icons --colour=auto --sort=type --group-directories-first'
     alias la='ls -a'
     alias ll='ls -al'

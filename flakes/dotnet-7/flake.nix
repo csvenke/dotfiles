@@ -1,5 +1,5 @@
 {
-  description = "Dotnet development environment";
+  description = "Dotnet 7 development environment";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
@@ -15,10 +15,10 @@
       in {
         devShell = pkgs.mkShell {
           packages = [
-            pkgs.dotnet-sdk
+            pkgs.dotnet-sdk_7
           ];
           shellHook = ''
-            export DOTNET_ROOT="${pkgs.dotnet-sdk}"
+            export DOTNET_ROOT="${pkgs.dotnet-sdk_7}"
           '';
         };
       }

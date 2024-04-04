@@ -41,7 +41,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       auto_install = false,
-      ensure_installed = { "v", "http" },
+      ensure_installed = { "v", "http", "cuda", "fish" },
     },
   },
   {
@@ -82,12 +82,6 @@ return {
           },
         },
       },
-    },
-  },
-  {
-    "ahmedkhalf/project.nvim",
-    opts = {
-      manual_mode = false,
     },
   },
 

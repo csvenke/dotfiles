@@ -1,19 +1,18 @@
 function select_project_dir() {
-	local projects_dir=$1
-	ag -g "(.sln|.csproj|package.json)" "$projects_dir" |
+	ag -g "(.sln|.csproj|package.json)" "$1" |
 		xargs -I {} dirname {} |
 		sort -u |
-		sed "s|^$projects_dir/||" |
-		fzf --color "hl:-1:underline,hl+:-1:underline:reverse"
+		sed "s|^$1/||" |
+		fzf --border=none --color "hl:-1:underline,hl+:-1:underline:reverse"
 }
 
 function main() {
-	local PROJECTS_DIRECTORY="$HOME/projects"
-	TARGET_DIR=$(select_project_dir "$PROJECTS_DIRECTORY")
-	FULL_PATH="$PROJECTS_DIRECTORY/$TARGET_DIR"
+	projects_directory="$HOME/projects"
+	target_dir=$(select_project_dir "$projects_directory")
+	full_path="$projects_directory/$target_dir"
 
-	if [ -n "$FULL_PATH" ]; then
-		cd "$FULL_PATH" && nvim .
+	if [ -n "$full_path" ]; then
+		cd "$full_path" && nvim .
 	fi
 }
 
