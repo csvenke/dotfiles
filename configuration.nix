@@ -1,5 +1,8 @@
 {pkgs}: let
   tmux = pkgs.writeShellScriptBin "configure-tmux" ''
+    # What the fuck Apple
+    tmux set -g default-terminal screen-256color
+    
     # Let there be color
     tmux set-option -sa terminal-overrides ",xterm*:Tc"
 
@@ -52,6 +55,9 @@
     		source "$1"
     	fi
     }
+
+    # What the fuck Apple
+    export BASH_SILENCE_DEPRECATION_WARNING=1
 
     export DIRENV_LOG_FORMAT=
     export DIRENV_WARN_TIMEOUT=1m
