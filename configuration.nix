@@ -1,8 +1,10 @@
-{pkgs}: let
+{ pkgs }:
+
+let
   tmux = pkgs.writeShellScriptBin "configure-tmux" ''
     # What the fuck Apple
     tmux set -g default-terminal screen-256color
-    
+
     # Let there be color
     tmux set-option -sa terminal-overrides ",xterm*:Tc"
 
@@ -48,7 +50,6 @@
     tmux bind '|' split-window -h -c "#{pane_current_path}"
   '';
 
-
   bash = pkgs.writeShellScriptBin "configure-bash" ''
     source_if_exists() {
     	if test -r "$1"; then
@@ -62,16 +63,18 @@
       git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
     }
 
-    # What the fuck Apple
-    export BASH_SILENCE_DEPRECATION_WARNING=1
-
-    export DIRENV_LOG_FORMAT=
-    export DIRENV_WARN_TIMEOUT=1m
-    export FZF_DEFAULT_COMMAND='ag --hidden -l -g ""'
-    export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
     export DOTFILES="$HOME/.dotfiles"
     export DOTFLAKES="$HOME/.dotfiles/flakes"
-    export EDITOR="nvim --clean"
+    export EDITOR="vim"
+    export VISUAL="nvim"
+    # fzf
+    export FZF_DEFAULT_COMMAND='ag --hidden -l -g ""'
+    export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
+    # direnv
+    export DIRENV_LOG_FORMAT=
+    export DIRENV_WARN_TIMEOUT=1m
+    # macos
+    export BASH_SILENCE_DEPRECATION_WARNING=1
 
     alias src="source ~/.bashrc"
     alias dot="cd ~/.dotfiles/"
@@ -92,10 +95,8 @@
     eval "$(starship init bash)"
   '';
 in
-  pkgs.symlinkJoin {
-    name = "configuration";
-    paths = [
-      tmux
-      bash
-    ];
-  }
+
+pkgs.symlinkJoin {
+  name = "configuration";
+  paths = [ tmux bash ];
+}

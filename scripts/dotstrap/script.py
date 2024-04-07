@@ -38,6 +38,10 @@ def install(dotfiles: DotfilesManager):
     print(">>> Update neovim plugins <<<")
     Shell.run('nvim --headless "+Lazy! update" +qa')
 
+    print(">>> Source .bashrc <<<")
+    bashrc = dotfiles.get_target_path(".bashrc")
+    Shell.run(f"source {bashrc}")
+
     print(">>> DONE <<<")
     print("Restart shell for changes to take effect")
 

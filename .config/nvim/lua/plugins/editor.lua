@@ -1,63 +1,6 @@
 return {
   { "direnv/direnv.vim" },
 
-  -- Themes
-  {
-    "AlexvZyl/nordic.nvim",
-    event = "VeryLazy",
-    opts = function()
-      local colors = require("nordic.colors")
-      return {
-        override = {
-          NeoTreeTitleBar = {
-            fg = colors.yellow.dim,
-          },
-          NeoTreeGitUntracked = {
-            fg = colors.white0,
-          },
-        },
-      }
-    end,
-  },
-  {
-    "LazyVim/LazyVim",
-    event = "VeryLazy",
-    opts = {
-      colorscheme = "nordic",
-    },
-  },
-
-  -- LSP
-  {
-    "neovim/nvim-lspconfig",
-    event = "VeryLazy",
-    opts = {
-      diagnostics = {
-        underline = false,
-      },
-    },
-  },
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      auto_install = false,
-      ensure_installed = { "v", "http", "cuda", "fish" },
-    },
-  },
-  {
-    "ThePrimeagen/refactoring.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    config = function()
-      require("refactoring").setup({
-        show_success_message = false,
-      })
-    end,
-  },
-
-  -- Editor
   {
     "christoomey/vim-tmux-navigator",
     event = "VeryLazy",
@@ -68,6 +11,7 @@ return {
       { "<C-K>", "<cmd>TmuxNavigateUp<cr>", desc = "window up" },
     },
   },
+
   {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
@@ -85,7 +29,6 @@ return {
     },
   },
 
-  -- Diffview
   {
     "sindrets/diffview.nvim",
     event = "VeryLazy",
@@ -108,7 +51,6 @@ return {
     },
   },
 
-  -- ChatGPT
   {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",

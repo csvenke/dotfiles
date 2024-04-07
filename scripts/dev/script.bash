@@ -1,19 +1,40 @@
-function select_project_dir() {
-	ag -g "(.sln|.csproj|package.json)" "$1" |
-		xargs -I {} dirname {} |
-		sort -u |
-		sed "s|^$1/||" |
-		fzf --border=none --color "hl:-1:underline,hl+:-1:underline:reverse"
+function findProjectRootDirectories() {
+	local search_path="$1"
+	local root_files="(.git|shell.nix|flake.nix|.envrc|.env)"
+	ag --hidden -g "$root_files" "$search_path" | xargs -I {} dirname {} | sort -u
 }
 
-function main() {
-	projects_directory="$HOME/projects"
-	target_dir=$(select_project_dir "$projects_directory")
-	full_path="$projects_directory/$target_dir"
+function formatDirectoriesForDisplay() {
+	local search_path="$1"
+	local directories="$2"
+	echo "$directories" |
+		sed "s|^$search_path/||" |
+		awk -v prefix="$search_path" 'BEGIN {
+        gray="\033[90m";
+        reset="\033[0m";
+    }
+    {print $0 " " gray "(" prefix "/" $0 ")" reset}'
+}
 
-	if [ -n "$full_path" ]; then
-		cd "$full_path" && nvim .
+function selectDirectoryWithUI() {
+	local formatted_directories="$1"
+	echo "$formatted_directories" | fzf --ansi --border=none | sed 's/.*(\(.*\)).*/\1/'
+}
+
+function navigateAndOpenNvim() {
+	local target_path="$1"
+	if [ -n "$target_path" ]; then
+		cd "$target_path" || exit
+		nvim .
 	fi
 }
 
-main
+function runProjectDirectoryNavigator() {
+	local dir_to_search="$1"
+	root_dirs=$(findProjectRootDirectories "$dir_to_search")
+	formatted_dirs=$(formatDirectoriesForDisplay "$dir_to_search" "$root_dirs")
+	selected_path=$(selectDirectoryWithUI "$formatted_dirs")
+	navigateAndOpenNvim "$selected_path"
+}
+
+runProjectDirectoryNavigator "$HOME/projects"
