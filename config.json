@@ -10,11 +10,15 @@
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
-      ".config/nvim",
-      ".config/tmux"
+      ".config/nvim"
     ],
-    "copy": [],
     "manual": [".bashrc.secrets.sh", ".gitconfig.work"],
-    "deprecated": ["default.nix", "shell.nix", "flake.nix", ".zshrc"]
+    "deprecated": [
+      "default.nix",
+      "shell.nix",
+      "flake.nix",
+      ".zshrc",
+      ".config/tmux"
+    ]
   }
 }

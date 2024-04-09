@@ -9,17 +9,21 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        combined-dotnet-sdks = with pkgs.dotnetCorePackages; combinePackages [
+        inherit (pkgs.dotnetCorePackages) combinePackages sdk_6_0 sdk_7_0 sdk_8_0;
+        dotnet = (combinePackages [
           sdk_6_0
           sdk_7_0
           sdk_8_0
-        ];
+        ]);
       in
       {
         devShell = pkgs.mkShell {
           packages = [
-            combined-dotnet-sdks
+            dotnet
           ];
+          shellHook = ''
+            export DOTNET_ROOT="${dotnet}"
+          '';
         };
       }
     );

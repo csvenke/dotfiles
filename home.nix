@@ -1,86 +1,25 @@
 { pkgs ? import <nixpkgs-unstable> { } }:
 
 let
-  configuration = import ./configuration.nix { inherit pkgs; };
-
-  scripts = import ./scripts { inherit pkgs; };
-
-  neovimParsers = pkgs.symlinkJoin {
-    name = "neovim-parsers";
-    paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
-  };
-
-  neovimInit = pkgs.writeTextFile {
-    name = "init.lua";
-    text = /* lua */ ''
-      require("config.lazy")
-      vim.opt.runtimepath:prepend("${neovimParsers}")
-      vim.opt.runtimepath:prepend("~/.local/share/nvim/lazy/nvim-treesitter")
-      require'lspconfig'.nil_ls.setup{}
-      require'lspconfig'.bashls.setup{}
-    '';
-  };
-
-  neovim = pkgs.buildEnv {
-    name = "neovim";
-    paths = [
-      pkgs.tree-sitter
-      pkgs.nil
-      pkgs.nixpkgs-fmt
-      pkgs.nodePackages.bash-language-server
-      (pkgs.neovim.override {
-        configure = {
-          customRC = /* vim */ ''
-            luafile ${neovimInit}
-          '';
-          packages.myPlugins.start = [
-            pkgs.vimPlugins.nvim-treesitter.withAllGrammars
-          ];
-        };
-      })
-    ];
-  };
+  tmux = import ./nixpkgs/tmux { inherit pkgs; };
+  neovim = import ./nixpkgs/neovim { inherit pkgs; };
+  dev = import ./nixpkgs/dev { inherit pkgs; };
 in
 
 pkgs.buildEnv {
   name = "Home environment";
   paths = [
-    configuration
-    scripts
-
-    # Deps
-    pkgs.coreutils
+    pkgs.coreutils-full
+    pkgs.findutils
     pkgs.direnv
     pkgs.nix-direnv
-    pkgs.findutils
-    pkgs.gnumake
-    pkgs.gnutar
-    pkgs.gnused
-    pkgs.gnugrep
-    pkgs.unzip
-    pkgs.gzip
-    pkgs.fd
-    pkgs.ripgrep
-    pkgs.curl
-    pkgs.wget
-    pkgs.lazygit
+    pkgs.eza
+    pkgs.bat
+    pkgs.silver-searcher
     pkgs.delta
 
-    # Shell
-    pkgs.starship
-    pkgs.tmux
-
-    # c
-    pkgs.gcc
-
-    # Rust
-    pkgs.cargo
-
-    # Dotnet
-    pkgs.dotnet-sdk
-
-    # Java
-    pkgs.jdk
+    # Bash
+    pkgs.bash
 
     # Python
     (pkgs.python3.withPackages (ps: [ ps.pip ps.pipx ]))
@@ -88,16 +27,20 @@ pkgs.buildEnv {
     # Node
     pkgs.nodejs
 
-    # Editor
+    # Shell
+    pkgs.starship
+    tmux
+
+    # Editors
     neovim
 
     # Tools
-    pkgs.git
-    pkgs.eza
-    pkgs.fzf
-    pkgs.bat
-    pkgs.silver-searcher
+    dev
     pkgs.gh
     pkgs.tldr
+    pkgs.git
+    pkgs.wget
+    pkgs.curl
+    pkgs.fzf
   ];
 }

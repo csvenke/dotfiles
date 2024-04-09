@@ -4,4 +4,6 @@ import subprocess
 class Shell:
     @staticmethod
     def run(command: str):
-        subprocess.run(command, shell=True, check=True)
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process.wait()
+        return process.returncode

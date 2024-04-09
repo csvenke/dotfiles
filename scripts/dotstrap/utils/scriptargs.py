@@ -31,5 +31,5 @@ class ScriptArgs:
 
     def __init__(self, args: dict[str, str]):
         self.command = str(args.get("command"))
-        self.dotfiles_directory = Path(str(args.get("dotfilesDirectory")))
-        self.target_directory = Path(str(args.get("targetDirectory")))
+        self.dotfiles_dir = Path(str(args.get("dotfilesDirectory")))
+        self.target_dir = Path(str(args.get("targetDirectory")))

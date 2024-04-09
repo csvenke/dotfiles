@@ -1,7 +1,7 @@
 [includeIf "gitdir:~/"]
   path = ~/.gitconfig.personal
 
-[includeIf "gitdir:~/projects/work/"]
+[includeIf "gitdir:~/repos/work/"]
   path = ~/.gitconfig.work
 
 [pull]

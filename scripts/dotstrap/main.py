@@ -1,7 +1,8 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i python -p python3
 
-from utils.nix import NixEnvironment
+
+from utils.nix import Nix
 from utils.shell import Shell
 from utils.dotfiles import DotfilesManager
 from utils.scriptargs import ScriptArgs
@@ -10,9 +11,10 @@ from utils.scriptargs import ScriptArgs
 def main():
     args = ScriptArgs.parse()
     dotfiles = DotfilesManager.from_script_args(args)
+    nix = Nix(dotfiles)
 
     if args.command == "install":
-        return install(dotfiles)
+        return install(dotfiles, nix)
 
     if args.command == "check":
         return check(dotfiles)
@@ -21,10 +23,12 @@ def main():
         return uninstall(dotfiles)
 
 
-def install(dotfiles: DotfilesManager):
-    print(">>> Install nix environment <<<")
-    nix_environment = NixEnvironment(dotfiles)
-    nix_environment.install()
+def install(dotfiles: DotfilesManager, nix: Nix):
+    print(">>> Add nixpkgs-unstable <<<")
+    nix.add_unstable_channel()
+
+    print(">>> Install nix packages <<<")
+    nix.install()
 
     print(">>> Creating .config directory if missing <<<")
     config_dir = dotfiles.get_target_path(".config")

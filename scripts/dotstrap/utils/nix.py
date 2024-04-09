@@ -2,7 +2,7 @@ from utils.dotfiles import DotfilesManager
 from utils.shell import Shell
 
 
-class NixEnvironment:
+class Nix:
     def __init__(self, dotfiles: DotfilesManager):
         self.path = dotfiles.get_path("home.nix")
 
@@ -10,4 +10,10 @@ class NixEnvironment:
         if self.path.exists():
             Shell.run(f"nix-env -if {self.path}")
         else:
-            print("env.nix does not exist. Doing nothing")
+            print("home.nix does not exist. Doing nothing")
+
+    def add_unstable_channel(self):
+        Shell.run(
+            "nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable"
+        )
+        Shell.run("nix-channel --update")
