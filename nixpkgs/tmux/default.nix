@@ -50,6 +50,8 @@ let
 
       bind '-' split-window -v -c "#{pane_current_path}"
       bind '|' split-window -h -c "#{pane_current_path}"
+      bind 'p' run-shell "tmux popup -d '#{pane_current_path}' -E 'tmux attach -t popup || tmux new -s popup'"
+      bind 'q' run-shell "tmux detach-client"
     '';
   };
 in
