@@ -1,6 +1,15 @@
+function getEnvOrDefault() {
+	local value="$1"
+	local defaultValue="$2"
+	echo "${!value:-$defaultValue}"
+}
+
+SEARCH_DIRS=$(getEnvOrDefault "DEV_SEARCH_DIRS" "$HOME/repos")
+ROOT_FILE_PATTERN=$(getEnvOrDefault "DEV_ROOT_FILE_PATTERN" "(.git|.envrc|.env|shell.nix|flake.nix|package.json|.sln|.csproj)")
+
 findRoots() {
 	local search_dir=$1
-	local root_files="(.git|shell.nix|flake.nix|.envrc|.env|.sln|.csproj|pom.xml|settings.gradle|settings.gradke.kts|package.json)"
+	local root_files="$ROOT_FILE_PATTERN"
 	ag --hidden -g "$root_files" "$search_dir" |
 		xargs -I {} dirname {} |
 		sort -u |
@@ -46,4 +55,5 @@ dev() {
 	openWithEditor "$selected_project_dir"
 }
 
-dev "$HOME/repos" "$HOME/projects"
+read -ra search_dir_args <<<"$SEARCH_DIRS"
+dev "${search_dir_args[@]}"
