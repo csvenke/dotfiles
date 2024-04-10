@@ -39,3 +39,4 @@ source_if_exists "$HOME/.bashrc.secrets.sh"
 
 eval "$(direnv hook bash)"
 eval "$(starship init bash)"
+eval "$(fzf --bash)"
