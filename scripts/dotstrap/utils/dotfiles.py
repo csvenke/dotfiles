@@ -145,14 +145,18 @@ class ManualDotfiles(DotfileLifecycle):
 
     def install(self):
         for dotfile in self.dotfiles:
-            if not dotfile.exists():
-                print(f"Creating {dotfile.target}")
-                dotfile.create_empty()
+            if not dotfile.source.exists():
+                print(f"Creating {dotfile.source}")
+                dotfile.source.touch()
+
+            dotfile.symlink()
 
     def check(self):
         for dotfile in self.dotfiles:
-            if not dotfile.exists():
-                print("MISSING!", dotfile.target)
+            if dotfile.is_symlinked():
+                print("OK!", dotfile.target)
+            else:
+                print("ERROR!", dotfile.target)
 
     def uninstall(self):
         for dotfile in self.dotfiles:

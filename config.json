@@ -7,18 +7,20 @@
       ".gitconfig",
       ".gitconfig.personal",
       ".gitignore",
+      ".gitignore.global",
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
       ".config/nvim"
     ],
-    "manual": [".bashrc.secrets.sh", ".gitconfig.work"],
+    "manual": [".bashrc.secrets.sh", ".bashrc.work.sh", ".gitconfig.work"],
     "deprecated": [
       "default.nix",
       "shell.nix",
       "flake.nix",
       ".zshrc",
-      ".config/tmux"
+      ".config/tmux",
+      ".bashrc.machine.sh"
     ]
   }
 }

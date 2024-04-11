@@ -12,4 +12,4 @@
 
 [core]
   pager = delta
-  excludesfile = ~/.gitignore
+  excludesfile = ~/.gitignore.global
