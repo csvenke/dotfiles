@@ -16,7 +16,6 @@
             pkgs.ghc
             pkgs.cabal-install
             pkgs.stack
-            pkgs.haskell-language-server
           ];
         };
       }
