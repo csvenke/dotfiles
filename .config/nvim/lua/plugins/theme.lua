@@ -1,7 +1,6 @@
 return {
   {
-    -- "AlexvZyl/nordic.nvim",
-    "juniorsundar/nordic.nvim",
+    "AlexvZyl/nordic.nvim",
     event = "VeryLazy",
     opts = function()
       local C = require("nordic.colors")

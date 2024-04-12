@@ -15,6 +15,14 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
+      source_selector = {
+        winbar = true,
+        statusLine = true,
+      },
+      sources = {
+        "filesystem",
+        "git_status",
+      },
       filesystem = {
         filtered_items = {
           visible = true,
