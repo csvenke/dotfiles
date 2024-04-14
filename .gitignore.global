@@ -1,3 +1,7 @@
 # nix
 .direnv
 .envrc
+
+# neovim
+.neoconf.json
+neoconf.json

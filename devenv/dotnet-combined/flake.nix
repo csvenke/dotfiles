@@ -21,9 +21,6 @@
           packages = [
             dotnet
           ];
-          shellHook = ''
-            export DOTNET_ROOT="${dotnet}"
-          '';
         };
       }
     );

@@ -2,8 +2,10 @@
 
 let
   tmux = import ./nixpkgs/tmux { inherit pkgs; };
-  neovim = import ./nixpkgs/neovim { inherit pkgs; };
   dev = import ./nixpkgs/dev { inherit pkgs; };
+
+  neovimFlake = builtins.getFlake "path:${builtins.toPath ./nixpkgs/neovim}";
+  neovim = neovimFlake.defaultPackage."${builtins.currentSystem}";
 in
 
 pkgs.buildEnv {
