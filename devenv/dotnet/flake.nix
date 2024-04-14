@@ -15,9 +15,6 @@
           packages = [
             pkgs.dotnet-sdk
           ];
-          shellHook = ''
-            export DOTNET_ROOT="${pkgs.dotnet-sdk}"
-          '';
         };
       }
     );

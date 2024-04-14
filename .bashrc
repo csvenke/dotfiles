@@ -1,13 +1,13 @@
 source_if_exists() {
-	if test -r "$1"; then
-		source "$1"
-	fi
+  if test -r "$1"; then
+    source "$1"
+  fi
 }
 git_current_branch() {
-	git branch --show-current
+  git branch --show-current
 }
 git_main_branch() {
-	git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+  git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
 }
 
 export DOTFILES="$HOME/.dotfiles"
