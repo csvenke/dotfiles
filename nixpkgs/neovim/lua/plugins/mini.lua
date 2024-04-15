@@ -1,29 +1,6 @@
-require("mini.ai").setup({ n_lines = 500 })
-
-require("mini.surround").setup()
-
-local statusline = require("mini.statusline")
-statusline.setup({ use_icons = vim.g.have_nerd_font })
-statusline.section_location = function()
-  return "%2l:%-2v"
-end
-
-require("mini.pairs").setup()
-
-require("mini.diff").setup({
-  view = {
-    style = "sign",
-    signs = {
-      add = "▎",
-      change = "▎",
-      delete = "",
-    },
-  },
-})
-
-vim.keymap.set("n", "<leader>go", function()
+local function toggleBufferDiff()
   require("mini.diff").toggle_overlay(0)
-end, { desc = "Toggle diff" })
+end
 
 local function deleteBuffer()
   local bd = require("mini.bufremove").delete
@@ -44,5 +21,25 @@ local function deleteBufferForce()
   require("mini.bufremove").delete(0, true)
 end
 
+require("mini.ai").setup({
+  n_lines = 500,
+})
+
+require("mini.surround").setup()
+
+require("mini.pairs").setup()
+
+require("mini.diff").setup({
+  view = {
+    style = "sign",
+    signs = {
+      add = "▎",
+      change = "▎",
+      delete = "",
+    },
+  },
+})
+
+vim.keymap.set("n", "<leader>go", toggleBufferDiff, { desc = "Toggle diff" })
 vim.keymap.set("n", "<leader>bd", deleteBuffer, { desc = "Delete buffer" })
 vim.keymap.set("n", "<leader>bD", deleteBufferForce, { desc = "Delete buffer (force)" })

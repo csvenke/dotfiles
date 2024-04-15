@@ -26,6 +26,7 @@
           pkgs.gnutar
           pkgs.git
           pkgs.lazygit
+          pkgs.fzf
           pkgs.wget
           pkgs.curl
           pkgs.unzip
@@ -95,28 +96,29 @@
 
           # Json, eslint, markdown, css, html
           pkgs.vscode-langservers-extracted
-
         ];
 
         plugins = with pkgs.vimPlugins; [
-          # Telescope
-          telescope-nvim
-          telescope-fzf-native-nvim
-          telescope-ui-select-nvim
+          direnv-vim
 
-          # Treesitter
+          # Syntax highlighting
           nvim-treesitter.withAllGrammars
           nvim-treesitter-textobjects
           nvim-treesitter-refactor
           nvim-treesitter-context
 
           # LSP
+          fidget-nvim
+          neodev-nvim
+          neoconf-nvim
           nvim-lspconfig
-          ## lang specific
           omnisharp-extended-lsp-nvim
           nvim-jdtls
 
-          # CMP
+          # Formatting
+          conform-nvim
+
+          # Autocomplete
           friendly-snippets
           luasnip
           cmp-nvim-lsp
@@ -126,28 +128,37 @@
           cmp_luasnip
           nvim-cmp
 
-          # Formatting
-          conform-nvim
+          # Telescope
+          telescope-nvim
+          telescope-fzf-native-nvim
+          telescope-ui-select-nvim
+
+          # Git
+          lazygit-nvim
+          diffview-nvim
+
+          # Ui
+          noice-nvim
+          lualine-nvim
+          neo-tree-nvim
+          nvim-notify
+          vim-startuptime
+          which-key-nvim
+          bufferline-nvim
+
+          # LLMs
+          ChatGPT-nvim
+
+          # Utils
+          comment-nvim
+          mini-nvim
+          vim-tmux-navigator
 
           # Other
-          mini-nvim
-          noice-nvim
-          nui-nvim
-          nvim-notify
           nvim-ts-autotag
-          neoconf-nvim
-          lazygit-nvim
-          nvim-web-devicons
-          direnv-vim
-          vim-tmux-navigator
-          neo-tree-nvim
-          fidget-nvim
-          neodev-nvim
-          vim-sleuth
-          comment-nvim
-          gitsigns-nvim
-          which-key-nvim
+          nui-nvim
           plenary-nvim
+          nvim-web-devicons
         ];
 
         # https://github.com/NixNeovim/NixNeovimPlugins
@@ -165,16 +176,19 @@
                 ${builtins.readFile ./lua/config/keymaps.lua}
                 ${builtins.readFile ./lua/config/autocmds.lua}
                 ${builtins.readFile ./lua/plugins/theme.lua}
-                ${builtins.readFile ./lua/plugins/cmp.lua}
-                ${builtins.readFile ./lua/plugins/comment.lua}
-                ${builtins.readFile ./lua/plugins/conform.lua}
                 ${builtins.readFile ./lua/plugins/treesitter.lua}
-                ${builtins.readFile ./lua/plugins/mini.lua}
                 ${builtins.readFile ./lua/plugins/lsp.lua}
+                ${builtins.readFile ./lua/plugins/cmp.lua}
+                ${builtins.readFile ./lua/plugins/conform.lua}
+                ${builtins.readFile ./lua/plugins/mini.lua}
+                ${builtins.readFile ./lua/plugins/lualine.lua}
+                ${builtins.readFile ./lua/plugins/bufferline.lua}
+                ${builtins.readFile ./lua/plugins/comment.lua}
                 ${builtins.readFile ./lua/plugins/neo-tree.lua}
                 ${builtins.readFile ./lua/plugins/telescope.lua}
                 ${builtins.readFile ./lua/plugins/noice.lua}
                 ${builtins.readFile ./lua/plugins/lazygit.lua}
+                ${builtins.readFile ./lua/plugins/diffview.lua}
                 ${builtins.readFile ./lua/plugins/which-key.lua}
               EOF
             '';
