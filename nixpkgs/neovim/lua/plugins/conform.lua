@@ -2,11 +2,10 @@ local conform = require("conform")
 
 conform.setup({
   notify_on_error = false,
-  format_on_save = function(bufnr)
-    local disable_filetypes = { c = true, cpp = true }
+  format_on_save = function()
     return {
       timeout_ms = 500,
-      lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+      lsp_fallback = true,
     }
   end,
   formatters_by_ft = {
@@ -14,9 +13,6 @@ conform.setup({
     nix = { "nixfmt" },
     bash = { "shfmt" },
     sh = { "shfmt" },
-    cs = {},
-    cshtml = {},
-    py = { "ruff" },
     ["javascript"] = { "prettier" },
     ["javascriptreact"] = { "prettier" },
     ["typescript"] = { "prettier" },
@@ -35,9 +31,6 @@ conform.setup({
     ["handlebars"] = { "prettier" },
   },
   formatters = {
-    ruff = {
-      command = "ruff",
-    },
     stylua = {
       command = "stylua",
       cwd = require("conform.util").root_file({
@@ -45,7 +38,7 @@ conform.setup({
         "stylua.toml",
         ".editorconfig",
       }),
-      require_cwd = true,
+      require_cwd = false,
     },
     nixfmt = {
       command = "nixpkgs-fmt",
@@ -61,7 +54,6 @@ conform.setup({
         ".csharpierrc",
         ".csharpierrc.json",
         ".csharpierrc.yaml",
-        ".editorconfig",
       }),
       require_cwd = true,
     },
@@ -75,7 +67,6 @@ conform.setup({
         ".prettierrc.json5",
         ".prettierrc.js",
         "prettier.config.js",
-        ".editorconfig",
       }),
       require_cwd = true,
     },
@@ -86,4 +77,4 @@ local function formatBuffer()
   require("conform").format({ async = true, lsp_fallback = true })
 end
 
-vim.keymap.set("n", "<leader>f", formatBuffer, { desc = "[F]ormat buffer" })
+vim.keymap.set("", "<leader>f", formatBuffer, { desc = "[F]ormat buffer" })

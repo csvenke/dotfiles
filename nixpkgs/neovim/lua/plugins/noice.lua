@@ -13,7 +13,5 @@ require("noice").setup({
     inc_rename = false,
     lsp_doc_border = false,
   },
-  messages = {
-    enabled = false,
-  },
+  messages = {},
 })

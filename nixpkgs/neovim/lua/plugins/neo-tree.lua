@@ -32,3 +32,7 @@ require("neo-tree").setup({
 vim.keymap.set("n", "<leader>e", function()
   require("neo-tree.command").execute({ source = "filesystem", toggle = true })
 end, { desc = "Show file system" })
+
+vim.keymap.set("n", "<leader>ge", function()
+  require("neo-tree.command").execute({ source = "git_status", toggle = true })
+end, { desc = "Show git status" })

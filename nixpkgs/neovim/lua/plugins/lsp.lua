@@ -2,10 +2,13 @@ require("fidget").setup({})
 require("neodev").setup({})
 require("neoconf").setup({})
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-
 local lspconfig = require("lspconfig")
+
+local capabilities = vim.tbl_deep_extend(
+  "force",
+  vim.lsp.protocol.make_client_capabilities(),
+  require("cmp_nvim_lsp").default_capabilities()
+)
 
 lspconfig.nil_ls.setup({
   capabilities = capabilities,
@@ -75,10 +78,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set("n", keys, func, { buffer = args.buf, desc = desc })
     end
 
-    vim.diagnostic.config({
-      underline = false,
-    })
-
     map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
     map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
     map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
@@ -111,4 +110,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
       })
     end
   end,
+})
+
+vim.diagnostic.config({
+  underline = false,
 })
