@@ -16,7 +16,7 @@
             neovim-extra-plugins.overlays.default
           ];
         };
-        config = import ./lua { inherit pkgs; };
+        config = import ./config { inherit pkgs; };
         runtimeInputs = import ./runtimeInputs.nix { inherit pkgs; };
         plugins = import ./plugins.nix { inherit pkgs; };
         overrideNeovim = pkgs.neovim.override {

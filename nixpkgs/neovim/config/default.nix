@@ -22,8 +22,8 @@ let
 in
 
 mkVimRc [
-  (toFile "options.lua" (readFile ./config/options.lua))
-  (toFile "keymaps.lua" (readFile ./config/keymaps.lua))
-  (toFile "autocmds.lua" (readFile ./config/autocmds.lua))
+  (toFile "options.lua" (readFile ./core/options.lua))
+  (toFile "keymaps.lua" (readFile ./core/keymaps.lua))
+  (toFile "autocmds.lua" (readFile ./core/autocmds.lua))
   (toFile "plugins.lua" (readLuaDir ./plugins))
 ]
