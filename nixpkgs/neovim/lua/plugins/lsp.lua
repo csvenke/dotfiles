@@ -78,24 +78,22 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set("n", keys, func, { buffer = args.buf, desc = desc })
     end
 
-    map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-    map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
-    map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-    map("gi", require("telescope.builtin").lsp_implementations, "[G]oto [I]mplementation")
-    map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-    map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-    map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-    map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+    map("gd", require("telescope.builtin").lsp_definitions, "[g]oto [d]efinition")
+    map("gD", vim.lsp.buf.declaration, "[g]oto [D]eclaration")
+    map("gr", require("telescope.builtin").lsp_references, "[g]oto [r]eferences")
+    map("gi", require("telescope.builtin").lsp_implementations, "[g]oto [i]mplementation")
+    map("<leader>ca", vim.lsp.buf.code_action, "[c]ode [a]ction")
+    map("<leader>cr", vim.lsp.buf.code_action, "[c]ode [r]ename")
     map("K", vim.lsp.buf.hover, "Hover Documentation")
-    map("<leader>D", require("telescope.builtin").lsp_type_definitions, "Type [D]efinition")
+    map("<leader>D", require("telescope.builtin").lsp_type_definitions, "type [D]efinition")
 
     local client = vim.lsp.get_client_by_id(args.data.client_id)
 
     if client.name == "omnisharp" then
-      map("gd", require("omnisharp_extended").lsp_definition, "[G]oto [D]efinition")
-      map("gi", require("omnisharp_extended").telescope_lsp_implementation, "[G]oto [I]mplementation")
-      map("gr", require("omnisharp_extended").telescope_lsp_references, "[G]oto [R]eferences")
-      map("<leader>D", require("omnisharp_extended").telescope_lsp_type_definition, "Type [D]efinition")
+      map("gd", require("omnisharp_extended").lsp_definition, "[g]oto [d]efinition")
+      map("gi", require("omnisharp_extended").telescope_lsp_implementation, "[g]oto [i]mplementation")
+      map("gr", require("omnisharp_extended").telescope_lsp_references, "[g]oto [r]eferences")
+      map("<leader>D", require("omnisharp_extended").telescope_lsp_type_definition, "type [D]efinition")
     end
 
     if client and client.server_capabilities.documentHighlightProvider then

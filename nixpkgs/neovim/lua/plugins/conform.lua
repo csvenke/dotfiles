@@ -3,6 +3,10 @@ local conform = require("conform")
 conform.setup({
   notify_on_error = false,
   format_on_save = function()
+    if not vim.g.autoformat then
+      return nil
+    end
+
     return {
       timeout_ms = 500,
       lsp_fallback = true,
@@ -67,6 +71,7 @@ conform.setup({
         ".prettierrc.json5",
         ".prettierrc.js",
         "prettier.config.js",
+        ".editorconfig",
       }),
       require_cwd = true,
     },
@@ -77,4 +82,14 @@ local function formatBuffer()
   require("conform").format({ async = true, lsp_fallback = true })
 end
 
-vim.keymap.set("", "<leader>f", formatBuffer, { desc = "[F]ormat buffer" })
+local function toggleAutoFormat()
+  vim.cmd("lua vim.g.autoformat = not vim.g.autoformat")
+  if vim.g.autoformat then
+    vim.notify("Autoformat is on")
+  else
+    vim.notify("Autoformat is off")
+  end
+end
+
+vim.keymap.set("n", "<leader>ft", toggleAutoFormat, { desc = "auto-[f]ormat [t]oggle" })
+vim.keymap.set("n", "F", formatBuffer, { desc = "Format buffer" })

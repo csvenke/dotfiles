@@ -1,1 +1,1 @@
-vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "Open git UI" })
+vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "[g]it [g]ui" })
