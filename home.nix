@@ -11,7 +11,7 @@ in
 pkgs.buildEnv {
   name = "Home environment";
   paths = [
-    pkgs.coreutils-full
+    pkgs.coreutils
     pkgs.findutils
     pkgs.direnv
     pkgs.nix-direnv
@@ -19,15 +19,6 @@ pkgs.buildEnv {
     pkgs.bat
     pkgs.silver-searcher
     pkgs.delta
-
-    # Bash
-    pkgs.bash
-
-    # Python
-    (pkgs.python3.withPackages (ps: [ ps.pip ps.pipx ]))
-
-    # Node
-    pkgs.nodejs
 
     # Shell
     pkgs.starship

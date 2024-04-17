@@ -1,7 +1,15 @@
 vim.api.nvim_create_autocmd("VimEnter", {
   group = vim.api.nvim_create_augroup("user-vim-enter-telescope", { clear = true }),
   callback = function()
+    local trouble = require("trouble.providers.telescope")
+
     require("telescope").setup({
+      defaults = {
+        mappings = {
+          i = { ["<C-q>"] = trouble.open_with_trouble },
+          n = { ["<C-q>"] = trouble.open_with_trouble },
+        },
+      },
       extensions = {
         ["ui-select"] = {
           require("telescope.themes").get_dropdown(),
@@ -9,21 +17,24 @@ vim.api.nvim_create_autocmd("VimEnter", {
       },
     })
 
-    pcall(require("telescope").load_extension, "notify")
-    pcall(require("telescope").load_extension, "fzf")
-    pcall(require("telescope").load_extension, "ui-select")
+    require("telescope").load_extension("notify")
+    require("telescope").load_extension("fzf")
+    require("telescope").load_extension("ui-select")
 
     local builtin = require("telescope.builtin")
-    vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-    vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
-    vim.keymap.set("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
-    vim.keymap.set("n", "<leader>ss", builtin.lsp_document_symbols, { desc = "[S]earch [S]ymbols" })
-    vim.keymap.set("n", "<leader>sS", builtin.lsp_workspace_symbols, { desc = "[S]earch [S]ymbols (workspace)" })
-    vim.keymap.set("n", "<leader>st", builtin.builtin, { desc = "[S]earch [T]elescope builtins" })
-    vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[S]earch [W]ord" })
-    vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-    vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[S]earch [D]iagnostics" })
-    vim.keymap.set("n", "<leader>so", builtin.oldfiles, { desc = "[S]earch [O]ld files" })
-    vim.keymap.set("n", "<leader><leader>", builtin.git_files, { desc = "Search git files" })
+    vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[s]earch [h]elp" })
+    vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[s]earch [k]eymaps" })
+    vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "[s]earch [g]it files" })
+    vim.keymap.set("n", "<leader>ss", builtin.lsp_document_symbols, { desc = "[s]earch [s]ymbols" })
+    vim.keymap.set("n", "<leader>sS", builtin.lsp_workspace_symbols, { desc = "[s]earch [S]ymbols (workspace)" })
+    vim.keymap.set("n", "<leader>st", builtin.builtin, { desc = "[s]earch [t]elescope builtins" })
+    vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[s]earch [w]ord" })
+    vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[s]earch by [g]rep" })
+    vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[s]earch [d]iagnostics" })
+    vim.keymap.set("n", "<leader>so", builtin.vim_options, { desc = "[s]earch vim [o]ptions" })
+    vim.keymap.set("n", "<leader>sn", "<cmd>Telescope notify<cr>", { desc = "[s]earch [n]otifications" })
+    vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Find in files (Grep)" })
+    vim.keymap.set("n", "<leader>:", builtin.command_history, { desc = "Command history" })
+    vim.keymap.set("n", "<leader><leader>", builtin.find_files, { desc = "Find files" })
   end,
 })

@@ -25,14 +25,15 @@ require("neo-tree").setup({
   window = {
     mappings = {
       ["<space>"] = "none",
+      ["/"] = "none",
     },
   },
 })
 
 vim.keymap.set("n", "<leader>e", function()
   require("neo-tree.command").execute({ source = "filesystem", toggle = true })
-end, { desc = "Show file system" })
+end, { desc = "file [e]xplorer" })
 
 vim.keymap.set("n", "<leader>ge", function()
   require("neo-tree.command").execute({ source = "git_status", toggle = true })
-end, { desc = "Show git status" })
+end, { desc = "[g]it status [e]xplorer" })
