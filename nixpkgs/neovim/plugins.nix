@@ -35,7 +35,7 @@ let
     diffview-nvim
     # Ui
     noice-nvim
-		trouble-nvim
+    trouble-nvim
     lualine-nvim
     neo-tree-nvim
     nvim-notify
@@ -46,6 +46,7 @@ let
     # Utils
     comment-nvim
     vim-tmux-navigator
+    smart-splits-nvim
     # Other
     mini-nvim
     vim-startuptime
