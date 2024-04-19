@@ -21,9 +21,7 @@ vim.api.nvim_create_autocmd("InsertEnter", {
         ["<C-p>"] = cmp.mapping.select_prev_item(),
         ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-y>"] = cmp.mapping.confirm({ select = true }),
         ["<Enter>"] = cmp.mapping.confirm({ select = true }),
-        ["<C-Enter>"] = cmp.mapping.complete({}),
 
         ["<C-l>"] = cmp.mapping(function()
           if luasnip.expand_or_locally_jumpable() then
@@ -43,5 +41,7 @@ vim.api.nvim_create_autocmd("InsertEnter", {
         { name = "path" },
       },
     })
+
+    vim.keymap.set("i", "<C-Enter>", cmp.mapping.complete(), { desc = "Trigger autocomplete" })
   end,
 })

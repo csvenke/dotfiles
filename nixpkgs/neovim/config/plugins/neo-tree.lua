@@ -26,6 +26,8 @@ require("neo-tree").setup({
     mappings = {
       ["<space>"] = "none",
       ["/"] = "none",
+      ["L"] = "next_source",
+      ["H"] = "prev_source",
     },
   },
 })

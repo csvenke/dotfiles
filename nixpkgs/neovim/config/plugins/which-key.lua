@@ -6,6 +6,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
       ["<leader>a"] = { name = "[a]i", _ = "which_key_ignore" },
       ["<leader>b"] = { name = "[b]uffer", _ = "which_key_ignore" },
       ["<leader>c"] = { name = "[c]ode", _ = "which_key_ignore" },
+      ["<leader>d"] = { name = "[d]iagnostics", _ = "which_key_ignore" },
       ["<leader>f"] = { name = "[f]ormat", _ = "which_key_ignore" },
       ["<leader>g"] = { name = "[g]it", _ = "which_key_ignore" },
       ["<leader>q"] = { name = "[q]uit", _ = "which_key_ignore" },

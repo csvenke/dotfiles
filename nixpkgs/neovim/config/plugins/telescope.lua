@@ -29,7 +29,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.keymap.set("n", "<leader>sS", builtin.lsp_workspace_symbols, { desc = "[s]earch [S]ymbols (workspace)" })
     vim.keymap.set("n", "<leader>st", builtin.builtin, { desc = "[s]earch [t]elescope builtins" })
     vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[s]earch [w]ord" })
-    vim.keymap.set("n", "<leader>sg", builtin.live_grep, { desc = "[s]earch by [g]rep" })
     vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[s]earch [d]iagnostics" })
     vim.keymap.set("n", "<leader>so", builtin.vim_options, { desc = "[s]earch vim [o]ptions" })
     vim.keymap.set("n", "<leader>sn", "<cmd>Telescope notify<cr>", { desc = "[s]earch [n]otifications" })
