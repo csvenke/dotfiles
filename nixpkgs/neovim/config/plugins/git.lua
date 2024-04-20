@@ -15,4 +15,5 @@ require("diffview").setup({
   },
 })
 
+vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "[g]it [g]ui" })
 vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewOpen<cr>", { desc = "[g]it [D]iff view" })
