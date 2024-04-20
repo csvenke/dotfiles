@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
       ["<leader>g"] = { name = "[g]it", _ = "which_key_ignore" },
       ["<leader>q"] = { name = "[q]uit", _ = "which_key_ignore" },
       ["<leader>s"] = { name = "[s]earch", _ = "which_key_ignore" },
-      ["<leader>w"] = { name = "[w]indow", _ = "which_key_ignore" },
+      ["<leader>w"] = { name = "[w]orkspace", _ = "which_key_ignore" },
       ["<leader>u"] = { name = "[u]i", _ = "which_key_ignore" },
     })
   end,

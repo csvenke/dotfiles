@@ -41,8 +41,6 @@ let
     nvim-notify
     which-key-nvim
     bufferline-nvim
-    # LLMs
-    ChatGPT-nvim
     # Utils
     comment-nvim
     vim-tmux-navigator
@@ -61,6 +59,8 @@ let
     # Themes
     nordic-alexczyl
     tokyonight-nvim
+    # LLMs
+    gp-nvim
   ];
 in
 
