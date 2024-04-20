@@ -13,38 +13,45 @@ local capabilities = vim.tbl_deep_extend(
 lspconfig.nil_ls.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.bashls
 lspconfig.bashls.setup({
   capabilities = capabilities,
 })
 lspconfig.hls.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.jdtls
 lspconfig.jdtls.setup({
   capabilities = capabilities,
+  settings = {},
 })
+---@type lspconfig.options.rust_analyzer
 lspconfig.rust_analyzer.setup({
   capabilities = capabilities,
   settings = {
     ["rust-analyzer"] = {},
   },
 })
+---@type lspconfig.options.tsserver
 lspconfig.tsserver.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.lua_ls
 lspconfig.lua_ls.setup({
   capabilities = capabilities,
   settings = {
     Lua = {
-      completion = "Replace",
-      diagnostics = {
-        globals = { "vim" },
+      library = {
+        vim.env.VIMRUNTIME,
       },
     },
   },
 })
+---@type lspconfig.options.omnisharp
 lspconfig.omnisharp.setup({
   cmd = { "OmniSharp" },
   capabilities = capabilities,
+  settings = {},
   enable_roslyn_analyzers = true,
   organize_imports_on_format = true,
   enable_import_completion = true,
@@ -52,18 +59,22 @@ lspconfig.omnisharp.setup({
 lspconfig.marksman.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.eslint
 lspconfig.eslint.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.pyright
 lspconfig.pyright.setup({
   capabilities = capabilities,
 })
 lspconfig.ruff.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.yamlls
 lspconfig.yamlls.setup({
   capabilities = capabilities,
 })
+---@type lspconfig.options.jsonls
 lspconfig.jsonls.setup({
   capabilities = capabilities,
 })
@@ -78,22 +89,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set("n", keys, func, { buffer = args.buf, desc = desc })
     end
 
-    map("gd", require("telescope.builtin").lsp_definitions, "[g]oto [d]efinition")
+    local telescope = require("telescope.builtin")
+    map("gd", telescope.lsp_definitions, "[g]oto [d]efinition")
+    map("gr", telescope.lsp_references, "[g]oto [r]eferences")
+    map("gi", telescope.lsp_implementations, "[g]oto [i]mplementation")
+    map("<leader>D", telescope.lsp_type_definitions, "type [D]efinition")
     map("gD", vim.lsp.buf.declaration, "[g]oto [D]eclaration")
-    map("gr", require("telescope.builtin").lsp_references, "[g]oto [r]eferences")
-    map("gi", require("telescope.builtin").lsp_implementations, "[g]oto [i]mplementation")
     map("<leader>ca", vim.lsp.buf.code_action, "[c]ode [a]ction")
-    map("<leader>cr", vim.lsp.buf.code_action, "[c]ode [r]ename")
+    map("<leader>cr", vim.lsp.buf.rename, "[c]ode [r]ename")
     map("K", vim.lsp.buf.hover, "Hover Documentation")
-    map("<leader>D", require("telescope.builtin").lsp_type_definitions, "type [D]efinition")
 
     local client = vim.lsp.get_client_by_id(args.data.client_id)
 
     if client.name == "omnisharp" then
-      map("gd", require("omnisharp_extended").lsp_definition, "[g]oto [d]efinition")
-      map("gi", require("omnisharp_extended").telescope_lsp_implementation, "[g]oto [i]mplementation")
-      map("gr", require("omnisharp_extended").telescope_lsp_references, "[g]oto [r]eferences")
-      map("<leader>D", require("omnisharp_extended").telescope_lsp_type_definition, "type [D]efinition")
+      local omnisharp = require("omnisharp_extended")
+      map("gd", omnisharp.lsp_definition, "[g]oto [d]efinition")
+      map("gi", omnisharp.telescope_lsp_implementation, "[g]oto [i]mplementation")
+      map("gr", omnisharp.telescope_lsp_references, "[g]oto [r]eferences")
+      map("<leader>D", omnisharp.telescope_lsp_type_definition, "type [D]efinition")
     end
 
     if client and client.server_capabilities.documentHighlightProvider then

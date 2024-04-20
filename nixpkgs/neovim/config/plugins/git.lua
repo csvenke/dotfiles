@@ -1,17 +1,20 @@
+local view_keymaps = {
+  { "n", "<leader>gd", "<cmd>DiffviewClose<cr>" },
+  { "n", "<leader>gD", "<cmd>DiffviewClose<cr>" },
+}
+
 require("diffview").setup({
+  enhanced_diff_hl = true,
   keymaps = {
-    view = {
-      { "n", "<leader>gd", "<cmd>DiffviewClose<cr>" },
-      { "n", "<leader>gD", "<cmd>DiffviewClose<cr>" },
-    },
-    diff2 = {
-      { "n", "<leader>gd", "<cmd>DiffviewClose<cr>" },
-      { "n", "<leader>gD", "<cmd>DiffviewClose<cr>" },
-    },
-    file_panel = {
-      { "n", "<leader>gd", "<cmd>DiffviewClose<cr>" },
-      { "n", "<leader>gD", "<cmd>DiffviewClose<cr>" },
-    },
+    view = view_keymaps,
+    diff1 = view_keymaps,
+    diff2 = view_keymaps,
+    diff3 = view_keymaps,
+    diff4 = view_keymaps,
+    file_panel = view_keymaps,
+    file_history_panel = view_keymaps,
+    option_panel = view_keymaps,
+    help_panel = view_keymaps,
   },
 })
 

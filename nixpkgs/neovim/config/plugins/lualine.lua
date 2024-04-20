@@ -1,5 +1,5 @@
 require("lualine").setup({
-	theme = "auto",
-	globalstatus = true,
+  theme = "auto",
+  globalstatus = true,
   extensions = { "neo-tree", "trouble" },
 })

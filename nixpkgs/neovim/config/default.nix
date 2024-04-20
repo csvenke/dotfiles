@@ -1,18 +1,19 @@
 { pkgs }:
 
+with builtins;
+
 let
-  inherit (builtins) map filter attrNames readFile readDir toFile concatStringsSep;
-  inherit (pkgs.lib) pipe;
-  inherit (pkgs.lib.strings) hasSuffix;
+  inherit (pkgs.lib) pipe strings;
 
   readLuaDir = dir:
     pipe dir [
       readDir
       attrNames
-      (filter (name: hasSuffix ".lua" name))
+      (filter (name: strings.hasSuffix ".lua" name))
       (map (name: readFile "${dir}/${name}"))
       (concatStringsSep "\n")
     ];
+
 
   mkVimRc = files:
     pipe files [
