@@ -1,7 +1,7 @@
 { pkgs }:
 
 let
-  config = pkgs.writeShellScript "tmux.conf" ''
+  configure-tmux = pkgs.writeShellScript "configure-tmux.bash" ''
     tmux set -g default-terminal screen-256color
 
     # Let there be color
@@ -76,6 +76,13 @@ let
     tmux bind-key -T copy-mode-vi 'C-k' select-pane -U
     tmux bind-key -T copy-mode-vi 'C-l' select-pane -R
   '';
+
+  tmuxConf = pkgs.writeTextFile {
+    name = "tmux.conf";
+    text = /* tmux */ ''
+      run-shell ${configure-tmux}
+    '';
+  };
 in
 
 
@@ -85,7 +92,7 @@ pkgs.tmux.overrideAttrs (oldAttrs: {
     mkdir $out/libexec
     mv $out/bin/tmux $out/libexec/tmux-unwrapped
     makeWrapper $out/libexec/tmux-unwrapped $out/bin/tmux \
-      --add-flags "-f ${config}"
+      --add-flags "-f ${tmuxConf}"
   '';
 })
 

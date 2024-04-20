@@ -27,6 +27,7 @@ pkgs.buildEnv {
 
     # Tools
     dev
+    pkgs.ripgrep
     pkgs.jq
     pkgs.gh
     pkgs.tldr

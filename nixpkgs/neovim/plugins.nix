@@ -33,6 +33,7 @@ let
     # Git
     lazygit-nvim
     diffview-nvim
+    git-blame-nvim
     # Ui
     noice-nvim
     trouble-nvim
