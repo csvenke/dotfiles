@@ -44,9 +44,9 @@ let
     bufferline-nvim
     # Utils
     comment-nvim
-    vim-tmux-navigator
     smart-splits-nvim
     # Other
+    SchemaStore-nvim
     mini-nvim
     vim-startuptime
     nvim-ts-autotag

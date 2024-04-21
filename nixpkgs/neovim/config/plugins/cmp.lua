@@ -8,14 +8,6 @@ luasnip.config.setup({})
 vim.opt.pumheight = 15
 
 cmp.setup({
-  window = {
-    completion = cmp.config.window.bordered({
-      winhighlight = "Normal:Pmenu,FloatBorder:DiagnosticInfo,CursorLine:PmenuSel,Search:None",
-    }),
-    documentation = cmp.config.window.bordered({
-      winhighlight = "Normal:Pmenu,FloatBorder:DiagnosticInfo,CursorLine:PmenuSel,Search:None",
-    }),
-  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -28,12 +20,6 @@ cmp.setup({
       maxwidth = 50,
       ellipsis_char = "...",
       show_labelDetails = true,
-      menu = {
-        buffer = "[Buffer]",
-        nvim_lsp = "[LSP]",
-        luasnip = "[LuaSnip]",
-        nvim_lua = "[Lua]",
-      },
     }),
   },
 

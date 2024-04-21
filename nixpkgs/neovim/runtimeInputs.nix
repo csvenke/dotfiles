@@ -70,8 +70,8 @@ with pkgs;
 
   # Python
   (python3.withPackages (ps: [ ps.pip ps.pipx ]))
-  nodePackages.pyright
-  ruff
+  pyright
+  ruff-lsp
 
   # Yaml
   yaml-language-server

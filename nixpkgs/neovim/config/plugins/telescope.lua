@@ -24,12 +24,14 @@ vim.api.nvim_create_autocmd("VimEnter", {
     require("telescope").load_extension("noice")
 
     local builtin = require("telescope.builtin")
+
     vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[s]earch [h]elp" })
     vim.keymap.set("n", "<leader>sk", builtin.keymaps, { desc = "[s]earch [k]eymaps" })
     vim.keymap.set("n", "<leader>sg", builtin.git_files, { desc = "[s]earch [g]it files" })
     vim.keymap.set("n", "<leader>ss", builtin.lsp_document_symbols, { desc = "[s]earch [s]ymbols" })
-    vim.keymap.set("n", "<leader>sS", builtin.lsp_workspace_symbols, { desc = "[s]earch [S]ymbols (workspace)" })
-    vim.keymap.set("n", "<leader>st", builtin.builtin, { desc = "[s]earch [t]elescope builtins" })
+    vim.keymap.set("n", "<leader>sS", builtin.lsp_dynamic_workspace_symbols, { desc = "[s]earch [S]ymbols (workspace)" })
+    vim.keymap.set("n", "<leader>st", builtin.tagstack, { desc = "[s]earch [t]agstack" })
+    vim.keymap.set("n", "<leader>sb", builtin.builtin, { desc = "[s]earch telescope [b]uiltins" })
     vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[s]earch [w]ord" })
     vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[s]earch [d]iagnostics" })
     vim.keymap.set("n", "<leader>so", builtin.vim_options, { desc = "[s]earch vim [o]ptions" })
