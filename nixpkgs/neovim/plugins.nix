@@ -52,6 +52,8 @@ let
     nvim-ts-autotag
     nui-nvim
     plenary-nvim
+    # Icons
+    lspkind-nvim
     nvim-web-devicons
   ];
 

@@ -21,6 +21,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     require("telescope").load_extension("fzf")
     require("telescope").load_extension("ui-select")
     require("telescope").load_extension("lazygit")
+    require("telescope").load_extension("noice")
 
     local builtin = require("telescope.builtin")
     vim.keymap.set("n", "<leader>sh", builtin.help_tags, { desc = "[s]earch [h]elp" })
