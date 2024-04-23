@@ -8,3 +8,6 @@ vim.keymap.set("n", "<leader>|", "<cmd>vsplit<cr>", { desc = "split vertical" })
 
 vim.keymap.set({ "n", "i" }, "<C-s>", "<cmd>w<cr>", { desc = "save" })
 vim.keymap.set("n", "<C-q>", "<cmd>q<cr>", { desc = "close" })
+
+vim.keymap.set("i", "<C-j>", "{}<Esc>i", { desc = "{" })
+vim.keymap.set("i", "<C-k>", "[]<Esc>i", { desc = "[" })

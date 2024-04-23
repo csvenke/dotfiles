@@ -91,5 +91,5 @@ local function toggleAutoFormat()
   end
 end
 
-vim.keymap.set("n", "<leader>ft", toggleAutoFormat, { desc = "auto-[f]ormat [t]oggle" })
-vim.keymap.set("n", "F", formatBuffer, { desc = "Format buffer" })
+vim.keymap.set("n", "F", formatBuffer, { desc = "[F]ormat buffer" })
+vim.keymap.set("n", "<C-f>", toggleAutoFormat, { desc = "Toggle auto-[f]ormat" })

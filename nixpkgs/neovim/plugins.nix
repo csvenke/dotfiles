@@ -42,6 +42,7 @@ let
     nvim-notify
     which-key-nvim
     bufferline-nvim
+    nvim-spectre
     # Utils
     comment-nvim
     smart-splits-nvim
