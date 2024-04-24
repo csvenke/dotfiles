@@ -5,9 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     neovim-extra-plugins.url = "github:jooooscha/nixpkgs-vim-extra-plugins";
+    language-servers.url = "git+https://git.sr.ht/~bwolf/language-servers.nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils, neovim-extra-plugins }:
+  outputs = { self, nixpkgs, flake-utils, neovim-extra-plugins, language-servers }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -29,7 +30,7 @@
       {
         defaultPackage = pkgs.writeShellApplication {
           name = "nvim";
-          runtimeInputs = runtimeInputs;
+          runtimeInputs = runtimeInputs ++ [ language-servers.packages.angular-language-server ];
           text = ''
             ${overrideNeovim}/bin/nvim "$@"
           '';

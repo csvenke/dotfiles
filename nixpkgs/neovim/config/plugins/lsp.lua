@@ -20,6 +20,7 @@ local function default_on_attach(client, buffer)
   map("<leader>D", telescope.lsp_type_definitions, "type [D]efinition(s)")
   map("<leader>ca", vim.lsp.buf.code_action, "[c]ode [a]ction")
   map("<leader>cr", vim.lsp.buf.rename, "[c]ode [r]ename")
+  map("<leader>cd", vim.diagnostic.open_float, "[c]ode [d]iagnostic")
 
   if client and client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
@@ -34,15 +35,40 @@ local function default_on_attach(client, buffer)
   end
 end
 
+local function organizeImports()
+  vim.lsp.buf.code_action({
+    apply = true,
+    context = {
+      only = { "source.organizeImports" },
+      diagnostics = {},
+    },
+  })
+end
+
 ---@diagnostic disable: missing-fields
 ---@type lspconfig.options
 local servers = {
   nil_ls = {},
+
   bashls = {},
+
   hls = {},
-  jdtls = {},
+
+  jdtls = {
+    cmd = { "jdtls" },
+  },
+
   rust_analyzer = {},
+
   tsserver = {},
+
+  angularls = {
+    cmd = { "angular-language-server", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" },
+    on_new_config = function(new_config)
+      new_config.cmd = { "angular-language-server", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" }
+    end,
+  },
+
   lua_ls = {
     settings = {
       Lua = {
@@ -55,6 +81,7 @@ local servers = {
       },
     },
   },
+
   omnisharp = {
     cmd = { "OmniSharp" },
     enable_editorconfig_support = true,
@@ -74,14 +101,27 @@ local servers = {
       map("<leader>D", omnisharp.telescope_lsp_type_definition, "type [D]efinition")
     end,
   },
+
   marksman = {},
+
   eslint = {},
-  pyright = {},
+
+  pyright = {
+    enabled = true,
+  },
+
   ruff_lsp = {
+    init_options = {
+      settings = {
+        args = {},
+      },
+    },
     on_attach = function(client)
+      vim.keymap.set("n", "<leader>co", organizeImports, { desc = "[c]ode [o]organize imports" })
       client.server_capabilities.hoverProvider = false
     end,
   },
+
   yamlls = {
     on_attach = function(client)
       client.server_capabilities.documentFormattingProvider = true
@@ -113,6 +153,7 @@ local servers = {
       },
     },
   },
+
   jsonls = {
     on_new_config = function(new_config)
       new_config.settings.json.schemas = new_config.settings.json.schemas or {}
@@ -127,6 +168,7 @@ local servers = {
       },
     },
   },
+
   taplo = {},
 }
 

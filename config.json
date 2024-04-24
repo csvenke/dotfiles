@@ -1,26 +1,26 @@
 {
-	"dotfiles": {
-		"symlink": [
-			".bashrc",
-			".bash_profile",
-			".agignore",
-			".gitconfig",
-			".gitconfig.personal",
-			".gitignore",
-			".gitignore.global",
-			".config/direnv",
-			".config/lazygit",
-			".config/nix"
-		],
-		"manual": [".bashrc.secrets.sh", ".bashrc.work.sh", ".gitconfig.work"],
-		"deprecated": [
-			"default.nix",
-			"shell.nix",
-			"flake.nix",
-			".zshrc",
-			".config/tmux",
-			".config/nvim",
-			".bashrc.machine.sh"
-		]
-	}
+  "dotfiles": {
+    "symlink": [
+      ".bashrc",
+      ".bash_profile",
+      ".agignore",
+      ".gitconfig",
+      ".gitconfig.personal",
+      ".gitignore",
+      ".gitignore.global",
+      ".config/direnv",
+      ".config/lazygit",
+      ".config/nix"
+    ],
+    "manual": [".bashrc.secrets.sh", ".bashrc.work.sh", ".gitconfig.work"],
+    "deprecated": [
+      "default.nix",
+      "shell.nix",
+      "flake.nix",
+      ".zshrc",
+      ".config/tmux",
+      ".config/nvim",
+      ".bashrc.machine.sh"
+    ]
+  }
 }

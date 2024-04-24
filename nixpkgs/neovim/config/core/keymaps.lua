@@ -11,3 +11,5 @@ vim.keymap.set("n", "<C-q>", "<cmd>q<cr>", { desc = "close" })
 
 vim.keymap.set("i", "<C-j>", "{}<Esc>i", { desc = "{" })
 vim.keymap.set("i", "<C-k>", "[]<Esc>i", { desc = "[" })
+
+vim.keymap.set("i", "C-c", "<cr>")

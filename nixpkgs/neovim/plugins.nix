@@ -53,6 +53,7 @@ let
     nvim-ts-autotag
     nui-nvim
     plenary-nvim
+    vim-sleuth
     # Icons
     lspkind-nvim
     nvim-web-devicons
