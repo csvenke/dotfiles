@@ -1,7 +1,3 @@
-local function toggleBufferDiff()
-  require("mini.diff").toggle_overlay(0)
-end
-
 local function deleteBuffer()
   local bd = require("mini.bufremove").delete
   if vim.bo.modified then
@@ -40,6 +36,5 @@ require("mini.diff").setup({
   },
 })
 
-vim.keymap.set("n", "<leader>gd", toggleBufferDiff, { desc = "[g]it [d]iff" })
 vim.keymap.set("n", "<leader>bd", deleteBuffer, { desc = "[b]uffer [d]elete" })
 vim.keymap.set("n", "<leader>bD", deleteBufferForce, { desc = "[b]uffer [D]elete (force)" })

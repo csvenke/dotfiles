@@ -6,6 +6,12 @@ require("noice").setup({
       ["cmp.entry.get_documentation"] = true,
     },
   },
+  messages = {
+    view = "mini",
+    view_error = false,
+    view_warn = false,
+    view_history = false,
+  },
   routes = {
     {
       filter = {
