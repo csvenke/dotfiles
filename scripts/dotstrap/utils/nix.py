@@ -9,6 +9,7 @@ class Nix:
     def install(self):
         if self.path.exists():
             Shell.run(f"nix-env -if {self.path}")
+            Shell.run("nix-env --delete-generations +5")
         else:
             print("home.nix does not exist. Doing nothing")
 
