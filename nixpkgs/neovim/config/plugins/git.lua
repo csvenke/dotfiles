@@ -1,17 +1,17 @@
 local actions = require("diffview.actions")
 
 local default_keymaps = {
-  { "n", "<leader>gd", "<cmd>DiffviewClose<cr>" },
-  { "n", "<leader>gD", "<cmd>DiffviewClose<cr>" },
-  { "n", "<C-q>", "<cmd>DiffviewClose<cr>" },
+  { "n", "<leader>gd", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+  { "n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+  { "n", "<C-q>", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
   { "n", "<tab>", actions.select_next_entry, { desc = "Select next entry" } },
   { "n", "<s-tab>", actions.select_prev_entry, { desc = "Select previous entry" } },
 }
 
 local file_panel = {
-  { "n", "<leader>gd", "<cmd>DiffviewClose<cr>" },
-  { "n", "<leader>gD", "<cmd>DiffviewClose<cr>" },
-  { "n", "<C-q>", "<cmd>DiffviewClose<cr>" },
+  { "n", "<leader>gd", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+  { "n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
+  { "n", "<C-q>", "<cmd>DiffviewClose<cr>", { desc = "Close diffview" } },
   { "n", "<tab>", actions.select_next_entry, { desc = "Select next entry" } },
   { "n", "<s-tab>", actions.select_prev_entry, { desc = "Select previous entry" } },
   { "n", "j", actions.next_entry, { desc = "Next" } },
@@ -38,6 +38,7 @@ require("diffview").setup({
   },
 })
 
+vim.opt.culopt="number"
 vim.opt.fillchars:append({ diff = " " })
 
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "[g]it [g]ui" })

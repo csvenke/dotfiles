@@ -5,6 +5,7 @@ require("neo-tree").setup({
   },
   sources = {
     "filesystem",
+    "git_status",
   },
   filesystem = {
     follow_current_file = {
@@ -35,3 +36,7 @@ require("neo-tree").setup({
 vim.keymap.set("n", "<leader>e", function()
   require("neo-tree.command").execute({ source = "filesystem", toggle = true })
 end, { desc = "file [e]xplorer" })
+
+vim.keymap.set("n", "<leader>ge", function()
+  require("neo-tree.command").execute({ source = "git_status", toggle = true })
+end, { desc = "[g]it status [e]xplorer" })
