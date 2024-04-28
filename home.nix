@@ -1,40 +1,34 @@
-{ pkgs ? import <nixpkgs-unstable> { } }:
+with import <nixpkgs-unstable> { };
 
-let
-  tmux = import ./nixpkgs/tmux { inherit pkgs; };
-  neovim = import ./nixpkgs/neovim { inherit pkgs; };
-  dev = import ./nixpkgs/dev { inherit pkgs; };
-in
-
-pkgs.buildEnv {
+buildEnv {
   name = "Home environment";
   paths = [
-    pkgs.coreutils
-    pkgs.findutils
-    pkgs.direnv
-    pkgs.nix-direnv
-    pkgs.eza
-    pkgs.bat
-    pkgs.silver-searcher
-    pkgs.delta
+    coreutils
+    findutils
+    direnv
+    nix-direnv
+    eza
+    bat
+    silver-searcher
+    delta
 
     # Shell
-    pkgs.starship
-    tmux
+    starship
+    (callPackage ./nixpkgs/tmux { })
 
     # Editors
-    neovim
+    (callPackage ./nixpkgs/neovim { })
 
     # Tools
-    dev
-    pkgs.devenv
-    pkgs.ripgrep
-    pkgs.jq
-    pkgs.gh
-    pkgs.tldr
-    pkgs.git
-    pkgs.wget
-    pkgs.curl
-    pkgs.fzf
+    (callPackage ./nixpkgs/dev { })
+    devenv
+    ripgrep
+    jq
+    gh
+    tldr
+    git
+    wget
+    curl
+    fzf
   ];
 }
