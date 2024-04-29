@@ -35,14 +35,16 @@ local function default_on_attach(client, buffer)
   end
 end
 
-local function organizeImports()
-  vim.lsp.buf.code_action({
-    apply = true,
-    context = {
-      only = { "source.organizeImports" },
-      diagnostics = {},
-    },
-  })
+local function makeCodeAction(name)
+  return function()
+    vim.lsp.buf.code_action({
+      apply = true,
+      context = {
+        only = { name },
+        diagnostics = {},
+      },
+    })
+  end
 end
 
 ---@diagnostic disable: missing-fields
@@ -60,7 +62,22 @@ local servers = {
 
   rust_analyzer = {},
 
-  tsserver = {},
+  tsserver = {
+    on_attach = function()
+      vim.keymap.set(
+        "n",
+        "<leader>co",
+        makeCodeAction("source.organizeImports.ts"),
+        { desc = "[c]ode [o]rganize imports" }
+      )
+      vim.keymap.set(
+        "n",
+        "<leader>cR",
+        makeCodeAction("source.removeUnused.ts"),
+        { desc = "[c]ode [R]emove unused imports" }
+      )
+    end,
+  },
 
   angularls = {
     cmd = { "angular-language-server", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" },
@@ -117,7 +134,12 @@ local servers = {
       },
     },
     on_attach = function(client)
-      vim.keymap.set("n", "<leader>co", organizeImports, { desc = "[c]ode [o]organize imports" })
+      vim.keymap.set(
+        "n",
+        "<leader>co",
+        makeCodeAction("source.organizeImports"),
+        { desc = "[c]ode [o]organize imports" }
+      )
       client.server_capabilities.hoverProvider = false
     end,
   },
