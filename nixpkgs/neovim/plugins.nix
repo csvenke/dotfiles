@@ -15,6 +15,7 @@ let
     nvim-lspconfig
     omnisharp-extended-lsp-nvim
     nvim-jdtls
+    refactoring-nvim
     # Formatting
     conform-nvim
     # Autocomplete
