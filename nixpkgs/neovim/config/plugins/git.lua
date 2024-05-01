@@ -36,9 +36,14 @@ require("diffview").setup({
     option_panel = default_keymaps,
     help_panel = default_keymaps,
   },
+  hooks = {
+    diff_buf_read = function()
+      vim.opt_local.foldenable = false
+    end,
+  },
 })
 
-vim.opt.culopt="number"
+vim.opt.culopt = "number"
 vim.opt.fillchars:append({ diff = " " })
 
 vim.keymap.set("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "[g]it [g]ui" })
