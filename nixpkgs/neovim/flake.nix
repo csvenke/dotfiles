@@ -18,7 +18,7 @@
           ];
         };
         config = import ./config { inherit pkgs; };
-        runtimeInputs = import ./runtimeInputs.nix { inherit pkgs; };
+        runtimeInputs = import ./runtimeInputs.nix { inherit pkgs; inherit language-servers; };
         plugins = import ./plugins.nix { inherit pkgs; };
         overrideNeovim = pkgs.neovim.override {
           configure = {
@@ -30,7 +30,7 @@
       {
         defaultPackage = pkgs.writeShellApplication {
           name = "nvim";
-          runtimeInputs = runtimeInputs ++ [ language-servers.packages.angular-language-server ];
+          runtimeInputs = runtimeInputs;
           text = ''
             ${overrideNeovim}/bin/nvim "$@"
           '';

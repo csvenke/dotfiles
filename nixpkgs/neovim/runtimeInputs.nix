@@ -1,11 +1,10 @@
-{ pkgs }:
+{ pkgs, language-servers }:
 
 with pkgs;
 [
   # Deps
   tree-sitter
   gcc
-  libstdcxx5
   ripgrep
   fd
   findutils
@@ -81,5 +80,8 @@ with pkgs;
 
   # Json, eslint, markdown, css, html
   vscode-langservers-extracted
+
+  # Angular
+  # language-servers.packages.angular-language-server
 ]
 
