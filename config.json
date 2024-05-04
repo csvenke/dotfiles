@@ -8,6 +8,7 @@
       ".gitconfig.personal",
       ".gitignore",
       ".gitignore.global",
+      ".wezterm.lua",
       ".config/direnv",
       ".config/lazygit",
       ".config/nix"
