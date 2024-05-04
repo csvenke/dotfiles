@@ -4,7 +4,9 @@ vim.keymap.set("n", "<leader>aa", "<cmd>GpNew<cr>", { desc = "quick prompt" })
 vim.keymap.set("n", "<leader>aA", "<cmd>GpChatToggle<cr>", { desc = "toggle chat" })
 
 vim.keymap.set("n", "<leader>a|", "<cmd>GpChatNew vsplit<cr>", { desc = "new chat (vertical)" })
+vim.keymap.set("n", "<leader>av", "<cmd>GpChatNew vsplit<cr>", { desc = "new chat (vertical)" })
 vim.keymap.set("n", "<leader>a-", "<cmd>GpChatNew split<cr>", { desc = "new chat (horizontal)" })
+vim.keymap.set("n", "<leader>as", "<cmd>GpChatNew split<cr>", { desc = "new chat (horizontal)" })
 vim.keymap.set("n", "<leader>at", "<cmd>GpChatNew tabnew<cr>", { desc = "new chat (tab)" })
 
 vim.keymap.set("v", "<leader>ap", ":'<,'>GpChatPaste split<cr>", { desc = "paste to chat (horizontal)" })
