@@ -50,3 +50,5 @@ vim.opt.scrolloff = 10
 vim.opt.hlsearch = true
 
 vim.opt.termguicolors = true
+
+vim.cmd("set nowrap")

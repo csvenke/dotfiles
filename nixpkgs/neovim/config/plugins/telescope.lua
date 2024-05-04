@@ -32,7 +32,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.keymap.set("n", "<leader>ss", builtin.lsp_document_symbols, { desc = "[s]earch [s]ymbols" })
     vim.keymap.set("n", "<leader>sS", builtin.lsp_workspace_symbols, { desc = "[s]earch [S]ymbols (workspace)" })
     vim.keymap.set("n", "<leader>st", builtin.tagstack, { desc = "[s]earch [t]agstack" })
-    vim.keymap.set("n", "<leader>sb", builtin.builtin, { desc = "[s]earch telescope [b]uiltins" })
+    vim.keymap.set("n", "<leader>sb", builtin.buffers, { desc = "[s]earch [b]uffers" })
     vim.keymap.set("n", "<leader>sw", builtin.grep_string, { desc = "[s]earch [w]ord" })
     vim.keymap.set("n", "<leader>sd", builtin.diagnostics, { desc = "[s]earch [d]iagnostics" })
     vim.keymap.set("n", "<leader>so", builtin.vim_options, { desc = "[s]earch vim [o]ptions" })
@@ -40,6 +40,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.keymap.set("n", "<leader>sr", "<cmd>Spectre<cr>", { desc = "[s]earch and [r]eplace" })
     vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Find in files (Grep)" })
     vim.keymap.set("n", "<leader>:", builtin.command_history, { desc = "Command history" })
-    vim.keymap.set("n", "<leader><leader>", builtin.find_files, { desc = "Find files" })
+    vim.keymap.set("n", "<leader><leader>", builtin.git_files, { desc = "[s]earch [g]it files" })
   end,
 })
