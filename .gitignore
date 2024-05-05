@@ -2,4 +2,5 @@
 !.neoconf.json
 .gitconfig.work
 .bashrc.work.sh
-.bashrc.secrets.sh
+.bashrc.machine.sh
+.vault

@@ -34,7 +34,7 @@ alias ll='ls -al'
 alias cat='command bat --style=plain'
 
 source_if_exists "$HOME/.bashrc.work.sh"
-source_if_exists "$HOME/.bashrc.secrets.sh"
+source_if_exists "$HOME/.bashrc.machine.sh"
 
 eval "$(direnv hook bash)"
 eval "$(starship init bash)"

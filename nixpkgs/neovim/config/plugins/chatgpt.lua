@@ -1,4 +1,6 @@
-require("gp").setup({})
+require("gp").setup({
+  openai_api_key = { "cat", os.getenv("HOME") .. "/.vault/openai-api-key.txt" },
+})
 
 vim.keymap.set("n", "<leader>aa", "<cmd>GpNew<cr>", { desc = "quick prompt" })
 vim.keymap.set("n", "<leader>aA", "<cmd>GpChatToggle<cr>", { desc = "toggle chat" })
@@ -16,4 +18,3 @@ vim.keymap.set("v", "<leader>ae", ":'<,'>GpRewrite<cr>", { desc = "edit selectio
 vim.keymap.set("v", "<leader>ar", ":'<,'>GpRewrite<cr>", { desc = "rewrite selection" })
 vim.keymap.set("n", "<leader>ao", "<cmd>GpAppend<cr>", { desc = "insert below" })
 vim.keymap.set("n", "<leader>aO", "<cmd>GpPrepend<cr>", { desc = "insert above" })
-

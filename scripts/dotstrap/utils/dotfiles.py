@@ -148,10 +148,6 @@ class ManualDotfiles(DotfileLifecycle):
 
     def install(self):
         for dotfile in self.dotfiles:
-            if not dotfile.source.exists():
-                print(f"Creating {dotfile.source}")
-                dotfile.source.touch()
-
             dotfile.symlink()
 
     def check(self):
@@ -193,7 +189,22 @@ def symlink_path(source: Path, target: Path):
         remove_path(target)
 
     print(f"Creating symlink: {source} -> {target}")
+    touch_file_if_missing(source)
+    make_parents_if_missing(target)
     target.symlink_to(source, source.is_dir())
+
+
+def touch_file_if_missing(path: Path):
+    if path.exists():
+        return
+
+    make_parents_if_missing(path)
+    path.touch()
+
+
+def make_parents_if_missing(path: Path):
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
 
 
 def load_json_file(path: Path) -> Any:

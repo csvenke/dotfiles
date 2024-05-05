@@ -29,12 +29,6 @@ def install(dotfiles: DotfilesManager, nix: Nix):
     print(">>> Install nix packages <<<")
     nix.install()
 
-    print(">>> Creating .config directory if missing <<<")
-    config_dir = dotfiles.get_target_path(".config")
-    if not config_dir.exists():
-        print("Creating .config directory")
-        config_dir.mkdir()
-
     print(">>> Installing all dotfiles")
     dotfiles.install_all()
 

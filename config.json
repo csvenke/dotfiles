@@ -15,16 +15,21 @@
       ".config/lazygit",
       ".config/nix"
     ],
-    "manual": [".bashrc.secrets.sh", ".bashrc.work.sh", ".gitconfig.work"],
+    "manual": [
+      ".bashrc.machine.sh",
+      ".bashrc.work.sh",
+      ".gitconfig.work",
+      ".vault/openai-api-key.txt"
+    ],
     "deprecated": [
       "default.nix",
       "shell.nix",
       "flake.nix",
+      ".bashrc.secrets.sh",
       ".gitignore",
       ".zshrc",
       ".config/tmux",
       ".config/nvim",
-      ".bashrc.machine.sh",
       ".wezterm.lua"
     ]
   }
