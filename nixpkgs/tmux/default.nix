@@ -45,7 +45,11 @@ let
     tmux set -g @catppuccin_window_right_separator "█ "
 
     tmux bind '-' split-window -v -c "#{pane_current_path}"
+    tmux bind 's' split-window -v -c "#{pane_current_path}"
+
     tmux bind '|' split-window -h -c "#{pane_current_path}"
+    tmux bind 'v' split-window -h -c "#{pane_current_path}"
+
     tmux bind 'p' run-shell "tmux popup -d '#{pane_current_path}' -E 'tmux attach -t popup || tmux new -s popup'"
     tmux bind 'q' run-shell "tmux detach-client"
 
