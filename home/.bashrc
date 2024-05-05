@@ -11,9 +11,8 @@ git_main_branch() {
 }
 
 export DOTFILES="$HOME/.dotfiles"
-export DOTFLAKES="$HOME/.dotfiles/devenv"
 export DEVENV="$HOME/.dotfiles/devenv"
-export EDITOR="vim"
+export EDITOR="nvim --clean"
 export VISUAL="nvim"
 # fzf
 export FZF_DEFAULT_COMMAND='ag --hidden -l -g ""'
@@ -26,7 +25,6 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
-alias vim="command nvim --clean"
 alias ggpush='command git push origin "$(git_current_branch)"'
 alias ggpull='command git pull origin "$(git_current_branch)"'
 alias ggsync='command git pull origin "$(git_main_branch)"'
