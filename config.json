@@ -1,12 +1,12 @@
 {
   "dotfiles": {
+    "root": "home",
     "symlink": [
       ".bashrc",
       ".bash_profile",
       ".agignore",
       ".gitconfig",
       ".gitconfig.personal",
-      ".gitignore",
       ".gitignore.global",
       ".config/starship.toml",
       ".config/nixpkgs",
@@ -20,6 +20,7 @@
       "default.nix",
       "shell.nix",
       "flake.nix",
+      ".gitignore",
       ".zshrc",
       ".config/tmux",
       ".config/nvim",

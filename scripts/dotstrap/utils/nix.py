@@ -4,7 +4,7 @@ from utils.shell import Shell
 
 class Nix:
     def __init__(self, dotfiles: DotfilesManager):
-        self.path = dotfiles.get_path("home.nix")
+        self.path = dotfiles.get_path("home")
 
     def install(self):
         if self.path.exists():

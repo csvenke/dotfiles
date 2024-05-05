@@ -1,11 +1,11 @@
 import functools
 import json
-from pathlib import Path
 import os
 import shutil
 from abc import ABC, abstractmethod
-from typing import Any
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
 
 from utils.scriptargs import ScriptArgs
 
@@ -32,15 +32,21 @@ class DotfilesManager:
 
     @classmethod
     def from_script_args(cls, args: ScriptArgs):
-        dotfiles_directory = args.dotfiles_dir
-        target_directory = args.target_dir
-        config_loader = DotfileConfigLoader(dotfiles_directory, target_directory)
+        dotfiles_dir = args.dotfiles_dir
+        target_dir = args.target_dir
+        config_loader = DotfileConfigLoader(dotfiles_dir, target_dir)
+
+        symlink_dotfiles = config_loader.get_dotfiles("dotfiles", "symlink")
+        deprecated_dotfiles = config_loader.get_dotfiles("dotfiles", "deprecated")
+        manual_dotfiles = config_loader.get_dotfiles("dotfiles", "manual")
+
         dotfiles: list[DotfileLifecycle] = [
-            SymlinkDotfiles(config_loader.get("dotfiles", "symlink")),
-            DeprecatedDotfiles(config_loader.get("dotfiles", "deprecated")),
-            ManualDotfiles(config_loader.get("dotfiles", "manual")),
+            SymlinkDotfiles(symlink_dotfiles),
+            ManualDotfiles(manual_dotfiles),
+            DeprecatedDotfiles(deprecated_dotfiles),
         ]
-        return cls(dotfiles_directory, target_directory, dotfiles)
+
+        return cls(dotfiles_dir, target_dir, dotfiles)
 
     def install_all(self):
         for dotfile in self.dotfiles:
@@ -62,9 +68,9 @@ class DotfilesManager:
 
 
 class Dotfile:
-    def __init__(self, path: str, dotfiles_directory: Path, target_directory: Path):
-        self.source = Path(dotfiles_directory, path)
-        self.target = Path(target_directory, path)
+    def __init__(self, path: str, source_dir: Path, target_dir: Path):
+        self.source = Path(source_dir, path)
+        self.target = Path(target_dir, path)
 
     def symlink(self):
         symlink_path(self.source, self.target)
@@ -78,27 +84,24 @@ class Dotfile:
     def remove(self):
         remove_path(self.target)
 
-    def create_empty(self):
-        self.target.touch()
-
 
 class DotfileConfigLoader:
-    def __init__(self, dotfiles_directory: Path, target_directory: Path):
-        config_path = Path(dotfiles_directory, "config.json")
+    def __init__(self, dotfiles_dir: Path, target_dir: Path):
+        config_path = Path(dotfiles_dir, "config.json")
 
         if not (config_path.exists()):
             raise FileNotFoundError("config.json does not exist")
 
-        self.dotfiles_directory = dotfiles_directory
-        self.target_directory = target_directory
         self.config = load_json_file(config_path)
+        self.source_dir = Path(dotfiles_dir, self.get("dotfiles", "root"))
+        self.target_dir = target_dir
 
-    def get(self, *keys: str) -> list[Dotfile]:
-        paths = functools.reduce(lambda acc, cv: acc[cv], keys, self.config)
-        return [self.create_dotfile(path) for path in paths]
+    def get(self, *keys: str):
+        return functools.reduce(lambda acc, cv: acc[cv], keys, self.config)
 
-    def create_dotfile(self, path: str):
-        return Dotfile(path, self.dotfiles_directory, self.target_directory)
+    def get_dotfiles(self, *keys: str):
+        paths = self.get(*keys)
+        return [Dotfile(path, self.source_dir, self.target_dir) for path in paths]
 
 
 class SymlinkDotfiles(DotfileLifecycle):

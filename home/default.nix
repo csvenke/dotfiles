@@ -14,13 +14,13 @@ buildEnv {
 
     # Shell
     starship
-    (callPackage ./nixpkgs/tmux { })
+    (callPackage ../nixpkgs/tmux { })
 
     # Editors
-    (callPackage ./nixpkgs/neovim { })
+    (callPackage ../nixpkgs/neovim { })
 
     # Tools
-    (callPackage ./nixpkgs/dev { })
+    (callPackage ../nixpkgs/dev { })
     devenv
     ripgrep
     jq
