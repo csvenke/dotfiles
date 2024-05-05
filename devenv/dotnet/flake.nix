@@ -9,7 +9,7 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        inherit (pkgs.dotnetCorePackages) combinePackages sdk_6_0 sdk_7_0 sdk_8_0 sdk_9_0;
+        inherit (pkgs.dotnetCorePackages) combinePackages sdk_6_0 sdk_7_0 sdk_8_0;
         dotnet = (combinePackages [
           sdk_6_0
           sdk_7_0
