@@ -9,6 +9,7 @@
       ".gitignore",
       ".gitignore.global",
       ".config/starship.toml",
+      ".config/nixpkgs",
       ".config/wezterm",
       ".config/direnv",
       ".config/lazygit",
