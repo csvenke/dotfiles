@@ -39,6 +39,7 @@ require("diffview").setup({
   hooks = {
     diff_buf_read = function()
       vim.opt_local.foldenable = false
+      vim.cmd("set diffopt+=context:99999")
     end,
   },
 })
