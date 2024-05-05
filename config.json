@@ -8,7 +8,7 @@
       ".gitconfig.personal",
       ".gitignore",
       ".gitignore.global",
-      ".wezterm.lua",
+      ".config/wezterm",
       ".config/direnv",
       ".config/lazygit",
       ".config/nix"
@@ -21,7 +21,8 @@
       ".zshrc",
       ".config/tmux",
       ".config/nvim",
-      ".bashrc.machine.sh"
+      ".bashrc.machine.sh",
+      ".wezterm.lua"
     ]
   }
 }

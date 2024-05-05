@@ -1,8 +1,11 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
--- config.color_scheme = "catppuccin-frappe"
-config.color_scheme = "catppuccin-macchiato"
+wezterm.on("format-window-title", function()
+	return "Terminal"
+end)
+
+config.colors = require("nordic")
 config.enable_tab_bar = false
 config.font_size = 16
 config.window_frame = {
