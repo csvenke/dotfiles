@@ -7,10 +7,7 @@ end)
 
 config.colors = require("nordic")
 config.enable_tab_bar = false
-config.font_size = 16
-config.window_frame = {
-	font_size = 16.0,
-}
+config.font_size = 18
 config.window_padding = {
 	left = 0,
 	right = 0,
