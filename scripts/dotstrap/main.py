@@ -23,14 +23,12 @@ def main():
 
 
 def install(dotfiles: DotfilesManager, nix: Nix):
-    print(">>> Add nixpkgs-unstable <<<")
-    nix.add_unstable_channel()
+    print(">>> Symlink dotfiles")
+    dotfiles.install_all()
 
     print(">>> Install nix packages <<<")
+    nix.add_unstable_channel()
     nix.install()
-
-    print(">>> Installing all dotfiles")
-    dotfiles.install_all()
 
     print(">>> Source .bashrc <<<")
     bashrc = dotfiles.get_target_path(".bashrc")
