@@ -25,9 +25,13 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
-alias ggpush='command git push origin "$(git_current_branch)"'
-alias ggpull='command git pull origin "$(git_current_branch)"'
-alias ggsync='command git pull origin "$(git_main_branch)"'
+alias gpb='command git push origin "$(git_current_branch)"'
+alias gsb='command git pull origin "$(git_current_branch)"'
+alias gsm='command git pull origin "$(git_main_branch)"'
+alias gcm='command git checkout "$(git_main_branch)"'
+alias ggpush='gpb'
+alias ggpull='gsb'
+alias ggsync='gsm'
 alias ls='command eza --icons --colour=auto --sort=type --group-directories-first'
 alias la='ls -a'
 alias ll='ls -al'
