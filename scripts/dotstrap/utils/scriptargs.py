@@ -22,7 +22,7 @@ class ScriptArgs:
             help="Default is $HOME",
         )
         sub_parser.add_parser("install")
-        sub_parser.add_parser("uninstall")
+        sub_parser.add_parser("clean")
         sub_parser.add_parser("check")
 
         args: dict[str, str] = vars(parser.parse_args())

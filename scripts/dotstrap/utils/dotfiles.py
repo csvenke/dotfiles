@@ -1,12 +1,10 @@
-import functools
-import json
 import os
 import shutil
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
+from utils.config import Config
 from utils.scriptargs import ScriptArgs
 
 
@@ -20,60 +18,49 @@ class DotfileLifecycle(ABC):
         pass
 
     @abstractmethod
-    def uninstall(self):
+    def clean(self):
         pass
 
 
 @dataclass
 class DotfilesManager:
-    dotfiles_dir: Path
-    target_dir: Path
     dotfiles: list[DotfileLifecycle]
 
     @classmethod
     def from_script_args(cls, args: ScriptArgs):
-        dotfiles_dir = args.dotfiles_dir
-        target_dir = args.target_dir
-        config_loader = DotfileConfigLoader(dotfiles_dir, target_dir)
-
-        symlink_dotfiles = config_loader.get_dotfiles("dotfiles", "symlink")
-        deprecated_dotfiles = config_loader.get_dotfiles("dotfiles", "deprecated")
-        manual_dotfiles = config_loader.get_dotfiles("dotfiles", "manual")
-
+        config = Config.load(args.dotfiles_dir, args.target_dir)
+        create_dotfiles = make_create_dotfiles(config.source_dir, config.target_dir)
         dotfiles: list[DotfileLifecycle] = [
-            SymlinkDotfiles(symlink_dotfiles),
-            ManualDotfiles(manual_dotfiles),
-            DeprecatedDotfiles(deprecated_dotfiles),
+            SymlinkDotfiles(create_dotfiles(config.symlink_paths)),
+            DeleteDotfiles(create_dotfiles(config.delete_paths)),
         ]
 
-        return cls(dotfiles_dir, target_dir, dotfiles)
+        return cls(dotfiles)
 
     def install_all(self):
         for dotfile in self.dotfiles:
             dotfile.install()
 
-    def uninstall_all(self):
+    def clean_all(self):
         for dotfile in self.dotfiles:
-            dotfile.uninstall()
+            dotfile.clean()
 
     def check_all(self):
         for dotfile in self.dotfiles:
             dotfile.check()
 
-    def get_path(self, path: str):
-        return Path(self.dotfiles_dir, path)
 
-    def get_target_path(self, path: str):
-        return Path(self.target_dir, path)
-
-
+@dataclass
 class Dotfile:
-    def __init__(self, path: str, source_dir: Path, target_dir: Path):
-        self.source = Path(source_dir, path)
-        self.target = Path(target_dir, path)
+    source: Path
+    target: Path
 
     def symlink(self):
         symlink_path(self.source, self.target)
+
+    def unlink(self):
+        if self.target.is_symlink():
+            self.target.unlink()
 
     def is_symlinked(self) -> bool:
         return self.target.is_symlink() & self.target.exists()
@@ -85,28 +72,9 @@ class Dotfile:
         remove_path(self.target)
 
 
-class DotfileConfigLoader:
-    def __init__(self, dotfiles_dir: Path, target_dir: Path):
-        config_path = Path(dotfiles_dir, "config.json")
-
-        if not (config_path.exists()):
-            raise FileNotFoundError("config.json does not exist")
-
-        self.config = load_json_file(config_path)
-        self.source_dir = Path(dotfiles_dir, self.get("dotfiles", "root"))
-        self.target_dir = target_dir
-
-    def get(self, *keys: str):
-        return functools.reduce(lambda acc, cv: acc[cv], keys, self.config)
-
-    def get_dotfiles(self, *keys: str):
-        paths = self.get(*keys)
-        return [Dotfile(path, self.source_dir, self.target_dir) for path in paths]
-
-
+@dataclass
 class SymlinkDotfiles(DotfileLifecycle):
-    def __init__(self, dotfiles: list[Dotfile]):
-        self.dotfiles = dotfiles
+    dotfiles: list[Dotfile]
 
     def install(self):
         for dotfile in self.dotfiles:
@@ -119,47 +87,33 @@ class SymlinkDotfiles(DotfileLifecycle):
             else:
                 print("ERROR!", dotfile.target)
 
-    def uninstall(self):
+    def clean(self):
         for dotfile in self.dotfiles:
             dotfile.remove()
 
 
-class DeprecatedDotfiles(DotfileLifecycle):
-    def __init__(self, dotfiles: list[Dotfile]):
-        self.dotfiles = dotfiles
+@dataclass
+class DeleteDotfiles(DotfileLifecycle):
+    dotfiles: list[Dotfile]
 
     def install(self):
         for dotfile in self.dotfiles:
-            dotfile.remove()
-
-    def check(self):
-        for dotfile in self.dotfiles:
-            if dotfile.exists():
-                print("ERROR!", dotfile.target)
-
-    def uninstall(self):
-        for dotfile in self.dotfiles:
-            dotfile.remove()
-
-
-class ManualDotfiles(DotfileLifecycle):
-    def __init__(self, dotfiles: list[Dotfile]):
-        self.dotfiles = dotfiles
-
-    def install(self):
-        for dotfile in self.dotfiles:
-            dotfile.symlink()
+            dotfile.unlink()
 
     def check(self):
         for dotfile in self.dotfiles:
             if dotfile.is_symlinked():
-                print("OK!", dotfile.target)
-            else:
                 print("ERROR!", dotfile.target)
 
-    def uninstall(self):
+    def clean(self):
         for dotfile in self.dotfiles:
-            dotfile.remove()
+            dotfile.unlink()
+
+
+def make_create_dotfiles(source_dir: Path, target_dir: Path):
+    return lambda paths: [
+        Dotfile(Path(source_dir, path), Path(target_dir, path)) for path in paths
+    ]
 
 
 def remove_path(path: Path):
@@ -176,7 +130,6 @@ def remove_path(path: Path):
     if path.exists():
         print(f"Deleting file {path}")
         os.remove(path)
-        return
 
 
 def symlink_path(source: Path, target: Path):
@@ -189,24 +142,17 @@ def symlink_path(source: Path, target: Path):
         remove_path(target)
 
     print(f"Creating symlink: {source} -> {target}")
-    touch_file_if_missing(source)
+    create_file_if_missing(source)
     make_parents_if_missing(target)
     target.symlink_to(source, source.is_dir())
 
 
-def touch_file_if_missing(path: Path):
-    if path.exists():
-        return
-
-    make_parents_if_missing(path)
-    path.touch()
+def create_file_if_missing(path: Path):
+    if not path.exists():
+        make_parents_if_missing(path)
+        path.touch()
 
 
 def make_parents_if_missing(path: Path):
     if not path.parent.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
-
-
-def load_json_file(path: Path) -> Any:
-    with open(path) as f:
-        return json.load(f)

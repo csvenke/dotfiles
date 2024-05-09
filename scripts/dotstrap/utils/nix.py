@@ -1,20 +1,14 @@
-from utils.dotfiles import DotfilesManager
-from utils.shell import Shell
+from pathlib import Path
+
+from utils import shell
 
 
-class Nix:
-    def __init__(self, dotfiles: DotfilesManager):
-        self.path = dotfiles.get_path("home")
+def install(path: Path):
+    shell.run(
+        "nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable"
+    )
+    shell.run("nix-channel --update")
 
-    def install(self):
-        if self.path.exists():
-            Shell.run(f"nix-env -if {self.path}")
-            Shell.run("nix-env --delete-generations +5")
-        else:
-            print("home.nix does not exist. Doing nothing")
-
-    def add_unstable_channel(self):
-        Shell.run(
-            "nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable"
-        )
-        Shell.run("nix-channel --update")
+    if path.exists():
+        shell.run(f"nix-env -if {path}")
+        shell.run("nix-env --delete-generations +5")

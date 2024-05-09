@@ -3,25 +3,23 @@
     "root": "home",
     "symlink": [
       ".bashrc",
+      ".bashrc.machine.sh",
+      ".bashrc.work.sh",
       ".bash_profile",
       ".agignore",
       ".gitconfig",
       ".gitconfig.personal",
+      ".gitconfig.work",
       ".gitignore.global",
       ".config/starship.toml",
       ".config/nixpkgs",
       ".config/wezterm",
       ".config/direnv",
       ".config/lazygit",
-      ".config/nix"
-    ],
-    "manual": [
-      ".bashrc.machine.sh",
-      ".bashrc.work.sh",
-      ".gitconfig.work",
+      ".config/nix",
       ".vault/openai-api-key.txt"
     ],
-    "deprecated": [
+    "delete": [
       "default.nix",
       "shell.nix",
       "flake.nix",
@@ -29,8 +27,7 @@
       ".gitignore",
       ".zshrc",
       ".config/tmux",
-      ".config/nvim",
-      ".wezterm.lua"
+      ".config/nvim"
     ]
   }
 }

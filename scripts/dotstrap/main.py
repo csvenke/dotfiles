@@ -1,51 +1,51 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i python -p python3
 
+from utils.config import Config
+from utils import nix, shell
 from utils.dotfiles import DotfilesManager
-from utils.nix import Nix
 from utils.scriptargs import ScriptArgs
-from utils.shell import Shell
 
 
 def main():
     args = ScriptArgs.parse()
+    config = Config.load(args.dotfiles_dir, args.target_dir)
     dotfiles = DotfilesManager.from_script_args(args)
-    nix = Nix(dotfiles)
 
     if args.command == "install":
-        return install(dotfiles, nix)
+        return install_command(config, dotfiles)
 
     if args.command == "check":
-        return check(dotfiles)
+        return check_command(dotfiles)
 
-    if args.command == "uninstall":
-        return uninstall(dotfiles)
+    if args.command == "clean":
+        return clean_command(dotfiles)
 
 
-def install(dotfiles: DotfilesManager, nix: Nix):
+def install_command(config: Config, dotfiles: DotfilesManager):
     print(">>> Symlink dotfiles")
     dotfiles.install_all()
 
     print(">>> Install nix packages <<<")
-    nix.add_unstable_channel()
-    nix.install()
+    home = config.get_dotfiles_path("home")
+    nix.install(home)
 
     print(">>> Source .bashrc <<<")
-    bashrc = dotfiles.get_target_path(".bashrc")
-    Shell.run(f"source {bashrc}")
+    bashrc = config.get_target_path(".bashrc")
+    shell.run(f"source {bashrc}")
 
     print(">>> DONE <<<")
     print("Restart shell for changes to take effect")
 
 
-def check(dotfiles: DotfilesManager):
+def check_command(dotfiles: DotfilesManager):
     print(">>> Check dotfiles status <<<")
     dotfiles.check_all()
 
 
-def uninstall(dotfiles: DotfilesManager):
-    print(">>> Uninstalling all dotfiles <<<")
-    dotfiles.uninstall_all()
+def clean_command(dotfiles: DotfilesManager):
+    print(">>> Cleaning all dotfiles <<<")
+    dotfiles.clean_all()
 
 
 if __name__ == "__main__":
