@@ -19,7 +19,7 @@
       ".config/nix",
       ".vault/openai-api-key.txt"
     ],
-    "delete": [
+    "unlink": [
       "default.nix",
       "shell.nix",
       "flake.nix",

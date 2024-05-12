@@ -6,11 +6,10 @@ from utils import nix, shell
 from utils.dotfiles import DotfilesManager
 from utils.scriptargs import ScriptArgs
 
-
 def main():
     args = ScriptArgs.parse()
-    config = Config.load(args.dotfiles_dir, args.target_dir)
-    dotfiles = DotfilesManager.from_script_args(args)
+    config = Config.from_script_args(args)
+    dotfiles = DotfilesManager.from_config(config)
 
     if args.command == "install":
         return install_command(config, dotfiles)

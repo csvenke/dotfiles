@@ -3,9 +3,9 @@ import shutil
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Callable
 
 from utils.config import Config
-from utils.scriptargs import ScriptArgs
 
 
 class DotfileLifecycle(ABC):
@@ -27,12 +27,11 @@ class DotfilesManager:
     dotfiles: list[DotfileLifecycle]
 
     @classmethod
-    def from_script_args(cls, args: ScriptArgs):
-        config = Config.load(args.dotfiles_dir, args.target_dir)
+    def from_config(cls, config: Config):
         create_dotfiles = make_create_dotfiles(config.source_dir, config.target_dir)
         dotfiles: list[DotfileLifecycle] = [
             SymlinkDotfiles(create_dotfiles(config.symlink_paths)),
-            DeleteDotfiles(create_dotfiles(config.delete_paths)),
+            UnlinkDotfiles(create_dotfiles(config.unlink_paths)),
         ]
 
         return cls(dotfiles)
@@ -62,14 +61,8 @@ class Dotfile:
         if self.target.is_symlink():
             self.target.unlink()
 
-    def is_symlinked(self) -> bool:
+    def is_linked(self) -> bool:
         return self.target.is_symlink() & self.target.exists()
-
-    def exists(self) -> bool:
-        return self.target.exists()
-
-    def remove(self):
-        remove_path(self.target)
 
 
 @dataclass
@@ -82,27 +75,26 @@ class SymlinkDotfiles(DotfileLifecycle):
 
     def check(self):
         for dotfile in self.dotfiles:
-            if dotfile.is_symlinked():
+            if dotfile.is_linked():
                 print("OK!", dotfile.target)
             else:
                 print("ERROR!", dotfile.target)
 
     def clean(self):
         for dotfile in self.dotfiles:
-            dotfile.remove()
+            dotfile.unlink()
 
 
 @dataclass
-class DeleteDotfiles(DotfileLifecycle):
+class UnlinkDotfiles(DotfileLifecycle):
     dotfiles: list[Dotfile]
 
     def install(self):
-        for dotfile in self.dotfiles:
-            dotfile.unlink()
+        self.clean()
 
     def check(self):
         for dotfile in self.dotfiles:
-            if dotfile.is_symlinked():
+            if dotfile.is_linked():
                 print("ERROR!", dotfile.target)
 
     def clean(self):
@@ -110,7 +102,9 @@ class DeleteDotfiles(DotfileLifecycle):
             dotfile.unlink()
 
 
-def make_create_dotfiles(source_dir: Path, target_dir: Path):
+def make_create_dotfiles(
+    source_dir: Path, target_dir: Path
+) -> Callable[[list[str]], list[Dotfile]]:
     return lambda paths: [
         Dotfile(Path(source_dir, path), Path(target_dir, path)) for path in paths
     ]

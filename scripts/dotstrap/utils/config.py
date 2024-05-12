@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from utils.scriptargs import ScriptArgs
+
 
 @dataclass
 class Config:
@@ -11,10 +13,12 @@ class Config:
     source_dir: Path
     target_dir: Path
     symlink_paths: list[str]
-    delete_paths: list[str]
+    unlink_paths: list[str]
 
     @classmethod
-    def load(cls, dotfiles_dir: Path, target_dir: Path):
+    def from_script_args(cls, args: ScriptArgs):
+        dotfiles_dir = args.dotfiles_dir
+        target_dir = args.target_dir
         config_path = Path(dotfiles_dir, "config.json")
 
         if not (config_path.exists()):
@@ -23,10 +27,10 @@ class Config:
         config = load_json_file(config_path)
         root_path: str = get_nested_value(config, "dotfiles", "root")
         symlink_paths: list[str] = get_nested_value(config, "dotfiles", "symlink")
-        delete_paths: list[str] = get_nested_value(config, "dotfiles", "delete")
+        unlink_paths: list[str] = get_nested_value(config, "dotfiles", "unlink")
         source_dir = Path(dotfiles_dir, root_path)
 
-        return cls(dotfiles_dir, source_dir, target_dir, symlink_paths, delete_paths)
+        return cls(dotfiles_dir, source_dir, target_dir, symlink_paths, unlink_paths)
 
     def get_dotfiles_path(self, path: str) -> Path:
         return Path(self.dotfiles_dir, path)
