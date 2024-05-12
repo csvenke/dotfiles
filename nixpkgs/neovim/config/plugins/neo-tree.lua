@@ -8,11 +8,8 @@ require("neo-tree").setup({
     "git_status",
   },
   filesystem = {
-    follow_current_file = {
-      enabled = true,
-      leave_dirs_open = false,
-      use_libuv_file_watcher = true,
-    },
+    use_libuv_file_watcher = true,
+    follow_current_file = { enabled = true  },
     filtered_items = {
       visible = true,
       show_hidden_count = true,
