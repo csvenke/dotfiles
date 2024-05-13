@@ -82,6 +82,6 @@ with pkgs;
   vscode-langservers-extracted
 
   # Angular
-  # language-servers.packages.angular-language-server
+  language-servers.packages.angular-language-server
 ]
 
