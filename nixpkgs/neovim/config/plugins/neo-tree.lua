@@ -9,7 +9,7 @@ require("neo-tree").setup({
   },
   filesystem = {
     use_libuv_file_watcher = true,
-    follow_current_file = { enabled = true  },
+    follow_current_file = { enabled = true },
     filtered_items = {
       visible = true,
       show_hidden_count = true,
@@ -28,6 +28,8 @@ require("neo-tree").setup({
       ["h"] = "close_node",
       ["L"] = "next_source",
       ["H"] = "prev_source",
+      ["s"] = "open_split",
+      ["v"] = "open_vsplit",
     },
   },
 })
@@ -35,6 +37,10 @@ require("neo-tree").setup({
 vim.keymap.set("n", "<leader>e", function()
   require("neo-tree.command").execute({ source = "filesystem", toggle = true })
 end, { desc = "file [e]xplorer" })
+
+vim.keymap.set("n", "<leader>E", function()
+  require("neo-tree.command").execute({ source = "filesystem" })
+end, { desc = "goto [E]xplorer" })
 
 vim.keymap.set("n", "<leader>ge", function()
   require("neo-tree.command").execute({ source = "git_status", toggle = true })
