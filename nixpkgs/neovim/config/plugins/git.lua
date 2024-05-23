@@ -36,6 +36,11 @@ require("diffview").setup({
     option_panel = default_keymaps,
     help_panel = default_keymaps,
   },
+  view = {
+    merge_tool = {
+      layout = "diff3_mixed"
+    }
+  },
   hooks = {
     diff_buf_read = function()
       vim.opt_local.foldenable = false

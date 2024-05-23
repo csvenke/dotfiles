@@ -39,6 +39,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.keymap.set("n", "<leader>sn", "<cmd>Telescope notify<cr>", { desc = "[s]earch [n]otifications" })
     vim.keymap.set("n", "<leader>sr", "<cmd>Spectre<cr>", { desc = "[s]earch and [r]eplace" })
     vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Find in files (Grep)" })
+    vim.keymap.set("n", "<leader>?", builtin.live_grep, { desc = "Find in files (Grep)" })
     vim.keymap.set("n", "<leader>:", builtin.command_history, { desc = "Command history" })
     vim.keymap.set("n", "<leader><leader>", builtin.git_files, { desc = "[s]earch [g]it files" })
   end,

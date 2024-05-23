@@ -63,6 +63,12 @@ local servers = {
   rust_analyzer = {},
 
   tsserver = {
+    init_options = {
+      preferences = {
+        importModuleSpecifierPreference = "relative",
+        importModuleSpecifierEnding = "minimal",
+      },
+    },
     on_attach = function()
       vim.keymap.set(
         "n",
