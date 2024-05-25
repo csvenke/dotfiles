@@ -49,5 +49,3 @@ noremap <leader>ss :vsc Edit.GoToSymbol<CR>
 noremap <leader>sS :vsc Edit.FindSymbol<CR>
 " Search for members
 noremap <leader>sm :vsc Edit.GoToMember<CR>
-
-

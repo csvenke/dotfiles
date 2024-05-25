@@ -1,6 +1,6 @@
 {
   "dotfiles": {
-    "root": "home",
+    "root": "platforms/unix",
     "symlink": [
       ".bashrc",
       ".bashrc.machine.sh",

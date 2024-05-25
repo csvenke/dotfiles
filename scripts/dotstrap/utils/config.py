@@ -32,14 +32,14 @@ class Config:
 
         return cls(dotfiles_dir, source_dir, target_dir, symlink_paths, unlink_paths)
 
-    def get_dotfiles_path(self, path: str) -> Path:
-        return Path(self.dotfiles_dir, path)
+    def get_dotfiles_path(self, *path: str) -> Path:
+        return Path(self.dotfiles_dir, *path)
 
-    def get_source_path(self, path: str) -> Path:
-        return Path(self.source_dir, path)
+    def get_source_path(self, *path: str) -> Path:
+        return Path(self.source_dir, *path)
 
-    def get_target_path(self, path: str) -> Path:
-        return Path(self.target_dir, path)
+    def get_target_path(self, *path: str) -> Path:
+        return Path(self.target_dir, *path)
 
 
 def get_nested_value(obj: Any, *keys: str) -> Any:

@@ -26,7 +26,7 @@ def install_command(config: Config, dotfiles: DotfilesManager):
     dotfiles.install_all()
 
     print(">>> Install nix packages <<<")
-    home = config.get_dotfiles_path("home")
+    home = config.get_source_path()
     nix.install(home)
 
     print(">>> Source .bashrc <<<")
