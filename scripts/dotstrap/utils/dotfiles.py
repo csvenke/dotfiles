@@ -59,6 +59,7 @@ class Dotfile:
 
     def unlink(self):
         if self.target.is_symlink():
+            print(f"Unlinking {self.target}")
             self.target.unlink()
 
     def is_linked(self) -> bool:

@@ -22,6 +22,7 @@ class ScriptArgs:
             help="Default is $HOME",
         )
         sub_parser.add_parser("install")
+        sub_parser.add_parser("update")
         sub_parser.add_parser("clean")
         sub_parser.add_parser("check")
 
