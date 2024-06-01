@@ -3,6 +3,9 @@ with import <nixpkgs-unstable> { };
 buildEnv {
   name = "Home environment";
   paths = [
+    # Config
+    (callPackage ../../nixpkgs/bashrc { })
+
     coreutils
     findutils
     direnv
