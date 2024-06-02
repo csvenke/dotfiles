@@ -14,7 +14,6 @@ pkgs.writeShellScriptBin "bashrc" /* bash */ ''
   }
 
   export DOTFILES="$HOME/.dotfiles"
-  export DEVENV="$HOME/.dotfiles/devenv"
   export EDITOR="nvim --clean"
   export VISUAL="nvim"
   export FZF_DEFAULT_COMMAND='ag --hidden -l -g ""'
