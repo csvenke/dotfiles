@@ -6,15 +6,6 @@ buildEnv {
     # Config
     (callPackage ../../nixpkgs/bashrc { })
 
-    coreutils
-    findutils
-    direnv
-    nix-direnv
-    eza
-    bat
-    silver-searcher
-    delta
-
     # Shell
     starship
     (callPackage ../../nixpkgs/tmux { })
@@ -24,7 +15,13 @@ buildEnv {
 
     # Tools
     (callPackage ../../nixpkgs/dev { })
-    devenv
+    findutils
+    direnv
+    nix-direnv
+    eza
+    bat
+    silver-searcher
+    delta
     ripgrep
     jq
     gh
