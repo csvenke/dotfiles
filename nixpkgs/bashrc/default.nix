@@ -35,7 +35,7 @@ pkgs.writeShellScriptBin "bashrc" /* bash */ ''
   alias la='ls -a'
   alias ll='ls -al'
   alias cat='command bat --style=plain'
-  alias flake-init="nix flake init -t github:hercules-ci/flake-parts"
+  alias flake-init="nix flake init -t github:csvenke/devenv"
 
   source_if_exists "$HOME/.bashrc.work.sh"
   source_if_exists "$HOME/.bashrc.machine.sh"
