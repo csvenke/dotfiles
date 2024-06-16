@@ -1,11 +1,8 @@
-with import <nixpkgs-unstable> { };
+{ pkgs ? import <nixpkgs-unstable> { } }:
 
-buildEnv {
+pkgs.buildEnv {
   name = "Home environment";
-  paths = [
-    # Config
-    (callPackage ../../nixpkgs/bashrc { })
-
+  paths = with pkgs; [
     # Shell
     starship
     (callPackage ../../nixpkgs/tmux { })
@@ -30,5 +27,7 @@ buildEnv {
     wget
     curl
     fzf
+    xclip
+    lazygit
   ];
 }
