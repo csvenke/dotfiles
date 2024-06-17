@@ -1,0 +1,20 @@
+{
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "vscode-neovim.ctrlKeysForInsertMode": [
+    "a",
+    "c",
+    "d",
+    "m",
+    "o",
+    "r",
+    "t",
+    "u",
+    "w",
+    "h",
+    "j",
+    "k",
+    "l"
+  ]
+}
