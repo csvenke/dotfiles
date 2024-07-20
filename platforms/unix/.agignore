@@ -11,6 +11,7 @@
 
 # rust
 .cargo
+.rustup
 
 # node
 .angular
@@ -20,3 +21,4 @@ node_modules
 # unknown
 .local
 .cache
+.eclipse
