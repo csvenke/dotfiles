@@ -5,19 +5,19 @@ function getEnvOrDefault() {
 }
 
 SEARCH_DIRS=$(getEnvOrDefault "DEV_SEARCH_DIRS" "$HOME/repos")
-ROOT_FILE_PATTERN=$(getEnvOrDefault "DEV_ROOT_FILE_PATTERN" "(.git|.envrc|.env|shell.nix|flake.nix|package.json|.sln|.csproj)")
+ROOT_FILE_PATTERN=$(getEnvOrDefault "DEV_ROOT_FILE_PATTERN" "(.git|package.json|.sln|.csproj)")
 
-findRoots() {
+function findRoots() {
   local search_dir=$1
   local root_files="$ROOT_FILE_PATTERN"
-  ag --hidden -g "$root_files" "$search_dir" |
+  fd --hidden --follow --regex "$root_files" "$search_dir" |
     xargs -I {} dirname {} |
     sort -u |
     sed "s|^$search_dir/||" |
     awk -v prefix="$search_dir" 'BEGIN { gray="\033[90m"; blue="\033[34m"; reset="\033[0m"; folderIcon=" "; } { print blue folderIcon $0 reset " " gray "(" prefix "/" $0 ")" reset }'
 }
 
-gatherRoots() {
+function gatherRoots() {
   local directory_paths=""
 
   for dir in "$@"; do
@@ -30,14 +30,14 @@ gatherRoots() {
   echo "$directory_paths"
 }
 
-selectDir() {
+function selectDir() {
   local formatted_directories="$1"
   echo "$formatted_directories" |
     fzf --ansi --border=none |
     sed 's/.*(\(.*\)).*/\1/'
 }
 
-openWithEditor() {
+function openWithEditor() {
   local target_path="$1"
   if [ -n "$target_path" ]; then
     cd "$target_path" || exit
@@ -45,7 +45,7 @@ openWithEditor() {
   fi
 }
 
-dev() {
+function dev() {
   if [ $# -eq 0 ]; then
     return 1
   fi
