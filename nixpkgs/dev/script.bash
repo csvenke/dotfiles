@@ -5,7 +5,7 @@ function getEnvOrDefault() {
 }
 
 SEARCH_DIRS=$(getEnvOrDefault "DEV_SEARCH_DIRS" "$HOME/repos")
-ROOT_FILE_PATTERN=$(getEnvOrDefault "DEV_ROOT_FILE_PATTERN" "(.git|package.json|.sln|.csproj)")
+ROOT_FILE_PATTERN=$(getEnvOrDefault "DEV_ROOT_FILE_PATTERN" "(\.git$|package\.json$|\.sln$|\.csproj$)")
 
 function findRoots() {
   local search_dir=$1
