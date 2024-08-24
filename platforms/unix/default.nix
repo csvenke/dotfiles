@@ -36,6 +36,7 @@ pkgs.buildEnv {
     wget
     curl
     fzf
+    xclip
     lazygit
   ];
 }
