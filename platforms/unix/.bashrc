@@ -35,6 +35,8 @@ alias dot="cd ~/.dotfiles"
 if commands_exist "nvim"; then
   export EDITOR="nvim --clean"
   export VISUAL="nvim"
+
+  alias chatgpt='nvim -c GpChatNew'
 fi
 
 if commands_exist "eza"; then
