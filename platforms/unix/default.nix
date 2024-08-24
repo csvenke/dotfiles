@@ -1,17 +1,26 @@
 { pkgs ? import <nixpkgs-unstable> { } }:
 
+with builtins;
+
+let
+  inherit (pkgs.lib) pipe;
+
+  getDefaultPackageFromFlake = path:
+    pipe path [
+      toPath
+      (path: "path:${path}")
+      getFlake
+      (flake: flake.packages."${currentSystem}".default)
+    ];
+in
+
 pkgs.buildEnv {
   name = "Home environment";
   paths = with pkgs; [
-    # Shell
-    starship
+    (getDefaultPackageFromFlake ../../nixpkgs/neovim)
     (callPackage ../../nixpkgs/tmux { })
-
-    # Editors
-    (callPackage ../../nixpkgs/neovim { })
-
-    # Tools
     (callPackage ../../nixpkgs/dev { })
+    starship
     findutils
     direnv
     nix-direnv
@@ -27,7 +36,6 @@ pkgs.buildEnv {
     wget
     curl
     fzf
-    xclip
     lazygit
   ];
 }
