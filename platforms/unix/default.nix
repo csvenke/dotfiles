@@ -17,9 +17,9 @@ in
 pkgs.buildEnv {
   name = "Home environment";
   paths = with pkgs; [
-    (getDefaultPackageFromFlake ../../nixpkgs/neovim)
-    (callPackage ../../nixpkgs/tmux { })
-    (callPackage ../../nixpkgs/dev { })
+    (getDefaultPackageFromFlake ../../packages/neovim)
+    (callPackage ../../packages/tmux { })
+    (callPackage ../../packages/dev { })
     starship
     findutils
     direnv
