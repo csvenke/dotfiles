@@ -54,67 +54,28 @@
         "type": "github"
       }
     },
-    "language-servers": {
-      "inputs": {
-        "nixpkgs": "nixpkgs"
-      },
-      "locked": {
-        "lastModified": 1709675937,
-        "narHash": "sha256-LpSNmATGgzyXBnnXsuD6NX4VhnvbHPSCKO5hyNk1mz4=",
-        "ref": "refs/heads/master",
-        "rev": "23ac6ce745daede8c801160bbda7d2114666bd94",
-        "revCount": 13,
-        "type": "git",
-        "url": "https://git.sr.ht/~bwolf/language-servers.nix"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://git.sr.ht/~bwolf/language-servers.nix"
-      }
-    },
     "neovim": {
       "inputs": {
         "flake-parts": "flake-parts_2",
-        "language-servers": "language-servers",
-        "neovim-extra-plugins": "neovim-extra-plugins",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs",
+        "vim-extra-plugins": "vim-extra-plugins"
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-qdldJb4+04JTTIB8LvLD7sgpFpMIFseSyZ3tiIjICWs=",
+        "narHash": "sha256-zpaAYm2IGnEl7kyxBplH1bR0oiyn1iOwvNNVdNLgd7g=",
         "path": "./packages/neovim",
         "type": "path"
       },
       "original": {
         "path": "./packages/neovim",
         "type": "path"
-      }
-    },
-    "neovim-extra-plugins": {
-      "inputs": {
-        "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs_2",
-        "poetry2nix": "poetry2nix"
-      },
-      "locked": {
-        "lastModified": 1723731750,
-        "narHash": "sha256-C79HQpVT4oema8gom0XFSttEBgd/y3vao1a3JRhcEBo=",
-        "owner": "jooooscha",
-        "repo": "nixpkgs-vim-extra-plugins",
-        "rev": "5868a512c759856778500900f255858d80675a96",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jooooscha",
-        "repo": "nixpkgs-vim-extra-plugins",
-        "type": "github"
       }
     },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
           "neovim",
-          "neovim-extra-plugins",
+          "vim-extra-plugins",
           "poetry2nix",
           "nixpkgs"
         ]
@@ -135,15 +96,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1659107414,
-        "narHash": "sha256-ASIVMNu/fTlgVvDJEJJ1xAysKGg6xX/wFcu4RTb2R3Y=",
-        "owner": "nixos",
+        "lastModified": 1724479785,
+        "narHash": "sha256-pP3Azj5d6M5nmG68Fu4JqZmdGt4S4vqI5f8te+E/FTw=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "69a3aff98b02b91b64e9f728f2e1e30ead8ecd52",
+        "rev": "d0e1602ddde669d5beb01aec49d71a51937ed7be",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -190,22 +152,6 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1723637854,
-        "narHash": "sha256-med8+5DSWa2UnOqtdICndjDAEjxr5D7zaIiK4pn0Q7c=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "c3aa7b8938b17aebd2deecf7be0636000d62a2b9",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_4": {
-      "locked": {
         "lastModified": 1724479785,
         "narHash": "sha256-pP3Azj5d6M5nmG68Fu4JqZmdGt4S4vqI5f8te+E/FTw=",
         "owner": "NixOS",
@@ -224,13 +170,13 @@
       "inputs": {
         "flake-utils": [
           "neovim",
-          "neovim-extra-plugins",
+          "vim-extra-plugins",
           "flake-utils"
         ],
         "nix-github-actions": "nix-github-actions",
         "nixpkgs": [
           "neovim",
-          "neovim-extra-plugins",
+          "vim-extra-plugins",
           "nixpkgs"
         ]
       },
@@ -252,7 +198,7 @@
       "inputs": {
         "flake-parts": "flake-parts",
         "neovim": "neovim",
-        "nixpkgs": "nixpkgs_4"
+        "nixpkgs": "nixpkgs_3"
       }
     },
     "systems": {
@@ -267,6 +213,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "vim-extra-plugins": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs_2",
+        "poetry2nix": "poetry2nix"
+      },
+      "locked": {
+        "lastModified": 1724595594,
+        "narHash": "sha256-jFKJ8paBZZ+kvT1bDKXZqSpMdt8C6XCG7JVYliM6PPY=",
+        "owner": "jooooscha",
+        "repo": "nixpkgs-vim-extra-plugins",
+        "rev": "f4d56b39eb2a9a2f2a8c8be9bee6ced645ebec5a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jooooscha",
+        "repo": "nixpkgs-vim-extra-plugins",
         "type": "github"
       }
     }

@@ -1,10 +1,9 @@
-{ pkgs, language-servers }:
+{ pkgs }:
 
 let
-
-  config = import ./config { inherit pkgs; };
-  runtime = import ./runtime { inherit pkgs; inherit language-servers; };
-  plugins = import ./plugins { inherit pkgs; };
+  config = pkgs.callPackage ./config { };
+  runtime = pkgs.callPackage ./runtime { };
+  plugins = pkgs.callPackage ./plugins { };
 
   overrideNeovim = pkgs.neovim.override {
     configure = {

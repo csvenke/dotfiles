@@ -64,11 +64,9 @@ let
   extraPlugins = with pkgs.vimExtraPlugins; [
     # Themes
     nordic-alexczyl
-    tokyonight-nvim
     # LLMs
     gp-nvim
   ];
 in
-
 
 plugins ++ extraPlugins

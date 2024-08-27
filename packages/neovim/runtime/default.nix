@@ -1,16 +1,13 @@
-{ pkgs, language-servers }:
+{ pkgs }:
 
 with pkgs;
 [
-  # Deps
   tree-sitter
   gcc
   ripgrep
   fd
   findutils
   gnutar
-  git
-  lazygit
   fzf
   wget
   curl
@@ -21,67 +18,45 @@ with pkgs;
   gnused
   gnugrep
   xdg-utils
+  git
+  lazygit
 
-  # Nix
-  nil
-  nixpkgs-fmt
-
-  # Bash
-  nodePackages.bash-language-server
-  shellcheck
-  shfmt
-
-  # Haskell
-  haskell-language-server
-  haskellPackages.hoogle
-  haskellPackages.fast-tags
-
-  # Dotnet
-  dotnet-sdk
-  omnisharp-roslyn
-
-  # Java
-  jdk
-  jdt-language-server
-
-  # Typescript
-  nodejs
-  nodePackages.typescript-language-server
-
-  ## Rust
-  cargo
-  rustc
-  rust-analyzer
-
-  # Lua
+  ### Lua ###
   lua-language-server
   stylua
 
-  # Markdown
-  markdownlint-cli
-  marksman
+  ### Nix ###
+  nil
+  nixpkgs-fmt
 
-  # Eslint
-  vscode-extensions.dbaeumer.vscode-eslint
+  ### Bash ###
+  nodePackages.bash-language-server
+  shfmt
+  shellcheck
 
-  # Prettier
-  prettierd
-
-  # Python
+  ### Python ###
   (python3.withPackages (ps: [ ps.pip ps.pipx ]))
   pyright
   ruff-lsp
 
-  # Yaml
+  ### Markdown ###
+  marksman
+
+  ### Yaml ###
   yaml-language-server
 
-  # TOML
+  ### TOML ###
   taplo
 
-  # Json, eslint, markdown, css, html
+  ### Json, eslint, markdown, css, html ###
   vscode-langservers-extracted
+  vscode-extensions.dbaeumer.vscode-eslint
 
-  # Angular
-  language-servers.packages.angular-language-server
+  ### Prettier ###
+  prettierd
+
+  ### Javascript/Typescript ###
+  nodejs
+  nodePackages.typescript-language-server
 ]
 
