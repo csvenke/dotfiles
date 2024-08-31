@@ -1,11 +1,10 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i python -p python3
 
-from utils.config import Config
-from utils import nix, shell
-from utils.dotfiles import DotfilesManager
-from utils.scriptargs import ScriptArgs
-
+import shell
+from config import Config
+from dotfiles import DotfilesManager
+from scriptargs import ScriptArgs
 
 def main():
     args = ScriptArgs.parse()
@@ -15,8 +14,6 @@ def main():
     match args.command:
         case "install":
             install_command(config, dotfiles)
-        case "update":
-            update_command(config)
         case "check":
             check_command(dotfiles)
         case "clean":
@@ -30,24 +27,12 @@ def install_command(config: Config, dotfiles: DotfilesManager):
     print(">>> Symlink dotfiles")
     dotfiles.install_all()
 
-    print(">>> Install nix packages <<<")
-    nix.install(config.get_source_path())
-
     print(">>> Source .bashrc <<<")
     bashrc = config.get_target_path(".bashrc")
     shell.run(f"source {bashrc}")
 
     print(">>> DONE <<<")
     print("Restart shell for changes to take effect")
-
-
-def update_command(config: Config):
-    print(">>> Install nix packages <<<")
-    nix.install(config.get_source_path())
-
-    print(">>> Source .bashrc <<<")
-    bashrc = config.get_target_path(".bashrc")
-    shell.run(f"source {bashrc}")
 
 
 def check_command(dotfiles: DotfilesManager):

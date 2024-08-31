@@ -20,6 +20,7 @@ with pkgs;
   xdg-utils
   git
   lazygit
+  xclip
 
   ### Lua ###
   lua-language-server

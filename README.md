@@ -15,16 +15,8 @@
 git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
 ```
 
-- Run install script
+- Run initialize script
 
 ```bash
-bash ~/.dotfiles/scripts/install.bash
-```
-
-### Uninstall
-
-- Run uninstall script
-
-```bash
-bash ~/.dotfiles/scripts/uninstall.bash
+bash ~/.dotfiles/scripts/initialize.bash
 ```
