@@ -15,14 +15,10 @@ let
   };
 in
 
-pkgs.tmux.overrideAttrs (oldAttrs: {
-  buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ pkgs.makeWrapper ];
-  postInstall = oldAttrs.postInstall + /* bash */ ''
-    mkdir $out/libexec
-    mv $out/bin/tmux $out/libexec/tmux-unwrapped
-    makeWrapper $out/libexec/tmux-unwrapped $out/bin/tmux \
-      --add-flags "-f ${tmuxConf}"
+pkgs.writeShellApplication {
+  name = "tmux";
+  text = ''
+    ${pkgs.tmux}/bin/tmux -f ${tmuxConf} "$@"
   '';
-})
-
+}
 
