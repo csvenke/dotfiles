@@ -36,7 +36,15 @@ let
     name = "gpb";
     runtimeInputs = with pkgs; [ git ];
     text = ''
-      git push origin "$(git branch --show-current)" -- "$@"
+      git push origin "$(git branch --show-current)"
+    '';
+  };
+
+  git-push-current-branch-force = pkgs.writeShellApplication {
+    name = "gpbf";
+    runtimeInputs = with pkgs; [ git ];
+    text = ''
+      git push origin --force "$(git branch --show-current)"
     '';
   };
 
@@ -88,6 +96,7 @@ pkgs.symlinkJoin {
     git-find-branch
     git-checkout-branch
     git-push-current-branch
+    git-push-current-branch-force
     git-sync-current-branch
     git-sync-main-branch
     git-checkout-main-branch
