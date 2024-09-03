@@ -13,15 +13,58 @@
       perSystem = { pkgs, system, ... }:
         let
           neovim = inputs.neovim.packages.${system}.default;
+
           packages = import ./packages {
             inherit pkgs;
             inherit neovim;
           };
+
+          dotstrap = import ./tools/dotstrap {
+            inherit pkgs;
+          };
+
+          install = pkgs.writeShellApplication {
+            name = "install";
+            runtimeInputs = [ pkgs.git dotstrap ];
+            text = ''
+              if [ ! -d "$HOME/.dotfiles" ]; then
+                git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
+              fi
+
+              dotstrap install
+
+              nix profile remove ".*"
+              nix profile install ~/.dotfiles
+              nix profile wipe-history --older-than 7d
+            '';
+          };
+
+          check = pkgs.writeShellApplication {
+            name = "check";
+            runtimeInputs = [ dotstrap ];
+            text = ''
+              dotstrap check
+            '';
+          };
+
+          clean = pkgs.writeShellApplication {
+            name = "clean";
+            runtimeInputs = [ dotstrap ];
+            text = ''
+              dotstrap clean
+            '';
+          };
         in
         {
-          packages.default = pkgs.buildEnv {
-            name = "dotfiles-env";
-            paths = packages;
+          packages = with pkgs; {
+            install = install;
+            check = check;
+            clean = clean;
+
+            default = buildEnv {
+              name = "dotfiles-env";
+              paths = packages;
+            };
           };
         };
     };

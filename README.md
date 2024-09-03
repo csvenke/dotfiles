@@ -1,22 +1,13 @@
 # dotfiles
 
-## Usage
-
-### Prerequisites
+## Requirements
 
 - Install [nix](https://nixos.org/download)
-- Download any [nerdfont](https://www.nerdfonts.com) (Optional)
 
-### Install
+## Usage
 
-- Clone repository
-
-```bash
-git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
-```
-
-- Run initialize script
+Run install script
 
 ```bash
-bash ~/.dotfiles/scripts/initialize.bash
+nix run --experimental-features 'nix-command flakes' github:csvenke/dotfiles#install
 ```

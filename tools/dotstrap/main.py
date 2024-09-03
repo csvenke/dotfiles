@@ -1,10 +1,8 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -i python -p python3
-
 import shell
 from config import Config
 from dotfiles import DotfilesManager
 from scriptargs import ScriptArgs
+
 
 def main():
     args = ScriptArgs.parse()
