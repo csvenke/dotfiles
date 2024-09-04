@@ -62,13 +62,13 @@
           };
         in
         {
-          packages = with pkgs; {
-            install = install;
-            update = update;
-            check = check;
-            clean = clean;
+          packages = {
+            inherit install;
+            inherit update;
+            inherit check;
+            inherit clean;
 
-            default = buildEnv {
+            default = pkgs.buildEnv {
               name = "dotfiles-env";
               paths = packages;
             };
