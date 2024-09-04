@@ -2,12 +2,16 @@
 
 ## Requirements
 
-- Install [nix](https://nixos.org/download)
+- [nix](https://nixos.org/download)
 
 ## Usage
 
-Run install script
+```bash
+nix run github:csvenke/dotfiles#install
+```
+
+If you dont have flakes enabled
 
 ```bash
-nix run --experimental-features 'nix-command flakes' github:csvenke/dotfiles#install
+nix run --extra-experimental-features 'nix-command flakes' github:csvenke/dotfiles#install
 ```

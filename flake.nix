@@ -33,8 +33,14 @@
 
               dotstrap install
 
-              nix profile remove ".*"
               nix profile install ~/.dotfiles
+            '';
+          };
+
+          update = pkgs.writeShellApplication {
+            name = "update";
+            text = ''
+              nix profile upgrade --all
               nix profile wipe-history --older-than 7d
             '';
           };
@@ -58,6 +64,7 @@
         {
           packages = with pkgs; {
             install = install;
+            update = update;
             check = check;
             clean = clean;
 
