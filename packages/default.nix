@@ -1,10 +1,6 @@
-{ pkgs, neovim }:
+{ pkgs }:
 
 let
-  flake-packages = [
-    neovim
-  ];
-
   local-packages = with pkgs; [
     (callPackage ./cat { })
     (callPackage ./copy { })
@@ -30,7 +26,8 @@ let
     silver-searcher
     fzf
     xclip
+    neovim
   ];
 in
 
-nix-packages ++ flake-packages ++ local-packages
+nix-packages ++ local-packages

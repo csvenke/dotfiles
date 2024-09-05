@@ -12,11 +12,15 @@
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem = { pkgs, system, ... }:
         let
-          neovim = inputs.neovim.packages.${system}.default;
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              inputs.neovim.overlays.default
+            ];
+          };
 
           packages = import ./packages {
             inherit pkgs;
-            inherit neovim;
           };
 
           dotstrap = import ./tools/dotstrap {
