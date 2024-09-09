@@ -4,14 +4,12 @@ let
   local-packages = with pkgs; [
     (callPackage ./cat { })
     (callPackage ./copy { })
-    (callPackage ./dev { })
     (callPackage ./git { })
     (callPackage ./ls { })
     (callPackage ./tmux { })
   ];
 
   nix-packages = with pkgs; [
-    coreutils
     findutils
     starship
     direnv
