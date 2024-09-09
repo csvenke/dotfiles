@@ -5,22 +5,15 @@ let
     name = "git-main-branch";
     runtimeInputs = with pkgs; [ git ];
     text = ''
-      git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+      git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
     '';
   };
 
   git-all-branches = pkgs.writeShellApplication {
     name = "git-all-branches";
-    runtimeInputs = with pkgs; [ git git-main-branch ];
+    runtimeInputs = with pkgs; [ git ];
     text = ''
-      git branch -a |
-        sed "s@*@@g" |
-        sed "s@ @@g" |
-        sed "s@remotes/origin/@@g" |
-        sed "s@HEAD->origin/$(git-main-branch)@@g" |
-        sed "/^$/d" |
-        sort |
-        uniq
+      git branch -a -r --format="%(refname:short)" | sed "s@origin/@@" | sed "/^origin/d"
     '';
   };
 
