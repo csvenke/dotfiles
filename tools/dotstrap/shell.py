@@ -7,7 +7,7 @@ def run(command: str) -> str:
     )
     stdout, stderr = process.communicate()
 
-    if process.returncode != 0:
+    if process.returncode == 1:
         raise subprocess.CalledProcessError(
             process.returncode, command, output=stdout, stderr=stderr
         )
