@@ -5,11 +5,11 @@
         "nixpkgs-lib": "nixpkgs-lib"
       },
       "locked": {
-        "lastModified": 1725234343,
-        "narHash": "sha256-+ebgonl3NbiKD2UD0x4BszCZQ6sTfL4xioaM49o5B3Y=",
+        "lastModified": 1726153070,
+        "narHash": "sha256-HO4zgY0ekfwO5bX0QH/3kJ/h4KvUDFZg8YpkNwIbg1U=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "567b938d64d4b4112ee253b9274472dc3a346eb6",
+        "rev": "bcef6817a8b2aa20a5a6dbb19b43e63c5bf8619a",
         "type": "github"
       },
       "original": {
@@ -272,14 +272,17 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1726093319,
-        "narHash": "sha256-Rl1KchhOqDIZIa4uFn6+78k2wDVMUAYS4iEUHWDvSR8=",
-        "path": "/home/csvenke/repos/tools",
-        "type": "path"
+        "lastModified": 1726093312,
+        "narHash": "sha256-Z9yObiuY5O6V/IAhnU2SFJgm1J44I8K2KU4xtFxquBU=",
+        "owner": "csvenke",
+        "repo": "tools",
+        "rev": "04bba79a01b2af44b969f69f8305fcb6d3893e55",
+        "type": "github"
       },
       "original": {
-        "path": "/home/csvenke/repos/tools",
-        "type": "path"
+        "owner": "csvenke",
+        "repo": "tools",
+        "type": "github"
       }
     },
     "vim-extra-plugins": {

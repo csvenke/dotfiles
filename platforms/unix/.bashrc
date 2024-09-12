@@ -57,6 +57,8 @@ alias dot="cd ~/.dotfiles"
 
 if commands_exist "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devenv"
+  alias npm-run="nix run github:csvenke/tools#npm-run"
+  alias dotnet-run="nix run github:csvenke/tools#dotnet-run"
 fi
 
 if commands_exist "git"; then
