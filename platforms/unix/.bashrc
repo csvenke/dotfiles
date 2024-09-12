@@ -16,23 +16,18 @@ function git-main-branch() {
 function git-all-branches() {
   git branch -a -r --format="%(refname:short)" | sed "s@origin/@@" | sed "/^origin/d"
 }
-
 function git-find-branch() {
   git-all-branches | fzf | xclip -selection clipboard
 }
-
 function git-push-current-branch() {
-  git push origin "$(git branch --show-current)"
+  git push origin "$(git branch --show-current)" "$@"
 }
-
 function git-sync-current-branch() {
-  git pull origin "$(git branch --show-current)"
+  git pull origin "$(git branch --show-current)" "$@"
 }
-
 function git-sync-main-branch() {
   git pull origin "$(git-main-branch)"
 }
-
 function git-checkout-main-branch() {
   git checkout "$(git-main-branch)"
 }
@@ -56,9 +51,7 @@ alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
 
 if commands_exist "nix"; then
-  alias flake-init="nix flake init -t github:csvenke/devenv"
-  alias npm-run="nix run github:csvenke/tools#npm-run"
-  alias dotnet-run="nix run github:csvenke/tools#dotnet-run"
+  alias flake-init="nix flake init -t github:csvenke/devkit"
 fi
 
 if commands_exist "git"; then
