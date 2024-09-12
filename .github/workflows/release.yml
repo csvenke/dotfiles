@@ -18,4 +18,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@main
-      - run: nix run github:csvenke/tools#github-release
+      - run: nix run github:csvenke/devkit#github-release
