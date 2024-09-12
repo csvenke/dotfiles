@@ -1,11 +1,10 @@
 {
-  description = "Dotfiles flake";
+  description = "dotfiles flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    neovim.url = "github:csvenke/neovim-flake";
-    tools.url = "github:csvenke/tools";
+    devkit.url = "github:csvenke/devkit";
   };
 
   outputs = inputs@{ flake-parts, nixpkgs, ... }:
@@ -13,9 +12,12 @@
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem = { pkgs, system, ... }:
         let
-          neovim = inputs.neovim.packages.${system}.default;
-          tmux = inputs.tools.packages.${system}.tmux;
-          dev = inputs.tools.packages.${system}.dev;
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [
+              inputs.devkit.overlays.default
+            ];
+          };
 
           dotstrap = import ./tools/dotstrap {
             inherit pkgs;
@@ -38,9 +40,11 @@
             xclip
             eza
             bat
-            neovim
-            tmux
-            dev
+            devkit.neovim
+            devkit.tmux
+            devkit.dev
+            devkit.npm-run
+            devkit.dotnet-run
           ];
 
           install = pkgs.writeShellApplication {
