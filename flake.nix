@@ -10,7 +10,7 @@
   outputs = inputs@{ flake-parts, nixpkgs, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
-      perSystem = { pkgs, system, ... }:
+      perSystem = { system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
