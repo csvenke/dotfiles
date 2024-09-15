@@ -96,8 +96,9 @@ if commands_exist "starship"; then
 fi
 
 if commands_exist "fzf"; then
-  if commands_exist "ag"; then
-    export FZF_DEFAULT_COMMAND='ag --hidden -l -g ""'
+  if commands_exist "fd"; then
+    export FZF_DEFAULT_COMMAND='fd --type file'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   fi
   export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
 

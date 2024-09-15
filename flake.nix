@@ -25,6 +25,7 @@
 
           packages = with pkgs; [
             findutils
+            fd
             starship
             direnv
             nix-direnv
@@ -35,7 +36,6 @@
             tldr
             wget
             curl
-            silver-searcher
             fzf
             xclip
             eza
