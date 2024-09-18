@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    neovim.url = "github:csvenke/neovim-flake";
     devkit.url = "github:csvenke/devkit";
   };
 
@@ -16,6 +17,7 @@
             inherit system;
             overlays = [
               inputs.devkit.overlays.default
+              inputs.neovim.overlays.default
             ];
           };
 
@@ -40,7 +42,7 @@
             xclip
             eza
             bat
-            devkit.neovim
+            neovim
             devkit.tmux
             devkit.dev
             devkit.npm-run
