@@ -43,6 +43,9 @@ function xclip-copy() {
 function bat-cat() {
   bat --style=plain "$@"
 }
+function is-wsl() {
+  [ -n "$WSL_DISTRO_NAME" ]
+}
 
 export DOTFILES="$HOME/.dotfiles"
 export BASH_SILENCE_DEPRECATION_WARNING=1
@@ -103,6 +106,10 @@ if commands_exist "fzf"; then
   export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
 
   eval "$(fzf --bash)"
+fi
+
+if is-wsl; then
+  alias start='explorer.exe'
 fi
 
 source_if_exists "$HOME/.bashrc.work.sh"
