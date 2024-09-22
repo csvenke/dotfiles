@@ -19,5 +19,6 @@ jobs:
           pr-labels: |
             dependencies
             automated
+            automerge
           commit-msg: "feat: update flake.lock"
           token: ${{ secrets.GH_REPO_PAT }}
