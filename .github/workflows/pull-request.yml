@@ -15,6 +15,7 @@ jobs:
       - run: nix develop
 
   automerge:
+    if: contains(github.event.pull_request.labels.*.name, 'automerge')
     needs: [test]
     runs-on: ubuntu-latest
     steps:
