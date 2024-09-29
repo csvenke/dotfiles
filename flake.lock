@@ -26,11 +26,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1727401859,
-        "narHash": "sha256-dS5FbZHpOk+MPAEGL4WmVBJ9Y7De08f4CzaaxQ5uKp8=",
+        "lastModified": 1727488216,
+        "narHash": "sha256-+e0o39RR/uxNaXVAtncfeNli4/gS13NFRaGE7H8bVSE=",
         "owner": "csvenke",
         "repo": "devkit",
-        "rev": "77aefcd5c75fb2758b4da359c36d71e271fad4d9",
+        "rev": "f5a0d2c3dea6c77ede32dcfba53c887594071823",
         "type": "github"
       },
       "original": {
@@ -136,11 +136,11 @@
         "vim-extra-plugins": "vim-extra-plugins"
       },
       "locked": {
-        "lastModified": 1727484465,
-        "narHash": "sha256-deesFSVSGn3EJHPQm5jBGkkuuQ300ePiPWzNpMVWKhk=",
+        "lastModified": 1727534549,
+        "narHash": "sha256-taecl7q9/YNAKqKqB9q6tuS7BKFpU+Pvk94s4Vico3Y=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "a65dd836a906a197f1a4f105ad2841895a60d6bc",
+        "rev": "c4fc882b04b5a21cd1d2864acf3ea2c8f0727417",
         "type": "github"
       },
       "original": {
@@ -238,11 +238,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1727122398,
-        "narHash": "sha256-o8VBeCWHBxGd4kVMceIayf5GApqTavJbTa44Xcg5Rrk=",
+        "lastModified": 1727348695,
+        "narHash": "sha256-J+PeFKSDV+pHL7ukkfpVzCOO7mBSrrpJ3svwBFABbhI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "30439d93eb8b19861ccbe3e581abf97bdc91b093",
+        "rev": "1925c603f17fc89f4c8f6bf6f631a802ad85d784",
         "type": "github"
       },
       "original": {
