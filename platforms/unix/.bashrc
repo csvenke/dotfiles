@@ -109,7 +109,10 @@ if commands_exist "fzf"; then
 fi
 
 if is-wsl; then
+  export BROWSER='explorer.exe'
+
   alias start='explorer.exe'
+  alias open='explorer.exe'
 fi
 
 source_if_exists "$HOME/.bashrc.work.sh"
