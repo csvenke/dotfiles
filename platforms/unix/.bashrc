@@ -12,7 +12,6 @@ function commands_exist() {
 function git-main-branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
-
 function git-all-branches() {
   git branch -a -r --format="%(refname:short)" | sed "s@origin/@@" | sed "/^origin/d"
 }
@@ -85,6 +84,8 @@ fi
 if commands_exist "nvim"; then
   export EDITOR="nvim --clean"
   export VISUAL="nvim"
+
+  alias vim="nvim"
 fi
 
 if commands_exist "direnv"; then
