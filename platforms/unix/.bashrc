@@ -52,6 +52,9 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
 
+source_if_exists "$HOME/.bashrc.work.sh"
+source_if_exists "$HOME/.bashrc.machine.sh"
+
 if commands_exist "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devkit"
 fi
@@ -114,11 +117,4 @@ if is-wsl; then
 
   alias start='explorer.exe'
   alias open='explorer.exe'
-fi
-
-source_if_exists "$HOME/.bashrc.work.sh"
-source_if_exists "$HOME/.bashrc.machine.sh"
-
-if commands_exist "tmux" && [ -n "$PS1" ] && [ -z "$TMUX" ]; then
-  tmux new-session -A -s main
 fi
