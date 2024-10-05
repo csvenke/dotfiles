@@ -45,8 +45,7 @@
             neovim
             devkit.tmux
             devkit.dev
-            devkit.npm-run
-            devkit.dotnet-run
+            devkit.run
           ];
 
           install = pkgs.writeShellApplication {
