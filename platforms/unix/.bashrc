@@ -57,8 +57,21 @@ function git-worktree-remove() {
 
   local worktree_path
   worktree_path=$(echo "$selected_worktree" | awk '{print $1}')
+
   echo "Removing $worktree_path"
   git worktree remove "$worktree_path"
+}
+function git-worktree-prune() {
+  local branches
+  branches=$(git worktree list --porcelain | grep "prunable" -B 1 | grep "branch" | sed "s@branch refs/heads/@@" | xargs -r)
+
+  if [ -z "$branches" ]; then
+    echo "No prunable worktrees"
+    return 0
+  fi
+
+  git worktree prune
+  echo "$branches" | xargs git branch -D
 }
 function eza-list-files() {
   command eza --icons --colour=auto --sort=type --group-directories-first "$@"
@@ -96,6 +109,7 @@ if commands_exist "git"; then
   alias gbc='git-bare-clone'
   alias gwa='git worktree add'
   alias gwr='git-worktree-remove'
+  alias gwp='git-worktree-prune'
 fi
 
 if commands_exist "eza"; then
