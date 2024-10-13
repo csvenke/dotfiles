@@ -42,6 +42,7 @@
             xclip
             eza
             bat
+            htop
             neovim
             devkit.tmux
             devkit.dev
