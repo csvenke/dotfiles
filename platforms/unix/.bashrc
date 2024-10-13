@@ -33,6 +33,33 @@ function git-checkout-main-branch() {
 function git-checkout-branch() {
   git-all-branches | fzf | xargs git checkout
 }
+function git-bare-clone() {
+  local url="$1"
+  local path="${url##*/}"
+
+  mkdir "$path"
+  cd "$path" || exit 1
+  git clone --bare "$url" .git
+
+  local main_branch
+  main_branch=$(git rev-parse --abbrev-ref HEAD)
+
+  git worktree add --lock "$main_branch"
+  git worktree add --lock review
+}
+function git-worktree-remove() {
+  local selected_worktree
+  selected_worktree=$(git worktree list | fzf)
+
+  if [ -z "$selected_worktree" ]; then
+    return 0
+  fi
+
+  local worktree_path
+  worktree_path=$(echo "$selected_worktree" | awk '{print $1}')
+  echo "Removing $worktree_path"
+  git worktree remove "$worktree_path"
+}
 function eza-list-files() {
   command eza --icons --colour=auto --sort=type --group-directories-first "$@"
 }
@@ -66,8 +93,9 @@ if commands_exist "git"; then
   alias gsm='git-sync-main-branch'
   alias gcm='git-checkout-main-branch'
   alias gcb='git-checkout-branch'
-  alias ggpush='git-push-current-branch'
-  alias ggpull='git-sync-current-branch'
+  alias gbc='git-bare-clone'
+  alias gwa='git worktree add'
+  alias gwr='git-worktree-remove'
 fi
 
 if commands_exist "eza"; then
