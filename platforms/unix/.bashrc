@@ -45,7 +45,8 @@ function git-bare-clone() {
   main_branch=$(git rev-parse --abbrev-ref HEAD)
 
   git worktree add --lock "$main_branch"
-  git worktree add --lock review
+  git worktree add --lock -d dev
+  git worktree add --lock -d review
 }
 function git-worktree-remove() {
   local selected_worktree
