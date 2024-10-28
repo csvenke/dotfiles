@@ -1,12 +1,10 @@
-function source_if_exists() {
+function source-if-exists() {
   if test -r "$1"; then
     source "$1"
   fi
 }
-function commands_exist() {
-  for cmd in "$@"; do
-    command -v "$cmd" &>/dev/null || return 1
-  done
+function has-cmd() {
+  command -v "$1" &>/dev/null || return 1
   return 0
 }
 function git-main-branch() {
@@ -93,14 +91,14 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
 
-source_if_exists "$HOME/.bashrc.work.sh"
-source_if_exists "$HOME/.bashrc.machine.sh"
+source-if-exists "$HOME/.bashrc.work.sh"
+source-if-exists "$HOME/.bashrc.machine.sh"
 
-if commands_exist "nix"; then
+if has-cmd "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devkit"
 fi
 
-if commands_exist "git"; then
+if has-cmd "git"; then
   alias gfb='git-find-branch'
   alias gpb='git-push-current-branch'
   alias gsb='git-sync-current-branch'
@@ -113,40 +111,40 @@ if commands_exist "git"; then
   alias gwp='git-worktree-prune'
 fi
 
-if commands_exist "eza"; then
+if has-cmd "eza"; then
   alias ls='eza-list-files'
   alias la='ls -a'
   alias ll='ls -al'
 fi
 
-if commands_exist "xclip"; then
+if has-cmd "xclip"; then
   alias copy='xclip-copy'
 fi
 
-if commands_exist "bat"; then
+if has-cmd "bat"; then
   alias cat='bat-cat'
 fi
 
-if commands_exist "nvim"; then
+if has-cmd "nvim"; then
   export EDITOR="nvim --clean"
   export VISUAL="nvim"
 
   alias vim="nvim"
 fi
 
-if commands_exist "direnv"; then
+if has-cmd "direnv"; then
   export DIRENV_LOG_FORMAT=
   export DIRENV_WARN_TIMEOUT=1m
 
   eval "$(direnv hook bash)"
 fi
 
-if commands_exist "starship"; then
+if has-cmd "starship"; then
   eval "$(starship init bash)"
 fi
 
-if commands_exist "fzf"; then
-  if commands_exist "fd"; then
+if has-cmd "fzf"; then
+  if has-cmd "fd"; then
     export FZF_DEFAULT_COMMAND='fd --type file'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   fi
