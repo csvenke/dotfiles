@@ -16,7 +16,8 @@
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
-      ".vault/openai-api-key.txt"
+      ".vault/openai-api-key.txt",
+      ".vault/anthropic-api-key.txt"
     ],
     "unlink": [
       "default.nix",
