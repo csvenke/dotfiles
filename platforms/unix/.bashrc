@@ -39,10 +39,7 @@ function git-bare-clone() {
   cd "$path" || exit 1
   git clone --bare "$url" .git
 
-  local main_branch
-  main_branch=$(git rev-parse --abbrev-ref HEAD)
-
-  git worktree add --lock "$main_branch"
+  git worktree add --lock "$(git-main-branch)"
   git worktree add --lock -d dev
   git worktree add --lock -d review
 }
