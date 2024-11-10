@@ -53,19 +53,16 @@
             name = "install";
             runtimeInputs = [ pkgs.git dotstrap ];
             text = ''
-              if [ ! -d "$HOME/.dotfiles" ]; then
-                git clone https://github.com/csvenke/dotfiles.git ~/.dotfiles
+              dotfiles="$HOME/.dotfiles"
+
+              if [ ! -d "$dotfiles" ]; then
+                git clone https://github.com/csvenke/dotfiles.git "$dotfiles"
+              else
+                git -C "$dotfiles" pull origin master
               fi
 
               dotstrap install
-
-              nix profile install ~/.dotfiles
-            '';
-          };
-
-          update = pkgs.writeShellApplication {
-            name = "update";
-            text = ''
+              nix profile install "$dotfiles"
               nix profile upgrade --all
               nix profile wipe-history --older-than 7d
             '';
@@ -90,7 +87,6 @@
         {
           packages = {
             inherit install;
-            inherit update;
             inherit check;
             inherit clean;
 
@@ -98,7 +94,6 @@
               name = "dotfiles";
               paths = packages;
             };
-
           };
 
           devShells = {
