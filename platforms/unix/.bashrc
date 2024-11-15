@@ -36,12 +36,12 @@ function git-bare-clone() {
   local path="${url##*/}"
 
   mkdir "$path"
-  cd "$path" || exit 1
-  git clone --bare "$url" .git
+  cd "$path" || return
+  git clone --bare "$url" .git || return
 
   git worktree add --lock "$(git-main-branch)"
-  git worktree add --lock -d dev
-  git worktree add --lock -d review
+  git worktree add --lock --detach dev
+  git worktree add --lock --detach review
 }
 function git-worktree-remove() {
   local selected_worktree
