@@ -11,7 +11,7 @@ function git-main-branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
 function git-all-branches() {
-  git branch -a -r --format="%(refname:short)" | sed "s@origin/@@" | sed "/^origin/d"
+  git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
 }
 function git-find-branch() {
   git-all-branches | fzf | xclip -selection clipboard
