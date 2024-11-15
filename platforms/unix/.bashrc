@@ -43,6 +43,16 @@ function git-bare-clone() {
   git worktree add --lock --detach dev
   git worktree add --lock --detach review
 }
+function git-bare-init() {
+  local name="$1"
+  local main_branch="main"
+
+  mkdir "$name"
+  cd "$name" || return
+  git init --bare .git -b "$main_branch" || return
+  git worktree add --lock --orphan "$main_branch"
+  cd "$main_branch" || return
+}
 function git-worktree-remove() {
   local selected_worktree
   selected_worktree=$(git worktree list | fzf)
@@ -103,6 +113,7 @@ if has-cmd "git"; then
   alias gcm='git-checkout-main-branch'
   alias gcb='git-checkout-branch'
   alias gbc='git-bare-clone'
+  alias gbi='git-bare-init'
   alias gwa='git worktree add'
   alias gwr='git-worktree-remove'
   alias gwp='git-worktree-prune'
