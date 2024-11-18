@@ -17,6 +17,11 @@
       "Lua.runtime.version": "LuaJIT",
       "Lua.completion.callSnippet": "Replace",
       "Lua.workspace.checkThirdParty": false
+    },
+    "nixd": {
+      "nixpkgs": {
+        "expr": "(builtins.getFlake (\"git+file://\" + toString ./.)).inputs.nixpkgs { }"
+      }
     }
   }
 }

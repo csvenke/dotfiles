@@ -2,105 +2,74 @@
   description = "dotfiles flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     neovim.url = "github:csvenke/neovim-flake";
-    devkit.url = "github:csvenke/devkit";
   };
 
-  outputs = inputs@{ flake-parts, nixpkgs, ... }:
+  outputs =
+    inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = nixpkgs.lib.systems.flakeExposed;
-      perSystem = { system, ... }:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [
-              inputs.devkit.overlays.default
-              inputs.neovim.overlays.default
+      flake = {
+        homeConfigurations = {
+          "csvenke@DESKTOP-OBOUJ4C" = import ./mkHomeConfig.nix {
+            inherit inputs;
+            username = "csvenke";
+            homeDirectory = "/home/csvenke";
+            system = "x86_64-linux";
+            modules = [
+              ./modules/core
+              ./modules/dev
+              ./modules/run
+              ./modules/secrets
             ];
           };
-
-          dotstrap = import ./tools/dotstrap {
-            inherit pkgs;
-          };
-
-          packages = with pkgs; [
-            findutils
-            fd
-            starship
-            direnv
-            nix-direnv
-            delta
-            ripgrep
-            jq
-            gh
-            tldr
-            wget
-            curl
-            fzf
-            xclip
-            eza
-            bat
-            htop
-            neovim
-            devkit.tmux
-            devkit.dev
-            devkit.run
-          ];
-
-          install = pkgs.writeShellApplication {
-            name = "install";
-            runtimeInputs = [ pkgs.git dotstrap ];
-            text = ''
-              dotfiles="$HOME/.dotfiles"
-
-              if [ ! -d "$dotfiles" ]; then
-                git clone https://github.com/csvenke/dotfiles.git "$dotfiles"
-              else
-                git -C "$dotfiles" pull origin master
-              fi
-
-              dotstrap install
-              nix profile install "$dotfiles"
-              nix profile upgrade --all
-              nix profile wipe-history --older-than 7d
-            '';
-          };
-
-          check = pkgs.writeShellApplication {
-            name = "check";
-            runtimeInputs = [ dotstrap ];
-            text = ''
-              dotstrap check
-            '';
-          };
-
-          clean = pkgs.writeShellApplication {
-            name = "clean";
-            runtimeInputs = [ dotstrap ];
-            text = ''
-              dotstrap clean
-            '';
-          };
+        };
+      };
+      systems = inputs.nixpkgs.lib.systems.flakeExposed;
+      perSystem =
+        {
+          system,
+          pkgs,
+          ...
+        }:
+        let
+          homeManager = inputs.home-manager.packages.${system}.default;
         in
         {
           packages = {
-            inherit install;
-            inherit check;
-            inherit clean;
+            install = pkgs.writeShellApplication {
+              name = "install";
+              runtimeInputs = [
+                pkgs.git
+                homeManager
+              ];
+              text = ''
+                dotfiles="$HOME/.dotfiles"
 
-            default = pkgs.buildEnv {
-              name = "dotfiles";
-              paths = packages;
-            };
-          };
+                if [ ! -d "$dotfiles" ]; then
+                  git clone https://github.com/csvenke/dotfiles.git "$dotfiles"
+                else
+                  git -C "$dotfiles" pull origin master
+                fi
 
-          devShells = {
-            default = pkgs.mkShell {
-              name = "dotfiles";
-              packages = packages;
+                home-manager switch -b backup --flake .
+              '';
             };
+
+            switch = pkgs.writeShellApplication {
+              name = "switch";
+              runtimeInputs = [ homeManager ];
+              text = ''
+                home-manager switch -b backup --flake .
+              '';
+            };
+
+            default = homeManager;
           };
         };
     };
