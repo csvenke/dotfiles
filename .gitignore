@@ -1,5 +1,4 @@
 !.envrc
-!.neoconf.json
 .gitconfig.work
 .bashrc.work.sh
 .bashrc.machine.sh
