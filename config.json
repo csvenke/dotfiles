@@ -1,6 +1,7 @@
 {
   "dotfiles": {
-    "root": "platforms/unix",
+    "url": "https://github.com/csvenke/dotfiles.git",
+    "root": "home",
     "symlink": [
       ".bashrc",
       ".bashrc.machine.sh",

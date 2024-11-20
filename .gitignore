@@ -1,4 +1,5 @@
 !.envrc
+.direnv
 .gitconfig.work
 .bashrc.work.sh
 .bashrc.machine.sh

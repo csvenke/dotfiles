@@ -1,7 +1,8 @@
-import shell
 from config import Config
 from dotfiles import DotfilesManager
 from scriptargs import ScriptArgs
+import nix
+import git
 
 
 def main():
@@ -19,27 +20,31 @@ def main():
 
 
 def install_command(config: Config, dotfiles: DotfilesManager):
-    print(">>> Unlinking all dotfiles <<<")
+    if config.dotfiles_dir.exists():
+        git.clone(config.dotfiles_url, str(config.dotfiles_dir))
+    else:
+        git.pull_origin("master", str(config.dotfiles_dir))
+
+    print(">>> Cleaning dotfiles <<<")
     dotfiles.clean_all()
 
-    print(">>> Symlink dotfiles")
+    print(">>> Symlinking dotfiles <<<")
     dotfiles.install_all()
 
-    print(">>> Source .bashrc <<<")
-    bashrc = config.get_target_path(".bashrc")
-    shell.run(f"source {bashrc}")
+    print(">>> Installing packages <<<")
+    nix.profile_install(str(config.dotfiles_dir))
+
+    print(">>> Upgrading packages <<<")
+    nix.profile_upgrade_all()
 
     print(">>> DONE <<<")
-    print("Restart shell for changes to take effect")
 
 
 def check_command(dotfiles: DotfilesManager):
-    print(">>> Check dotfiles status <<<")
     dotfiles.check_all()
 
 
 def clean_command(dotfiles: DotfilesManager):
-    print(">>> Cleaning all dotfiles <<<")
     dotfiles.clean_all()
 
 

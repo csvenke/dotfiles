@@ -10,8 +10,9 @@
 
   outputs = inputs@{ flake-parts, nixpkgs, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      debug = true;
       systems = nixpkgs.lib.systems.flakeExposed;
-      perSystem = { system, ... }:
+      perSystem = { config, system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -21,85 +22,67 @@
             ];
           };
 
-          dotstrap = import ./tools/dotstrap {
-            inherit pkgs;
-          };
-
-          packages = with pkgs; [
-            findutils
-            fd
-            starship
-            direnv
-            nix-direnv
-            delta
-            ripgrep
-            jq
-            gh
-            tldr
-            wget
-            curl
-            fzf
-            xclip
-            eza
-            bat
-            htop
-            neovim
-            devkit.tmux
-            devkit.dev
-            devkit.run
-          ];
-
-          install = pkgs.writeShellApplication {
-            name = "install";
-            runtimeInputs = [ pkgs.git dotstrap ];
-            text = ''
-              dotfiles="$HOME/.dotfiles"
-
-              if [ ! -d "$dotfiles" ]; then
-                git clone https://github.com/csvenke/dotfiles.git "$dotfiles"
-              else
-                git -C "$dotfiles" pull origin master
-              fi
-
-              dotstrap install
-              nix profile install "$dotfiles"
-              nix profile upgrade --all
-              nix profile wipe-history --older-than 7d
-            '';
-          };
-
-          check = pkgs.writeShellApplication {
-            name = "check";
-            runtimeInputs = [ dotstrap ];
-            text = ''
-              dotstrap check
-            '';
-          };
-
-          clean = pkgs.writeShellApplication {
-            name = "clean";
-            runtimeInputs = [ dotstrap ];
-            text = ''
-              dotstrap clean
-            '';
-          };
+          dotstrap = pkgs.callPackage ./tools/dotstrap {};
         in
         {
           packages = {
-            inherit install;
-            inherit check;
-            inherit clean;
+            install = pkgs.writeShellApplication {
+              name = "install";
+              runtimeInputs = [dotstrap];
+              text = ''
+                dotstrap install
+              '';
+            };
+            check = pkgs.writeShellApplication {
+              name = "check";
+              runtimeInputs = [dotstrap];
+              text = ''
+                dotstrap check
+              '';
+            };
+            clean = pkgs.writeShellApplication {
+              name = "clean";
+              runtimeInputs = [dotstrap];
+              text = ''
+                dotstrap clean
+              '';
+            };
 
             default = pkgs.buildEnv {
               name = "dotfiles";
-              paths = packages;
+              paths = with pkgs; [
+                nixVersions.latest
+                findutils
+                fd
+                starship
+                direnv
+                nix-direnv
+                delta
+                ripgrep
+                jq
+                gh
+                tldr
+                wget
+                curl
+                fzf
+                xclip
+                eza
+                bat
+                htop
+                neovim
+                devkit.tmux
+                devkit.dev
+                devkit.run
+              ];
             };
           };
 
           devShells = {
             default = pkgs.mkShell {
               name = "dotfiles";
-              packages = packages;
+              packages = [
+                config.packages.default
+              ];
             };
           };
         };
