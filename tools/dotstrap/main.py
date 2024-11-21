@@ -1,12 +1,14 @@
+import git
+import nix
 from config import Config
 from dotfiles import DotfilesManager
 from scriptargs import ScriptArgs
-import nix
-import git
 
 
 def main():
     args = ScriptArgs.parse()
+    clone_or_update_dotfiles(args)
+
     config = Config.from_script_args(args)
     dotfiles = DotfilesManager.from_config(config)
 
@@ -20,11 +22,6 @@ def main():
 
 
 def install_command(config: Config, dotfiles: DotfilesManager):
-    if config.dotfiles_dir.exists():
-        git.clone(config.dotfiles_url, str(config.dotfiles_dir))
-    else:
-        git.pull_origin("master", str(config.dotfiles_dir))
-
     print(">>> Cleaning dotfiles <<<")
     dotfiles.clean_all()
 
@@ -41,11 +38,20 @@ def install_command(config: Config, dotfiles: DotfilesManager):
 
 
 def check_command(dotfiles: DotfilesManager):
+    print(">>> Checking dotfiles <<<")
     dotfiles.check_all()
 
 
 def clean_command(dotfiles: DotfilesManager):
+    print(">>> Cleaning dotfiles <<<")
     dotfiles.clean_all()
+
+
+def clone_or_update_dotfiles(args: ScriptArgs):
+    if args.dotfiles_dir.exists():
+        git.pull_origin(args.remote_branch, str(args.dotfiles_dir))
+    else:
+        git.clone(args.remote_url, str(args.dotfiles_dir))
 
 
 if __name__ == "__main__":

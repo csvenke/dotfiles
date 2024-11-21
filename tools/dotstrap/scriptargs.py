@@ -6,9 +6,18 @@ class ScriptArgs:
     @classmethod
     def parse(cls):
         parser = argparse.ArgumentParser()
-
         sub_parser = parser.add_subparsers(dest="command")
 
+        parser.add_argument(
+            "--remoteUrl",
+            default="https://github.com/csvenke/dotfiles.git",
+            help="Default is https://github.com/csvenke/dotfiles.git",
+        )
+        parser.add_argument(
+            "--remoteBranch",
+            default="master",
+            help="Default is master",
+        )
         parser.add_argument(
             "-d",
             "--dotfilesDirectory",
@@ -21,6 +30,7 @@ class ScriptArgs:
             default=str(Path.home()),
             help="Default is $HOME",
         )
+
         sub_parser.add_parser("install")
         sub_parser.add_parser("clean")
         sub_parser.add_parser("check")
@@ -31,5 +41,7 @@ class ScriptArgs:
 
     def __init__(self, args: dict[str, str]):
         self.command = str(args.get("command"))
+        self.remote_url = str(args.get("remoteUrl"))
+        self.remote_branch = str(args.get("remoteBranch"))
         self.dotfiles_dir = Path(str(args.get("dotfilesDirectory")))
         self.target_dir = Path(str(args.get("targetDirectory")))

@@ -9,7 +9,6 @@ from scriptargs import ScriptArgs
 
 @dataclass
 class Config:
-    dotfiles_url: str
     dotfiles_dir: Path
     source_dir: Path
     target_dir: Path
@@ -29,11 +28,9 @@ class Config:
         root_path: str = get_nested_value(config, "dotfiles", "root")
         symlink_paths: list[str] = get_nested_value(config, "dotfiles", "symlink")
         unlink_paths: list[str] = get_nested_value(config, "dotfiles", "unlink")
-        dotfiles_url: str = get_nested_value(config, "dotfiles", "url")
         source_dir = Path(dotfiles_dir, root_path)
 
         return cls(
-            dotfiles_url,
             dotfiles_dir,
             source_dir,
             target_dir,

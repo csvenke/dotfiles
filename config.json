@@ -1,6 +1,5 @@
 {
   "dotfiles": {
-    "url": "https://github.com/csvenke/dotfiles.git",
     "root": "home",
     "symlink": [
       ".bashrc",
