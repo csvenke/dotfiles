@@ -8,51 +8,29 @@
       url = "github:csvenke/neovim-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    devkit = {
-      url = "github:csvenke/devkit";
-      inputs.nixpkgs.follows = "nixpkgs"; 
-    };
   };
 
-  outputs = inputs@{ flake-parts, nixpkgs, ... }:
+  outputs =
+    inputs@{ flake-parts, nixpkgs, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       debug = true;
       systems = nixpkgs.lib.systems.flakeExposed;
-      perSystem = { config, system, ... }:
+      perSystem =
+        { config, system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
             overlays = [
-              inputs.devkit.overlays.default
               inputs.neovim.overlays.default
             ];
           };
-
-          dotstrap = pkgs.callPackage ./tools/dotstrap {};
+          dotstrap = pkgs.callPackage ./lib/dotstrap { };
         in
         {
           packages = {
-            install = pkgs.writeShellApplication {
-              name = "install";
-              runtimeInputs = [dotstrap];
-              text = ''
-                dotstrap install
-              '';
-            };
-            check = pkgs.writeShellApplication {
-              name = "check";
-              runtimeInputs = [dotstrap];
-              text = ''
-                dotstrap check
-              '';
-            };
-            clean = pkgs.writeShellApplication {
-              name = "clean";
-              runtimeInputs = [dotstrap];
-              text = ''
-                dotstrap clean
-              '';
-            };
+            install = dotstrap "install";
+            check = dotstrap "check";
+            clean = dotstrap "clean";
 
             default = pkgs.buildEnv {
               name = "dotfiles";
@@ -76,9 +54,9 @@
                 bat
                 htop
                 neovim
-                devkit.tmux
-                devkit.dev
-                devkit.run
+                (callPackage ./packages/tmux { })
+                (callPackage ./packages/dev { })
+                (callPackage ./packages/run { })
               ];
             };
           };
