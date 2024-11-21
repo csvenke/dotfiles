@@ -10,8 +10,8 @@
 nix run github:csvenke/dotfiles#install
 ```
 
-If you dont have flakes enabled
+Without flakes enabled
 
 ```bash
-nix run --extra-experimental-features 'nix-command flakes' github:csvenke/dotfiles#install
+nix run github:csvenke/dotfiles#install --extra-experimental-features 'nix-command flakes'
 ```
