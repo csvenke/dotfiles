@@ -19,16 +19,6 @@
       ".vault/openai-api-key.txt",
       ".vault/anthropic-api-key.txt"
     ],
-    "unlink": [
-      "default.nix",
-      "shell.nix",
-      "flake.nix",
-      ".agignore",
-      ".bashrc.secrets.sh",
-      ".gitignore",
-      ".zshrc",
-      ".config/tmux",
-      ".config/nvim"
-    ]
+    "unlink": []
   }
 }
