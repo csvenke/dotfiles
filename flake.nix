@@ -4,8 +4,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    neovim.url = "github:csvenke/neovim-flake";
-    devkit.url = "github:csvenke/devkit";
+    neovim = {
+      url = "github:csvenke/neovim-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    devkit = {
+      url = "github:csvenke/devkit";
+      inputs.nixpkgs.follows = "nixpkgs"; 
+    };
   };
 
   outputs = inputs@{ flake-parts, nixpkgs, ... }:
