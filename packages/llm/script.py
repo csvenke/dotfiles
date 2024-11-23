@@ -22,6 +22,8 @@ def main():
     match command:
         case "commit":
             commit_command(client)
+        case None:
+            parser.print_help()
 
 
 def commit_command(client):
