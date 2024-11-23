@@ -57,6 +57,7 @@
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })
+                (callPackage ./packages/llm { })
               ];
             };
           };
