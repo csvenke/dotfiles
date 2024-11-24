@@ -12,6 +12,6 @@ pkgs.writeShellApplication {
   ];
   text = ''
     apiKey=$(cat "$HOME"/.vault/anthropic-api-key.txt)
-    python3 ${src} --anthropicApiKey "$apiKey" "$@"
+    python3 ${src} --anthropic-api-key "$apiKey" "$@"
   '';
 }

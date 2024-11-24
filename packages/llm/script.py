@@ -6,27 +6,52 @@ from anthropic import Anthropic
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--anthropicApiKey",
+        "--anthropic-api-key",
         required=True,
     )
     sub_parser = parser.add_subparsers(dest="command")
     sub_parser.add_parser("commit")
+    sub_parser.add_parser("ask").add_argument("prompt")
+    sub_parser.add_parser("help")
 
-    args: dict[str, str] = vars(parser.parse_args())
+    args = vars(parser.parse_args())
 
-    command = args.get("command")
-    anthropic_api_key = args.get("anthropicApiKey")
+    anthropic_api_key: str = args["anthropic_api_key"]
+    claude = Claude(api_key=anthropic_api_key)
 
-    client = Anthropic(api_key=anthropic_api_key)
+    command = args.get("command") or "help"
 
     match command:
         case "commit":
-            commit_command(client)
-        case None:
+            commit_command(claude)
+        case "ask":
+            ask_command(args, claude)
+        case "help":
             parser.print_help()
 
 
-def commit_command(client):
+class Claude:
+    def __init__(self, api_key: str):
+        self.client = Anthropic(api_key=api_key)
+
+    def message(self, prompt: str):
+        message = self.client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": f"{prompt}"}],
+        )
+        commit = message.content[0].text
+        return commit
+
+
+def ask_command(args: dict[str, str], claude: Claude):
+    prompt = args.get("prompt")
+    if prompt:
+        answer = claude.message(prompt)
+        print(answer)
+
+
+def commit_command(claude: Claude):
     status = subprocess.check_output(["git", "status"]).decode()
     diff = subprocess.check_output(["git", "diff", "--staged"]).decode()
     prompt = f"""
@@ -40,14 +65,10 @@ def commit_command(client):
         git diff --staged
         {diff}
 	"""
-    message = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
-        max_tokens=1024,
-        messages=[{"role": "user", "content": f"{prompt}"}],
-    )
-    commit = message.content[0].text
+    commit = claude.message(prompt)
 
     subprocess.run(["git", "commit", "-m", commit, "-e"])
 
 
-main()
+if __name__ == "__main__":
+    main()
