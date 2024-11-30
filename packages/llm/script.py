@@ -52,18 +52,19 @@ def ask_command(args: dict[str, str], claude: Claude):
 
 
 def commit_command(claude: Claude):
-    status = subprocess.check_output(["git", "status"]).decode()
-    diff = subprocess.check_output(["git", "diff", "--staged"]).decode()
+    diff_stat = subprocess.check_output(["git", "diff", "--staged", "--stat"]).decode()
+    staged_diff = subprocess.check_output(["git", "diff", "--staged", "-W"]).decode()
+
     prompt = f"""
-	You are an experienced software developer tasked with generating commit messages based on git diff output.
-        Your goal is to create concise, meaningful commit messages that follow the conventional commits specification.
-        Respond only with the commit, if the output of git diff --staged is empty, respond with empty string
+	Act as an expert software developer tasked with creating commit messages based on git diff output.
+        Your prime directive is to create concise, meaningful commit messages that follow conventional commit specification.
+        Respond only with commit message, if empty git diff command then respond with empty string
 
-        git status
-        {status}
+        git diff --stat
+        {diff_stat}
 
-        git diff --staged
-        {diff}
+        git diff --staged -W
+        {staged_diff}
 	"""
     commit = claude.message(prompt)
 
