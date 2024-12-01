@@ -4,11 +4,8 @@ from anthropic import Anthropic
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--anthropic-api-key",
-        required=True,
-    )
+    parser = argparse.ArgumentParser(prog="llm")
+    parser.add_argument("--anthropic-api-key", required=True)
     sub_parser = parser.add_subparsers(dest="command")
     sub_parser.add_parser("commit")
     sub_parser.add_parser("ask").add_argument("prompt")
