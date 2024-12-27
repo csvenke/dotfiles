@@ -13,6 +13,7 @@
       ".config/starship.toml",
       ".config/nixpkgs",
       ".config/wezterm",
+      ".config/ghostty",
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
