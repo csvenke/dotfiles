@@ -4,7 +4,6 @@ let
   src = ./.;
 in
 
-name:
 pkgs.writeShellApplication {
   name = "dotstrap";
   runtimeInputs = with pkgs; [
@@ -12,6 +11,6 @@ pkgs.writeShellApplication {
     git
   ];
   text = ''
-    python3 ${src}/main.py ${name}
+    python3 ${src}/main.py "$@"
   '';
 }

@@ -28,9 +28,13 @@
         in
         {
           packages = {
-            install = dotstrap "install";
-            check = dotstrap "check";
-            clean = dotstrap "clean";
+            install = pkgs.writeShellApplication {
+              name = "install";
+              runtimeInputs = [ dotstrap ];
+              text = ''
+                dotstrap install
+              '';
+            };
 
             default = pkgs.buildEnv {
               name = "dotfiles";
