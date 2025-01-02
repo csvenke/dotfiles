@@ -53,6 +53,7 @@
                 gh
                 tldr
                 wget
+                git
                 curl
                 fzf
                 xclip
