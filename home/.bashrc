@@ -31,6 +31,19 @@ function git-checkout-main-branch() {
 function git-checkout-branch() {
   git-all-branches | fzf | xargs git checkout
 }
+function git-worktree-add() {
+  git worktree add "$@"
+
+  local path="${*: -1}"
+
+  if [ -d ".shared" ]; then
+    cp -r .shared/. "$path/"
+  fi
+
+  if has-cmd "direnv" && [ -f "$path/.envrc" ]; then
+    direnv allow "$path"
+  fi
+}
 function git-bare-clone() {
   local url="$1"
   local path="${url##*/}"
@@ -38,10 +51,15 @@ function git-bare-clone() {
   mkdir "$path"
   cd "$path" || return
   git clone --bare "$url" .git || return
+  mkdir -p .shared
 
-  git worktree add --lock "$(git-main-branch)"
-  git worktree add --lock --detach dev
-  git worktree add --lock --detach review
+  git worktree add --lock --orphan nix
+  (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
+  echo 'use flake "../nix"' >.shared/.envrc
+
+  git-worktree-add --lock "$(git-main-branch)"
+  git-worktree-add --lock --detach dev
+  git-worktree-add --lock --detach review
 }
 function git-bare-init() {
   local name="$1"
@@ -115,7 +133,7 @@ if has-cmd "git"; then
   alias gcb='git-checkout-branch'
   alias gbc='git-bare-clone'
   alias gbi='git-bare-init'
-  alias gwa='git worktree add'
+  alias gwa='git-worktree-add'
   alias gwr='git-worktree-remove'
   alias gwp='git-worktree-prune'
 fi
