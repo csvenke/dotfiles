@@ -54,6 +54,7 @@
                 tldr
                 wget
                 git
+                lazygit
                 curl
                 fzf
                 xclip

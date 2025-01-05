@@ -138,6 +138,10 @@ if has-cmd "git"; then
   alias gwp='git-worktree-prune'
 fi
 
+if has-cmd "lazygit"; then
+  alias gui='lazygit'
+fi
+
 if has-cmd "eza"; then
   alias ls='eza-list-files'
   alias la='ls -a'
