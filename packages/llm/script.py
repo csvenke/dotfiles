@@ -53,14 +53,51 @@ def commit_command(claude: Claude):
     staged_diff = subprocess.check_output(["git", "diff", "--staged", "-W"]).decode()
 
     prompt = f"""
-	Act as an expert software developer tasked with creating commit messages based on git diff output.
-        Your prime directive is to create concise, meaningful commit messages that follow conventional commit specification.
-        Respond only with commit message, if empty git diff command then respond with empty string
+        Create a semantic git commit message that accurately describes the changes shown in the diff, following conventional commit format.
 
-        git diff --stat
+        Input Format:
+        Below you'll find the git diff stat (showing changed files) and detailed diff.
+
+        Output Format:
+        1. For small changes (1-2 files, single purpose):
+           <type>(<scope>): <description>
+
+        2. For larger changes (multiple files or purposes):
+           <type>(<scope>): <general description>
+
+           * <specific change 1>
+           * <specific change 2>
+           * <specific change 3>
+
+        Rules:
+        - Types: feat, fix, docs, style, refactor, test, chore
+        - Use present tense imperative ("add" not "added")
+        - Be concise and direct
+        - No self-references ("this commit")
+        - Start with lowercase
+        - No period at end
+        - Use scope when clearly applicable
+        - For multiple changes, make title broad and use bullets for details
+
+        Examples:
+
+        Small change:
+        feat(auth): add password reset endpoint
+
+        Large change:
+        refactor(api): restructure authentication flow
+
+        * extract auth middleware to separate module
+        * implement JWT token validation
+        * add rate limiting for auth endpoints
+        * update error handling
+
+        Review the following changes and respond with only the commit message:
+
+        Git Stat:
         {diff_stat}
 
-        git diff --staged -W
+        Detailed Diff:
         {staged_diff}
 	"""
     commit = claude.message(prompt)
