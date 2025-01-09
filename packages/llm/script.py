@@ -73,7 +73,7 @@ def commit_command(claude: Claude):
         - Types: feat, fix, docs, style, refactor, test, chore
         - Use present tense imperative ("add" not "added")
         - Be concise and direct
-        - No self-references ("this commit")
+        - No self-references ("this commit", "this change")
         - Start with lowercase
         - No period at end
         - Use scope when clearly applicable
