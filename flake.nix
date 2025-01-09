@@ -24,7 +24,7 @@
               inputs.neovim.overlays.default
             ];
           };
-          dotstrap = pkgs.callPackage ./lib/dotstrap { };
+          dotstrap = pkgs.callPackage ./packages/dotstrap { };
         in
         {
           packages = {
