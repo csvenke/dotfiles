@@ -125,6 +125,8 @@ if has-cmd "nix"; then
 fi
 
 if has-cmd "git"; then
+  alias gaa='git add . && git status -s'
+  alias gra='git restore --staged . && git status -s'
   alias gfb='git-find-branch'
   alias gpb='git-push-current-branch'
   alias gsb='git-sync-current-branch'
