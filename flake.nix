@@ -40,7 +40,6 @@
               name = "dotfiles";
               paths = with pkgs; [
                 coreutils
-                bash
                 nixVersions.latest
                 findutils
                 fd
