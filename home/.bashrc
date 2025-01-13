@@ -1,37 +1,37 @@
-function source-if-exists() {
+function source_if_exists() {
   if test -r "$1"; then
     source "$1"
   fi
 }
-function has-cmd() {
+function has_cmd() {
   command -v "$1" &>/dev/null || return 1
   return 0
 }
-function git-main-branch() {
+function git_main_branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
-function git-all-branches() {
+function git_all_branches() {
   git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
 }
-function git-find-branch() {
-  git-all-branches | fzf | xclip -selection clipboard
+function git_find_branch() {
+  git_all_branches | fzf | xclip -selection clipboard
 }
-function git-push-current-branch() {
+function git_push_current_branch() {
   git push origin "$(git branch --show-current)" "$@"
 }
-function git-sync-current-branch() {
+function git_sync_current_branch() {
   git pull origin "$(git branch --show-current)" "$@"
 }
-function git-sync-main-branch() {
-  git pull origin "$(git-main-branch)"
+function git_sync_main_branch() {
+  git pull origin "$(git_main_branch)"
 }
-function git-checkout-main-branch() {
-  git checkout "$(git-main-branch)"
+function git_checkout_main_branch() {
+  git checkout "$(git_main_branch)"
 }
-function git-checkout-branch() {
-  git-all-branches | fzf | xargs git checkout
+function git_checkout_branch() {
+  git_all_branches | fzf | xargs git checkout
 }
-function git-worktree-add() {
+function git_worktree_add() {
   git worktree add "$@"
 
   local path="${*: -1}"
@@ -40,11 +40,11 @@ function git-worktree-add() {
     cp -r .shared/. "$path/"
   fi
 
-  if has-cmd "direnv" && [ -f "$path/.envrc" ]; then
+  if has_cmd "direnv" && [ -f "$path/.envrc" ]; then
     direnv allow "$path"
   fi
 }
-function git-bare-clone() {
+function git_bare_clone() {
   local url="$1"
   local path="${url##*/}"
 
@@ -57,11 +57,11 @@ function git-bare-clone() {
   (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
   echo 'use flake "../nix"' >.shared/.envrc
 
-  git-worktree-add --lock "$(git-main-branch)"
-  git-worktree-add --lock --detach dev
-  git-worktree-add --lock --detach review
+  git_worktree_add --lock "$(git_main_branch)"
+  git_worktree_add --lock --detach dev
+  git_worktree_add --lock --detach review
 }
-function git-bare-init() {
+function git_bare_init() {
   local name="$1"
   local main_branch="main"
 
@@ -71,7 +71,7 @@ function git-bare-init() {
   git worktree add --lock --orphan "$main_branch"
   cd "$main_branch" || return
 }
-function git-worktree-remove() {
+function git_worktree_remove() {
   local selected_worktree
   selected_worktree=$(git worktree list | fzf)
 
@@ -85,7 +85,7 @@ function git-worktree-remove() {
   echo "Removing $worktree_path"
   git worktree remove "$worktree_path"
 }
-function git-worktree-prune() {
+function git_worktree_prune() {
   local branches
   branches=$(git worktree list --porcelain | grep "prunable" -B 1 | grep "branch" | sed "s@branch refs/heads/@@" | xargs -r)
 
@@ -97,16 +97,16 @@ function git-worktree-prune() {
   git worktree prune
   echo "$branches" | xargs git branch -D
 }
-function eza-list-files() {
+function eza_list_files() {
   command eza --icons --colour=auto --sort=type --group-directories-first "$@"
 }
-function xclip-copy() {
+function xclip_copy() {
   xclip -selection clipboard
 }
-function bat-cat() {
+function bat_cat() {
   bat --style=plain "$@"
 }
-function is-wsl() {
+function is_wsl() {
   [ -n "$WSL_DISTRO_NAME" ]
 }
 
@@ -117,67 +117,67 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
 
-source-if-exists "$HOME/.bashrc.work.sh"
-source-if-exists "$HOME/.bashrc.machine.sh"
+source_if_exists "$HOME/.bashrc.work.sh"
+source_if_exists "$HOME/.bashrc.machine.sh"
 
-if has-cmd "nix"; then
+if has_cmd "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devkit"
 fi
 
-if has-cmd "git"; then
+if has_cmd "git"; then
   alias gaa='git add . && git status -s'
   alias gra='git restore --staged . && git status -s'
-  alias gfb='git-find-branch'
-  alias gpb='git-push-current-branch'
-  alias gsb='git-sync-current-branch'
-  alias gsm='git-sync-main-branch'
-  alias gcm='git-checkout-main-branch'
-  alias gcb='git-checkout-branch'
-  alias gbc='git-bare-clone'
-  alias gbi='git-bare-init'
-  alias gwa='git-worktree-add'
-  alias gwr='git-worktree-remove'
-  alias gwp='git-worktree-prune'
+  alias gfb='git_find_branch'
+  alias gpb='git_push_current_branch'
+  alias gsb='git_sync_current_branch'
+  alias gsm='git_sync_main_branch'
+  alias gcm='git_checkout_main_branch'
+  alias gcb='git_checkout_branch'
+  alias gbc='git_bare_clone'
+  alias gbi='git_bare_init'
+  alias gwa='git_worktree_add'
+  alias gwr='git_worktree_remove'
+  alias gwp='git_worktree_prune'
 fi
 
-if has-cmd "lazygit"; then
+if has_cmd "lazygit"; then
   alias gui='lazygit'
 fi
 
-if has-cmd "eza"; then
-  alias ls='eza-list-files'
+if has_cmd "eza"; then
+  alias ls='eza_list_files'
   alias la='ls -a'
   alias ll='ls -al'
 fi
 
-if has-cmd "xclip"; then
-  alias copy='xclip-copy'
+if has_cmd "xclip"; then
+  alias copy='xclip_copy'
 fi
 
-if has-cmd "bat"; then
-  alias cat='bat-cat'
+if has_cmd "bat"; then
+  alias cat='bat_cat'
 fi
 
-if has-cmd "nvim"; then
+if has_cmd "nvim"; then
   export EDITOR="nvim --clean"
   export VISUAL="nvim"
 
   alias vim="nvim"
 fi
 
-if has-cmd "direnv"; then
+if has_cmd "direnv"; then
   export DIRENV_LOG_FORMAT=
   export DIRENV_WARN_TIMEOUT=1m
 
   eval "$(direnv hook bash)"
 fi
 
-if has-cmd "starship"; then
+if has_cmd "starship"; then
   eval "$(starship init bash)"
 fi
 
-if has-cmd "fzf"; then
-  if has-cmd "fd"; then
+if has_cmd "fzf"; then
+  if has_cmd "fd"; then
     export FZF_DEFAULT_COMMAND='fd --type file'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   fi
@@ -186,7 +186,7 @@ if has-cmd "fzf"; then
   eval "$(fzf --bash)"
 fi
 
-if is-wsl; then
+if is_wsl; then
   export BROWSER='explorer.exe'
 
   alias start='explorer.exe'
