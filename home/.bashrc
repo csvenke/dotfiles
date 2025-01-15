@@ -133,6 +133,7 @@ if has_cmd "git"; then
   alias gsm='git_sync_main_branch'
   alias gcm='git_checkout_main_branch'
   alias gcb='git_checkout_branch'
+  alias gcB='git checkout -b'
   alias gbc='git_bare_clone'
   alias gbi='git_bare_init'
   alias gwa='git_worktree_add'
