@@ -2,7 +2,7 @@
   path = ~/.gitconfig.personal
 
 [includeIf "gitdir:~/repos/work/"]
-  path = ~/.gitconfig.work
+  path = ~/.work/.gitconfig
 
 [pull]
   rebase = true

@@ -3,12 +3,9 @@
     "root": "home",
     "symlink": [
       ".bashrc",
-      ".bashrc.machine.sh",
-      ".bashrc.work.sh",
       ".bash_profile",
       ".gitconfig",
       ".gitconfig.personal",
-      ".gitconfig.work",
       ".gitignore.global",
       ".config/starship.toml",
       ".config/nixpkgs",
@@ -18,8 +15,14 @@
       ".config/lazygit",
       ".config/nix",
       ".vault/openai-api-key.txt",
-      ".vault/anthropic-api-key.txt"
+      ".vault/anthropic-api-key.txt",
+      ".work/.bashrc",
+      ".work/.gitconfig"
     ],
-    "unlink": []
+    "unlink": [
+      ".gitconfig.work",
+      ".bashrc.machine.sh",
+      ".bashrc.work.sh"
+    ]
   }
 }
