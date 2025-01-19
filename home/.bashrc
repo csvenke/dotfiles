@@ -191,4 +191,5 @@ if is_wsl; then
   alias open='explorer.exe'
 fi
 
+source_if_exists "$HOME/.machine/.bashrc"
 source_if_exists "$HOME/.work/.bashrc"

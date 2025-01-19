@@ -17,7 +17,8 @@
       ".vault/openai-api-key.txt",
       ".vault/anthropic-api-key.txt",
       ".work/.bashrc",
-      ".work/.gitconfig"
+      ".work/.gitconfig",
+      ".machine/.bashrc"
     ],
     "unlink": [
       ".gitconfig.work",
