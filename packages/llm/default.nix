@@ -1,17 +1,12 @@
 { pkgs }:
 
-let
-  src = ./script.py;
-in
-
-pkgs.writeShellApplication {
-  name = "llm";
-  runtimeInputs = [
-    (pkgs.python3.withPackages (ps: [ ps.anthropic ]))
-    pkgs.git
+pkgs.python3Packages.buildPythonApplication {
+  pname = "llm";
+  version = "1.0.0";
+  src = ./.;
+  propagatedBuildInputs = with pkgs; [
+    git
+    python3Packages.anthropic
+    python3Packages.halo
   ];
-  text = ''
-    apiKey=$(cat "$HOME"/.vault/anthropic-api-key.txt)
-    python3 ${src} --anthropic-api-key "$apiKey" "$@"
-  '';
 }

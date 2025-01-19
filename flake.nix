@@ -74,6 +74,7 @@
               packages = with pkgs; [
                 python3Packages.setuptools
                 python3Packages.anthropic
+                python3Packages.halo
                 (callPackage ./packages/llm { })
                 (callPackage ./packages/dotstrap { })
               ];

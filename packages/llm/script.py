@@ -1,106 +1,114 @@
 import argparse
 import subprocess
-from anthropic import Anthropic
+import re
+import os
+from typing import Any
+from claude import Claude
 
 
 def main():
     parser = argparse.ArgumentParser(prog="llm")
-    parser.add_argument("--anthropic-api-key", required=True)
+    parser.add_argument("--anthropic-api-key", default=os.getenv("ANTHROPIC_API_KEY"))
     sub_parser = parser.add_subparsers(dest="command")
-    sub_parser.add_parser("commit")
+    sub_parser.add_parser("commit").add_argument("--full", action="store_true")
     sub_parser.add_parser("ask").add_argument("prompt")
     sub_parser.add_parser("help")
-
     args = vars(parser.parse_args())
 
-    anthropic_api_key: str = args["anthropic_api_key"]
-    claude = Claude(api_key=anthropic_api_key)
-
+    claude = Claude(api_key=args["anthropic_api_key"])
     command = args.get("command") or "help"
 
     match command:
         case "commit":
-            commit_command(claude)
+            commit_command(args, claude)
         case "ask":
             ask_command(args, claude)
         case "help":
             parser.print_help()
 
 
-class Claude:
-    def __init__(self, api_key: str):
-        self.client = Anthropic(api_key=api_key)
-
-    def message(self, prompt: str):
-        message = self.client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=1024,
-            messages=[{"role": "user", "content": f"{prompt}"}],
-        )
-        commit = message.content[0].text
-        return commit
-
-
-def ask_command(args: dict[str, str], claude: Claude):
+def ask_command(args: dict[str, Any], claude: Claude):
     prompt = args.get("prompt")
     if prompt:
         answer = claude.message(prompt)
         print(answer)
 
 
-def commit_command(claude: Claude):
+def commit_command(args: dict[str, Any], claude: Claude):
     diff_stat = subprocess.check_output(["git", "diff", "--staged", "--stat"]).decode()
-    staged_diff = subprocess.check_output(["git", "diff", "--staged", "-W"]).decode()
+
+    if args["full"]:
+        staged_diff = subprocess.check_output(
+            ["git", "diff", "--staged", "-W"]
+        ).decode()
+    else:
+        staged_diff = subprocess.check_output(["git", "diff", "--staged"]).decode()
 
     prompt = f"""
-        Create a semantic git commit message that accurately describes the changes shown in the diff, following conventional commit format.
+        You are an experienced software developer tasked with creating semantic git commit messages that accurately describe code changes. Your goal is to produce clear, concise, and informative commit messages following the conventional commit format.
 
-        Input Format:
-        Below you'll find the git diff stat (showing changed files) and detailed diff.
+        Here are the git diff details you need to analyze:
 
-        Output Format:
-        1. For small changes (1-2 files, single purpose):
+        <diff_stat>
+        {diff_stat}
+        </diff_stat>
+
+        <staged_diff>
+        {staged_diff}
+        </staged_diff>
+
+        Instructions:
+
+        1. Analyze the provided git diff information.
+        2. Determine whether the changes are small (1-2 files, single purpose) or large (multiple files or purposes).
+        3. Create an appropriate commit message based on the following format:
+
+           For small changes:
            <type>(<scope>): <description>
 
-        2. For larger changes (multiple files or purposes):
+           For larger changes:
            <type>(<scope>): <general description>
 
            * <specific change 1>
            * <specific change 2>
            * <specific change 3>
 
-        Rules:
-        - Types: feat, fix, docs, style, refactor, test, chore
-        - Use present tense imperative ("add" not "added")
+        Rules for creating commit messages:
+
+        - Use one of these types: feat, fix, docs, style, refactor, test, chore
+        - Write in present tense imperative (e.g., "add" not "added")
         - Be concise and direct
-        - No self-references ("this commit", "this change")
+        - Avoid self-references like "this commit" or "this change"
         - Start with lowercase
-        - No period at end
-        - Use scope when clearly applicable
-        - For multiple changes, make title broad and use bullets for details
+        - Omit the period at the end
+        - Include a scope when clearly applicable
+        - For larger changes, make the title broad and use bullet points for specific details
 
-        Examples:
+        Before formulating your final commit message, break down the changes, categorize them, and plan your commit message structure inside <diff_analysis> tags:
 
-        Small change:
-        feat(auth): add password reset endpoint
+        1. List out the files changed and the number of lines added/removed for each file.
+        2. Categorize each change as feat, fix, docs, style, refactor, test, or chore.
+        3. Determine if this is a small or large change based on the number of files and purposes.
+        4. Write down potential scopes for the commit message.
+        5. For larger changes, brainstorm potential bullet points.
 
-        Large change:
-        refactor(api): restructure authentication flow
+        Pay special attention to making the commit title general for larger changes while using bullet points to specify each change.
 
-        * extract auth middleware to separate module
-        * implement JWT token validation
-        * add rate limiting for auth endpoints
-        * update error handling
+        After your analysis, provide your final commit message without any additional commentary.
 
-        Review the following changes and respond with only the commit message:
+        Example output structure:
 
-        Git Stat:
-        {diff_stat}
+        <diff_analysis>
+        [Your detailed analysis of the diff, categorization of changes, and commit message planning]
+        </diff_analysis>
 
-        Detailed Diff:
-        {staged_diff}
-	"""
+        [Your final commit message, formatted according to the rules above]
+
+        Please proceed with your analysis and commit message creation based on the provided git diff information.
+    """
+
     commit = claude.message(prompt)
+    commit = re.sub(r"<diff_analysis>.*?</diff_analysis>", "", commit, flags=re.DOTALL)
 
     subprocess.run(["git", "commit", "-m", commit, "-e"])
 
