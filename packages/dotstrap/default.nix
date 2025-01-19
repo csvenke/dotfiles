@@ -1,16 +1,11 @@
 { pkgs }:
 
-let
+pkgs.python3Packages.buildPythonApplication {
+  pname = "dotstrap";
+  version = "1.0.0";
   src = ./.;
-in
-
-pkgs.writeShellApplication {
-  name = "dotstrap";
-  runtimeInputs = with pkgs; [
-    python3
+  propagatedBuildInputs = with pkgs; [
     git
   ];
-  text = ''
-    python3 ${src}/main.py "$@"
-  '';
 }
+
