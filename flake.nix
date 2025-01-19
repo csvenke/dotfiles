@@ -16,7 +16,7 @@
       debug = true;
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem =
-        { config, system, ... }:
+        { system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -71,9 +71,11 @@
 
           devShells = {
             default = pkgs.mkShell {
-              name = "dotfiles";
-              packages = [
-                config.packages.default
+              packages = with pkgs; [
+                python3Packages.setuptools
+                python3Packages.anthropic
+                (callPackage ./packages/llm { })
+                (callPackage ./packages/dotstrap { })
               ];
             };
           };
