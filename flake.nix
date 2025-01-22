@@ -75,6 +75,7 @@
                 python3Packages.setuptools
                 python3Packages.anthropic
                 python3Packages.halo
+                python3Packages.click
                 (callPackage ./packages/llm { })
                 (callPackage ./packages/dotstrap { })
               ];

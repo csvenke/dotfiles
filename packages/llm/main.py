@@ -1,43 +1,35 @@
-import argparse
-import subprocess
 import re
-import os
-from typing import Any
+import subprocess
+from typing import Optional
+
+import click
 from claude import Claude
 
-
-def main():
-    parser = argparse.ArgumentParser(prog="llm")
-    parser.add_argument("--anthropic-api-key", default=os.getenv("ANTHROPIC_API_KEY"))
-    sub_parser = parser.add_subparsers(dest="command")
-    sub_parser.add_parser("commit").add_argument("--full", action="store_true")
-    sub_parser.add_parser("ask").add_argument("prompt")
-    sub_parser.add_parser("help")
-    args = vars(parser.parse_args())
-
-    claude = Claude(api_key=args["anthropic_api_key"])
-    command = args.get("command") or "help"
-
-    match command:
-        case "commit":
-            commit_command(args, claude)
-        case "ask":
-            ask_command(args, claude)
-        case "help":
-            parser.print_help()
+pass_claude = click.make_pass_decorator(Claude)
 
 
-def ask_command(args: dict[str, Any], claude: Claude):
-    prompt = args.get("prompt")
-    if prompt:
-        answer = claude.message(prompt)
-        print(answer)
+@click.group()
+@click.option("--api-key", envvar="ANTHROPIC_API_KEY", default=None)
+@click.pass_context
+def cli(ctx: click.Context, api_key: Optional[str]):
+    ctx.obj = Claude(api_key=api_key)
 
 
-def commit_command(args: dict[str, Any], claude: Claude):
+@cli.command()
+@click.argument("question")
+@pass_claude
+def ask(claude: Claude, question: str):
+    answer = claude.message(question)
+    print(answer)
+
+
+@cli.command()
+@click.option("--full", "-f", is_flag=True, default=False)
+@pass_claude
+def commit(claude: Claude, full: bool):
     diff_stat = subprocess.check_output(["git", "diff", "--staged", "--stat"]).decode()
 
-    if args["full"]:
+    if full:
         staged_diff = subprocess.check_output(
             ["git", "diff", "--staged", "-W"]
         ).decode()
@@ -114,4 +106,4 @@ def commit_command(args: dict[str, Any], claude: Claude):
 
 
 if __name__ == "__main__":
-    main()
+    cli()

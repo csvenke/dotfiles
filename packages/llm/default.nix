@@ -1,12 +1,19 @@
 { pkgs }:
 
-pkgs.python3Packages.buildPythonApplication {
-  pname = "llm";
-  version = "1.0.0";
+let
   src = ./.;
-  propagatedBuildInputs = with pkgs; [
+in
+
+pkgs.writeShellApplication {
+  name = "llm";
+  runtimeInputs = with pkgs; [
+    (python3.withPackages (ps: [
+      ps.click
+      ps.halo
+    ]))
     git
-    python3Packages.anthropic
-    python3Packages.halo
   ];
+  text = ''
+    python3 ${src}/main.py "$@"
+  '';
 }
