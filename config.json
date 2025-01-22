@@ -14,13 +14,13 @@
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
-      ".vault/openai-api-key.txt",
-      ".vault/anthropic-api-key.txt",
       ".work/.bashrc",
       ".work/.gitconfig",
       ".machine/.bashrc"
     ],
     "unlink": [
+      ".vault/openai-api-key.txt",
+      ".vault/anthropic-api-key.txt",
       ".gitconfig.work",
       ".bashrc.machine.sh",
       ".bashrc.work.sh"
