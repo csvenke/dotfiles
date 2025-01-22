@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scriptargs import ScriptArgs
-
 
 @dataclass
 class Config:
@@ -16,9 +14,7 @@ class Config:
     unlink_paths: list[str]
 
     @classmethod
-    def from_script_args(cls, args: ScriptArgs):
-        dotfiles_dir = args.dotfiles_dir
-        target_dir = args.target_dir
+    def from_script_args(cls, dotfiles_dir: Path, target_dir: Path):
         config_path = Path(dotfiles_dir, "config.json")
 
         if not (config_path.exists()):

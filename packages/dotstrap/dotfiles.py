@@ -25,6 +25,7 @@ class DotfileLifecycle(ABC):
 @dataclass
 class DotfilesManager:
     dotfiles: list[DotfileLifecycle]
+    path: Path
 
     @classmethod
     def from_config(cls, config: Config):
@@ -34,7 +35,7 @@ class DotfilesManager:
             UnlinkDotfiles(create_dotfiles(config.unlink_paths)),
         ]
 
-        return cls(dotfiles)
+        return cls(dotfiles, config.dotfiles_dir)
 
     def install_all(self):
         for dotfile in self.dotfiles:
