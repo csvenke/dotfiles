@@ -8,6 +8,7 @@ pkgs.writeShellApplication {
   name = "llm";
   runtimeInputs = with pkgs; [
     (python3.withPackages (ps: [
+      ps.anthropic
       ps.click
       ps.halo
     ]))
