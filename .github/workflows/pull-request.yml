@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  check:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@main
-      - run: nix develop
+      - run: nix flake check
 
   automerge:
     if: contains(github.event.pull_request.labels.*.name, 'automerge')
-    needs: [test]
+    needs: [check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
