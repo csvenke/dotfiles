@@ -16,7 +16,7 @@
       debug = true;
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem =
-        { system, ... }:
+        { config, system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -70,6 +70,9 @@
           };
 
           devShells = {
+            ci = pkgs.mkShell {
+              packages = [ config.packages.default ];
+            };
             default = pkgs.mkShell {
               packages = with pkgs; [
                 python3Packages.setuptools
