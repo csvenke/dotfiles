@@ -128,6 +128,8 @@ if has_cmd "git"; then
   alias gpb='git_push_current_branch'
   alias gsb='git_sync_current_branch'
   alias gsm='git_sync_main_branch'
+  alias gca='git commit --amend'
+  alias gcA='git commit --amend --no-edit'
   alias gcm='git_checkout_main_branch'
   alias gcb='git_checkout_branch'
   alias gcB='git checkout -b'
