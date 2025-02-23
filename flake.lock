@@ -104,11 +104,11 @@
         "vim-extra-plugins": "vim-extra-plugins"
       },
       "locked": {
-        "lastModified": 1740220148,
-        "narHash": "sha256-+OnvDgFPWCshYmcn2lsSpRrg7MzDMZM8bpDuINtClpY=",
+        "lastModified": 1740272097,
+        "narHash": "sha256-h4DmmyWEq87MC6saRPSW2ktCQd9RgM/BRpivpq8vMQ0=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "768c810d1602ade509bbb9ecc231cccee8359c04",
+        "rev": "c8309c16c9a81d7b9228e3792ba3a847abbaa3bd",
         "type": "github"
       },
       "original": {
@@ -252,11 +252,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1740061536,
-        "narHash": "sha256-Jx0nX3z5CIIvHieHhwS/UDSENFxwtD7cfkAklJlxXLM=",
+        "lastModified": 1740250958,
+        "narHash": "sha256-t68QBTejLifcsmgAQaSTBFiyD7YwwPxbB4bxYk7V1qI=",
         "owner": "jooooscha",
         "repo": "nixpkgs-vim-extra-plugins",
-        "rev": "0640a7c8ea2412ebd6ff8708a80d9620d41e8c07",
+        "rev": "e9e5d8dd8c6e40621ec7a207226cea9649dca112",
         "type": "github"
       },
       "original": {
