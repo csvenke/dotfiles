@@ -12,7 +12,7 @@ class Claude:
     @Halo(text="Thinking", spinner="dots")
     def message(self, prompt: str) -> str:
         message = self.client.messages.create(
-            model="claude-3-5-sonnet-20241022",
+            model="claude-3-7-sonnet-latest",
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}],
         )
