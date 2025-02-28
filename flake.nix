@@ -23,6 +23,9 @@
             overlays = [
               inputs.neovim.overlays.default
             ];
+            config = {
+              allowUnfree = true;
+            };
           };
           dotstrap = pkgs.callPackage ./packages/dotstrap { };
         in
@@ -61,6 +64,7 @@
                 bat
                 htop
                 neovim
+                claude-code
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })
