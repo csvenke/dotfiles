@@ -13,7 +13,6 @@
   outputs =
     inputs@{ flake-parts, nixpkgs, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      debug = true;
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem =
         { config, system, ... }:
