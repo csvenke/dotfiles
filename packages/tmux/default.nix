@@ -8,10 +8,10 @@ let
     name = "tmux.conf";
     text = # tmux
       ''
+        source-file '${userConf}'
         run-shell '${pkgs.tmuxPlugins.sensible.rtp}'
         run-shell '${pkgs.tmuxPlugins.yank.rtp}'
         run-shell '${pkgs.tmuxPlugins.catppuccin.rtp}'
-        source-file ${userConf}
       '';
   };
 in
