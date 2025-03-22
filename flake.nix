@@ -41,8 +41,7 @@
             default = pkgs.buildEnv {
               name = "dotfiles";
               paths = with pkgs; [
-                coreutils
-                nixVersions.latest
+                nix
                 findutils
                 fd
                 starship
