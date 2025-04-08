@@ -4,6 +4,15 @@
 [includeIf "gitdir:~/repos/work/"]
   path = ~/.work/.gitconfig
 
+[includeIf "gitdir:~/repos/github/"]
+  path = ~/repos/github/.gitconfig
+
+[includeIf "gitdir:~/repos/azure-devops/"]
+  path = ~/repos/azure-devops/.gitconfig
+
+[includeIf "gitdir:~/repos/altinn-studio/"]
+  path = ~/repos/altinn-studio/.gitconfig
+
 [pull]
   rebase = true
 
