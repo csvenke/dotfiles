@@ -9,6 +9,7 @@ pkgs.writeShellApplication {
   runtimeInputs = with pkgs; [
     (python3.withPackages (ps: [
       ps.click
+      ps.pyfiglet
     ]))
     git
   ];

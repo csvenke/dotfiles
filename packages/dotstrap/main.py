@@ -3,6 +3,7 @@ from pathlib import Path
 import nix
 from config import Config
 from dotfiles import DotfilesManager
+import pyfiglet
 
 import click
 
@@ -24,6 +25,8 @@ def cli(
     dotfiles_dir: Path,
     target_dir: Path,
 ):
+    print(pyfiglet.figlet_format("Dotstrap"))
+
     if dotfiles_dir.exists():
         git.pull_origin(remote_branch, str(dotfiles_dir))
     else:

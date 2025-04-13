@@ -81,6 +81,7 @@
                 python3Packages.anthropic
                 python3Packages.halo
                 python3Packages.click
+                python3Packages.pyfiglet
                 (callPackage ./packages/llm { })
                 (callPackage ./packages/dotstrap { })
               ];
