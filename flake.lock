@@ -104,11 +104,11 @@
         "vim-extra-plugins": "vim-extra-plugins"
       },
       "locked": {
-        "lastModified": 1745283339,
-        "narHash": "sha256-U3AuTuBlG68M09gcYQBAKXC6MFsfpnQX1KQ287lg9Mk=",
+        "lastModified": 1745370558,
+        "narHash": "sha256-pjzLf0QF8WuE8iMA1UJcvaI/cLI2LlUsDiV2T5Fyox0=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "a89c4390c7f7bc0501950c138bf7089d09fdf649",
+        "rev": "89bc6e6edb7dfc3d70e30c8bf5a4374e5b0232e4",
         "type": "github"
       },
       "original": {
@@ -142,11 +142,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1744932701,
-        "narHash": "sha256-fusHbZCyv126cyArUwwKrLdCkgVAIaa/fQJYFlCEqiU=",
+        "lastModified": 1745234285,
+        "narHash": "sha256-GfpyMzxwkfgRVN0cTGQSkTC0OHhEkv3Jf6Tcjm//qZ0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b024ced1aac25639f8ca8fdfc2f8c4fbd66c48ef",
+        "rev": "c11863f1e964833214b767f4a369c6e6a7aba141",
         "type": "github"
       },
       "original": {
