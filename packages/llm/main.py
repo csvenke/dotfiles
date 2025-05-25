@@ -65,24 +65,40 @@ def commit(claude: Claude, full: bool):
            * <specific change 2>
            * <specific change 3>
 
+        Conventional Commit Types:
+
+        - feat: A new feature or significant enhancement
+        - fix: A bug fix
+        - docs: Documentation changes only
+        - style: Changes that don't affect code meaning (formatting, whitespace)
+        - refactor: Code changes that neither fix bugs nor add features
+        - test: Adding or correcting tests
+        - chore: Maintenance tasks, dependency updates, build changes
+        - perf: Performance improvements
+        - ci: Changes to CI/CD configuration
+        - build: Changes to build system or external dependencies
+
         Rules for creating commit messages:
 
-        - Use one of these types: feat, fix, docs, style, refactor, test, chore
         - Write in present tense imperative (e.g., "add" not "added")
-        - Be concise and direct
+        - Be concise and direct (50-72 characters for title)
         - Avoid self-references like "this commit" or "this change"
         - Start with lowercase
         - Omit the period at the end
-        - Include a scope when clearly applicable
+        - Include a scope when clearly applicable (e.g., component name, module)
         - For larger changes, make the title broad and use bullet points for specific details
+        - Focus on WHY the change was made, not just WHAT changed
+        - Mention breaking changes explicitly with "BREAKING CHANGE:" prefix
+        - Reference issue numbers when applicable with "#123" format
 
         Before formulating your final commit message, break down the changes, categorize them, and plan your commit message structure inside <diff_analysis> tags:
 
         1. List out the files changed and the number of lines added/removed for each file.
-        2. Categorize each change as feat, fix, docs, style, refactor, test, or chore.
+        2. Categorize each change with the most appropriate commit type.
         3. Determine if this is a small or large change based on the number of files and purposes.
-        4. Write down potential scopes for the commit message.
-        5. For larger changes, brainstorm potential bullet points.
+        4. Identify the most suitable scope(s) for the commit message.
+        5. For larger changes, brainstorm clear and specific bullet points.
+        6. Consider if any changes are breaking changes that need special notation.
 
         Pay special attention to making the commit title general for larger changes while using bullet points to specify each change.
 
