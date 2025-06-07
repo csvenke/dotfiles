@@ -1,4 +1,3 @@
-import re
 import subprocess
 from typing import Optional
 
@@ -9,116 +8,122 @@ pass_claude = click.make_pass_decorator(Claude)
 
 
 @click.group()
+@click.option("--model", default="claude-3-7-sonnet-latest")
 @click.option("--api-key", envvar="ANTHROPIC_API_KEY", default=None)
 @click.pass_context
-def cli(ctx: click.Context, api_key: Optional[str]):
-    ctx.obj = Claude(api_key=api_key)
+def cli(ctx: click.Context, model: str, api_key: Optional[str]) -> None:
+    ctx.obj = Claude(model=model, api_key=api_key)
 
 
 @cli.command()
 @click.argument("question")
 @pass_claude
-def ask(claude: Claude, question: str):
+def ask(claude: Claude, question: str) -> None:
+    """Ask me anything"""
     answer = claude.message(question)
     print(answer)
 
 
 @cli.command()
-@click.option("--full", "-f", is_flag=True, default=False)
+@click.option(
+    "--full",
+    "-f",
+    is_flag=True,
+    default=False,
+    help="Include full file diff context",
+)
 @pass_claude
-def commit(claude: Claude, full: bool):
-    diff_stat = subprocess.check_output(["git", "diff", "--staged", "--stat"]).decode()
+def commit(claude: Claude, full: bool) -> None:
+    """Draft a commit message"""
+    diff_stat = execute(["git", "diff", "--staged", "--stat"])
+
+    if not diff_stat:
+        print("No staged changes to commit.")
+        return
 
     if full:
-        staged_diff = subprocess.check_output(
-            ["git", "diff", "--staged", "-W"]
-        ).decode()
+        staged_diff = execute(["git", "diff", "--staged", "-W"])
     else:
-        staged_diff = subprocess.check_output(["git", "diff", "--staged"]).decode()
+        staged_diff = execute(["git", "diff", "--staged"])
 
-    prompt = f"""
-        You are an experienced software developer tasked with creating semantic git commit messages that accurately describe code changes. Your goal is to produce clear, concise, and informative commit messages following the conventional commit format.
+    recent_commits = execute(["git", "log", "--oneline", "-n", "5"])
+    current_branch = execute(["git", "branch", "--show-current"])
 
-        Here are the git diff details you need to analyze:
+    prompt = f""" 
+        Generate a commit message for the following git diff. Follow the conventional commit format.
 
-        <diff_stat>
+        ## Repository context
+        Current branch: {current_branch}
+
+        Recent commits:
+        ```
+        {recent_commits}
+        ```
+
+        Diff stat:
+        ```
         {diff_stat}
-        </diff_stat>
+        ```
 
-        <staged_diff>
+        Staged diff:
+        ```
         {staged_diff}
-        </staged_diff>
+        ```
 
-        Instructions:
+        ## Examples
+        Here are some examples of great commit messages:
 
-        1. Analyze the provided git diff information.
-        2. Determine whether the changes are small (1-2 files, single purpose) or large (multiple files or purposes).
-        3. Create an appropriate commit message based on the following format:
+        ### Example 1 (small change):
+        ```
+        feat(auth): implement JWT token refresh mechanism
+        ```
 
-           For small changes:
-           <type>(<scope>): <description>
+        ### Example 2 (small change):
+        ```
+        fix(api): handle null response from user service
+        ```
 
-           For larger changes:
-           <type>(<scope>): <general description>
+        ### Example 3 (larger change):
+        ```
+        refactor(database): improve query performance
 
-           * <specific change 1>
-           * <specific change 2>
-           * <specific change 3>
+        * replace ORM with raw SQL for critical paths
+        * add indexes to frequently queried columns
+        * implement connection pooling
+        ```
 
-        Conventional Commit Types:
+        ### Example 4 (larger change):
+        ```
+        feat(ui): redesign dashboard layout
 
-        - feat: A new feature or significant enhancement
-        - fix: A bug fix
-        - docs: Documentation changes only
-        - style: Changes that don't affect code meaning (formatting, whitespace)
-        - refactor: Code changes that neither fix bugs nor add features
-        - test: Adding or correcting tests
-        - chore: Maintenance tasks, dependency updates, build changes
-        - perf: Performance improvements
-        - ci: Changes to CI/CD configuration
-        - build: Changes to build system or external dependencies
+        * reorganize widgets for better information hierarchy
+        * implement responsive grid system
+        * add dark mode support
+        ```
 
-        Rules for creating commit messages:
+        ### Example 5 (breaking change):
+        ```
+        feat(api): revise authentication endpoints
 
-        - Write in present tense imperative (e.g., "add" not "added")
-        - Be concise and direct (50-72 characters for title)
-        - Avoid self-references like "this commit" or "this change"
-        - Start with lowercase
-        - Omit the period at the end
-        - Include a scope when clearly applicable (e.g., component name, module)
-        - For larger changes, make the title broad and use bullet points for specific details
-        - Focus on WHY the change was made, not just WHAT changed
-        - Mention breaking changes explicitly with "BREAKING CHANGE:" prefix
-        - Reference issue numbers when applicable with "#123" format
+        * consolidate login and signup flows
+        * require 2FA for admin accounts
+        * remove deprecated password reset endpoint
 
-        Before formulating your final commit message, break down the changes, categorize them, and plan your commit message structure inside <diff_analysis> tags:
+        BREAKING CHANGE: clients using the old password reset flow need to migrate
+        ```
 
-        1. List out the files changed and the number of lines added/removed for each file.
-        2. Categorize each change with the most appropriate commit type.
-        3. Determine if this is a small or large change based on the number of files and purposes.
-        4. Identify the most suitable scope(s) for the commit message.
-        5. For larger changes, brainstorm clear and specific bullet points.
-        6. Consider if any changes are breaking changes that need special notation.
+        Based on the examples above, create a commit message that accurately describes the changes in the diff.
 
-        Pay special attention to making the commit title general for larger changes while using bullet points to specify each change.
-
-        After your analysis, provide your final commit message without any additional commentary.
-
-        Example output structure:
-
-        <diff_analysis>
-        [Your detailed analysis of the diff, categorization of changes, and commit message planning]
-        </diff_analysis>
-
-        [Your final commit message, formatted according to the rules above]
-
-        Please proceed with your analysis and commit message creation based on the provided git diff information.
+        IMPORTANT: Return ONLY the commit message text without any markdown formatting, code blocks, or additional explanation.
     """
 
     commit = claude.message(prompt)
-    commit = re.sub(r"<diff_analysis>.*?</diff_analysis>", "", commit, flags=re.DOTALL)
 
     subprocess.run(["git", "commit", "-m", commit, "-e"])
+
+
+def execute(args: list[str]) -> str:
+    return subprocess.check_output(args).decode().strip()
 
 
 if __name__ == "__main__":
