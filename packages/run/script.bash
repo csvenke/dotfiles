@@ -58,6 +58,9 @@ function dotnet_runner() {
 
   while IFS= read -r project_dir; do
     echo "dotnet run --project $project_dir"
+  done <<<"$project_dirs"
+
+  while IFS= read -r project_dir; do
     echo "dotnet watch --project $project_dir"
   done <<<"$project_dirs"
 }
