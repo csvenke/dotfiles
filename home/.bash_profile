@@ -3,5 +3,5 @@ if [ -f "$HOME/.bashrc" ]; then
 fi
 
 if command -v tmux >/dev/null && [ -n "$PS1" ] && [ -z "$TMUX" ]; then
-  tmux new -A -s main
+  tmux new -A -s primary
 fi
