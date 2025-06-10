@@ -104,11 +104,11 @@
         "vim-extra-plugins": "vim-extra-plugins"
       },
       "locked": {
-        "lastModified": 1749430924,
-        "narHash": "sha256-Sy82aq9p1l9t9dC8tOXj7XFqAxs/kzAEzB/V4b59NRw=",
+        "lastModified": 1749485827,
+        "narHash": "sha256-UPRnk9zWqdFnr/ai4uIGzRSz7g/6o2zrKxEeZ2uwMVU=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "ba911315adbd8b2d0f49b9d35f02a22fe52129af",
+        "rev": "d8668458d270d7508cb2e9bc1f41b20bcd8a8dd4",
         "type": "github"
       },
       "original": {
