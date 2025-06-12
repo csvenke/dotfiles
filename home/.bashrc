@@ -194,4 +194,3 @@ if is_wsl; then
 fi
 
 source_if_exists "$HOME/.machine/.bashrc"
-source_if_exists "$HOME/.work/.bashrc"

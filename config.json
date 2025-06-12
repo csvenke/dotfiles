@@ -14,8 +14,6 @@
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
-      ".work/.bashrc",
-      ".work/.gitconfig",
       ".machine/.bashrc"
     ],
     "unlink": [
@@ -23,7 +21,9 @@
       ".vault/anthropic-api-key.txt",
       ".gitconfig.work",
       ".bashrc.machine.sh",
-      ".bashrc.work.sh"
+      ".bashrc.work.sh",
+      ".work/.bashrc",
+      ".work/.gitconfig"
     ]
   }
 }
