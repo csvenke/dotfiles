@@ -8,7 +8,7 @@ pass_claude = click.make_pass_decorator(Claude)
 
 
 @click.group()
-@click.option("--model", default="claude-3-7-sonnet-latest")
+@click.option("--model", default="claude-sonnet-4-20250514")
 @click.option("--api-key", envvar="ANTHROPIC_API_KEY", default=None)
 @click.pass_context
 def cli(ctx: click.Context, model: str, api_key: Optional[str]) -> None:
