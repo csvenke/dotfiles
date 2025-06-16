@@ -11,6 +11,7 @@ function git_main_branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
 function git_all_branches() {
+  git fetch origin
   git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
 }
 function git_find_branch() {
@@ -26,10 +27,27 @@ function git_sync_main_branch() {
   git pull origin "$(git_main_branch)"
 }
 function git_checkout_main_branch() {
-  git checkout "$(git_main_branch)"
+  git switch "$(git_main_branch)"
 }
-function git_checkout_branch() {
-  git_all_branches | fzf | xargs git checkout
+function git_checkout_local_branch() {
+  local branch_name="$1"
+
+  if [ -z "$branch_name" ]; then
+    return 1
+  fi
+
+  git fetch origin
+  git switch --create "$branch_name"
+}
+function git_checkout_remote_branch() {
+  local branch_name="$1"
+
+  if [ -z "$branch_name" ]; then
+    return 1
+  fi
+
+  git fetch origin
+  git switch "$branch_name"
 }
 function git_worktree_add() {
   git worktree add "$@"
@@ -131,8 +149,8 @@ if has_cmd "git"; then
   alias gca='git commit --amend'
   alias gcA='git commit --amend --no-edit'
   alias gcm='git_checkout_main_branch'
-  alias gcb='git_checkout_branch'
-  alias gcB='git checkout -b'
+  alias gcb='git_checkout_local_branch'
+  alias gcB='git_checkout_remote_branch'
   alias gbc='git_bare_clone'
   alias gbi='git_bare_init'
   alias gwa='git_worktree_add'
