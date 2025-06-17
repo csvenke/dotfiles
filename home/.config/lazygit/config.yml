@@ -1,6 +1,7 @@
 gui:
   showRandomTip: false
   showCommandLog: false
+  switchTabsWithPanelJumpKeys: true
 git:
   paging:
     pager: delta --dark --paging=never
