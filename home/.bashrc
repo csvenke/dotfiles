@@ -132,6 +132,22 @@ function bat_cat() {
 function is_wsl() {
   [ -n "$WSL_DISTRO_NAME" ]
 }
+function dotfiles_upgrade() {
+  local original_dir="$PWD"
+
+  function cleanup() {
+    cd "$original_dir" || return 1
+  }
+
+  trap cleanup RETURN
+
+  cd "$HOME"/.dotfiles || return 1
+  git fetch origin
+  git pull origin "$(git_main_branch)"
+  nix flake update
+  git add .
+  nix run .#install
+}
 
 export DOTFILES="$HOME/.dotfiles"
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -142,6 +158,10 @@ alias dot="cd ~/.dotfiles"
 
 if has_cmd "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devkit"
+
+  if test -r "$HOME"/.dotfiles; then
+    alias upgrade='dotfiles_upgrade'
+  fi
 fi
 
 if has_cmd "git"; then
