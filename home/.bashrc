@@ -65,19 +65,24 @@ function git_worktree_add() {
 function git_bare_clone() {
   local url="$1"
   local path="${url##*/}"
+  local original_dir="$PWD"
 
   mkdir "$path"
   cd "$path" || return
   git clone --bare "$url" .git || return
   mkdir -p .shared
 
-  git worktree add --lock --orphan nix
-  (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
-  echo 'use flake "../nix"' >.shared/.envrc
+  if has_cmd "nix"; then
+    git worktree add --lock --orphan nix
+    (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
+    echo 'use flake "../nix"' >.shared/.envrc
+  fi
 
   git_worktree_add --lock "$(git_main_branch)"
   git_worktree_add --lock --detach dev
   git_worktree_add --lock --detach review
+
+  cd "$original_dir" || return
 }
 function git_bare_init() {
   local name="$1"
