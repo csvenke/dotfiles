@@ -37,6 +37,13 @@
                 dotstrap install
               '';
             };
+            update = pkgs.writeShellApplication {
+              name = "update";
+              runtimeInputs = [ dotstrap ];
+              text = ''
+                dotstrap update
+              '';
+            };
 
             default = pkgs.buildEnv {
               name = "dotfiles";

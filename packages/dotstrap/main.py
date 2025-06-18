@@ -58,6 +58,21 @@ def install(dotfiles: DotfilesManager):
 
 @cli.command()
 @pass_dotfiles
+def update(dotfiles: DotfilesManager):
+    print(">>> Updating flake.lock <<<")
+    nix.flake_update(str(dotfiles.path))
+
+    print(">>> Installing packages <<<")
+    nix.profile_install(str(dotfiles.path))
+
+    print(">>> Upgrading packages <<<")
+    nix.profile_upgrade_all()
+
+    print(">>> DONE <<<")
+
+
+@cli.command()
+@pass_dotfiles
 def check(dotfiles: DotfilesManager):
     print(">>> Checking dotfiles <<<")
     dotfiles.check_all()
