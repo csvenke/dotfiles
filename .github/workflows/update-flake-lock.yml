@@ -20,5 +20,5 @@ jobs:
             dependencies
             automated
             automerge
-          commit-msg: "feat(deps): update dependencies"
+          commit-msg: "chore(deps): update dependencies"
           token: ${{ secrets.GH_REPO_PAT }}
