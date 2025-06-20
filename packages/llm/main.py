@@ -71,45 +71,49 @@ def commit(claude: Claude, full: bool) -> None:
         ```
 
         ## Examples
-        Here are some examples of great commit messages:
+        Here are examples of clear, direct commit messages:
 
-        ### Example 1 (small change):
+        ### Example 1 (bug fix):
         ```
-        feat(auth): implement JWT token refresh mechanism
-        ```
-
-        ### Example 2 (small change):
-        ```
-        fix(api): handle null response from user service
+        fix: prevent null pointer exception in user validation
         ```
 
-        ### Example 3 (larger change):
+        ### Example 2 (feature addition):
         ```
-        refactor(database): improve query performance
-
-        * replace ORM with raw SQL for critical paths
-        * add indexes to frequently queried columns
-        * implement connection pooling
+        feat: add pagination to search results endpoint
         ```
 
-        ### Example 4 (larger change):
+        ### Example 3 (refactoring):
         ```
-        feat(ui): redesign dashboard layout
+        refactor: extract database connection logic into separate module
 
-        * reorganize widgets for better information hierarchy
-        * implement responsive grid system
-        * add dark mode support
+        * move connection pooling to db/pool.py
+        * update imports in affected services
+        * add connection timeout configuration
         ```
 
-        ### Example 5 (breaking change):
+        ### Example 4 (configuration change):
         ```
-        feat(api): revise authentication endpoints
+        chore: increase API rate limit from 100 to 500 requests/minute
+        ```
 
-        * consolidate login and signup flows
-        * require 2FA for admin accounts
-        * remove deprecated password reset endpoint
+        ### Example 5 (dependency update):
+        ```
+        chore: upgrade pytest from 7.1.0 to 7.4.2
 
-        BREAKING CHANGE: clients using the old password reset flow need to migrate
+        * update test fixtures for new assertion format
+        * fix deprecated warning in conftest.py
+        ```
+
+        ### Example 6 (breaking change):
+        ```
+        feat: change user ID format from integer to UUID
+
+        * update database schema and migrations
+        * modify API responses to use string IDs
+        * update client SDK documentation
+
+        BREAKING CHANGE: user IDs are now UUIDs instead of integers
         ```
 
         Based on the examples above, create a commit message that accurately describes the changes in the diff.
