@@ -49,6 +49,9 @@ function git_checkout_remote_branch() {
   git fetch origin
   git switch "$branch_name"
 }
+function git_worktree_switch() {
+  cd "$(git worktree list | fzf | awk '{print $1}')" || return
+}
 function git_worktree_add() {
   git worktree add "$@"
 
@@ -158,6 +161,7 @@ if has_cmd "git"; then
   alias gcB='git_checkout_remote_branch'
   alias gbc='git_bare_clone'
   alias gbi='git_bare_init'
+  alias gws='git_worktree_switch'
   alias gwa='git_worktree_add'
   alias gwr='git_worktree_remove'
   alias gwp='git_worktree_prune'
