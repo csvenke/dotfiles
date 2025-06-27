@@ -70,6 +70,7 @@
                 htop
                 neovim
                 claude-code
+                (callPackage ./packages/gemini-cli { })
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })
