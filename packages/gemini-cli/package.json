@@ -1,0 +1,12 @@
+{
+  "name": "gemini",
+  "version": "0.1.5",
+  "bin": "index.js",
+  "main": "index.js",
+  "scripts": {
+    "build": "true"
+  },
+  "dependencies": {
+    "@google/gemini-cli": "0.1.5"
+  }
+}
