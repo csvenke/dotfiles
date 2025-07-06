@@ -57,7 +57,6 @@
                 delta
                 ripgrep
                 jq
-                gh
                 tldr
                 wget
                 git
@@ -68,6 +67,7 @@
                 eza
                 bat
                 htop
+                gh
                 neovim
                 claude-code
                 (callPackage ./packages/tmux { })
