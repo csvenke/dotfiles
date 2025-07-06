@@ -6,3 +6,6 @@
 .vault
 .work
 .machine
+.opencode
+.claude
+!.claude/settings.json

@@ -70,6 +70,7 @@
                 gh
                 neovim
                 claude-code
+                opencode
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })
