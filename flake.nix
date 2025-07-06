@@ -66,7 +66,7 @@
                 xclip
                 eza
                 bat
-                htop
+                htop-vim
                 gh
                 neovim
                 claude-code
