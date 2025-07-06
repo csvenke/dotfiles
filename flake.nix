@@ -68,6 +68,9 @@
                 bat
                 htop-vim
                 gh
+                (azure-cli.withExtensions [
+                  azure-cli-extensions.azure-devops
+                ])
                 neovim
                 claude-code
                 opencode
