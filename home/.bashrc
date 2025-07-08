@@ -52,10 +52,17 @@ function git_checkout_remote_branch() {
 function git_worktree_switch() {
   cd "$(git worktree list | fzf | awk '{print $1}')" || return
 }
-function git_worktree_add() {
-  git worktree add "$@"
+function setup_shared_dir() {
+  mkdir -p .shared
 
-  local path="${*: -1}"
+  if has_cmd "nix"; then
+    git worktree add --lock --orphan nix
+    (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
+    echo 'use flake "../nix"' >.shared/.envrc
+  fi
+}
+function setup_worktree() {
+  local path="$1"
 
   if [ -d ".shared" ]; then
     cp -r .shared/. "$path/"
@@ -65,6 +72,12 @@ function git_worktree_add() {
     direnv allow "$path"
   fi
 }
+function git_worktree_add() {
+  git worktree add "$@"
+
+  local path="${*: -1}"
+  setup_worktree "$path"
+}
 function git_bare_clone() {
   local url="$1"
   local path="${url##*/}"
@@ -73,13 +86,8 @@ function git_bare_clone() {
   mkdir "$path"
   cd "$path" || return
   git clone --bare "$url" .git || return
-  mkdir -p .shared
 
-  if has_cmd "nix"; then
-    git worktree add --lock --orphan nix
-    (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
-    echo 'use flake "../nix"' >.shared/.envrc
-  fi
+  setup_shared_dir
 
   git_worktree_add --lock "$(git_main_branch)"
   git_worktree_add --lock --detach dev
@@ -93,9 +101,15 @@ function git_bare_init() {
 
   mkdir "$name"
   cd "$name" || return
+
   git init --bare .git -b "$main_branch" || return
-  git worktree add --lock --orphan "$main_branch"
-  cd "$main_branch" || return
+  git worktree add --orphan --lock "$main_branch"
+  (cd "$main_branch" && touch README.md && git add . && git commit -m "genesis")
+
+  setup_shared_dir
+  setup_worktree "$main_branch"
+  git_worktree_add --lock --detach dev
+  git_worktree_add --lock --detach review
 }
 function git_worktree_remove() {
   local selected_worktree
