@@ -48,24 +48,19 @@ function open_path() {
   local path="$1"
 
   if [[ -z "$path" ]]; then
-    exit 1
+    return
   fi
 
-  cd "$path" || exit 1
-
-  if command -v nvim &>/dev/null; then
-    nvim
-    exit 0
-  fi
+  cd "$path" || return
 
   if [ -n "$VISUAL" ]; then
-    "$VISUAL" .
-    exit 0
+    "$VISUAL"
+    return
   fi
 
   if [ -n "$EDITOR" ]; then
-    "$EDITOR" .
-    exit 0
+    "$EDITOR"
+    return
   fi
 }
 
