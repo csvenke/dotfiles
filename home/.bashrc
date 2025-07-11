@@ -20,6 +20,9 @@ function git_find_branch() {
 function git_push_current_branch() {
   git push origin "$(git branch --show-current)" "$@"
 }
+function git_push_force_current_branch() {
+  git_push_current_branch --force-with-lease "$@"
+}
 function git_sync_current_branch() {
   git pull origin "$(git branch --show-current)" "$@"
 }
@@ -28,6 +31,15 @@ function git_sync_main_branch() {
 }
 function git_checkout_main_branch() {
   git switch "$(git_main_branch)"
+}
+function git_rebase_branch() {
+  git rebase -i "$(git merge-base HEAD "$(git_main_branch)")"
+}
+function git_add_all() {
+  git add . && git status -s
+}
+function git_unstage_all() {
+  git restore --staged . && git status -s
 }
 function git_checkout_local_branch() {
   local branch_name="$1"
@@ -78,7 +90,7 @@ function git_worktree_add() {
   local path="${*: -1}"
   setup_worktree "$path"
 }
-function git_bare_clone() {
+function git_worktree_clone() {
   local url="$1"
   local path="${url##*/}"
   local original_dir="$PWD"
@@ -95,7 +107,7 @@ function git_bare_clone() {
 
   cd "$original_dir" || return
 }
-function git_bare_init() {
+function git_worktree_init() {
   local name="$1"
   local main_branch="main"
 
@@ -162,19 +174,21 @@ if has_cmd "nix"; then
 fi
 
 if has_cmd "git"; then
-  alias gaa='git add . && git status -s'
-  alias gra='git restore --staged . && git status -s'
   alias gfb='git_find_branch'
-  alias gpb='git_push_current_branch'
-  alias gsb='git_sync_current_branch'
-  alias gsm='git_sync_main_branch'
-  alias gca='git commit --amend'
-  alias gcA='git commit --amend --no-edit'
   alias gcm='git_checkout_main_branch'
   alias gcb='git_checkout_local_branch'
   alias gcB='git_checkout_remote_branch'
-  alias gbc='git_bare_clone'
-  alias gbi='git_bare_init'
+  alias gca='git commit --amend'
+  alias gcA='git commit --amend --no-edit'
+  alias gaa='git_add_all'
+  alias gua='git_unstage_all'
+  alias gpb='git_push_current_branch'
+  alias gpB='git_push_force_current_branch'
+  alias gsb='git_sync_current_branch'
+  alias gsm='git_sync_main_branch'
+  alias grb='git_rebase_branch'
+  alias gwi='git_worktree_init'
+  alias gwc='git_worktree_clone'
   alias gws='git_worktree_switch'
   alias gwa='git_worktree_add'
   alias gwr='git_worktree_remove'
@@ -182,7 +196,7 @@ if has_cmd "git"; then
 fi
 
 if has_cmd "lazygit"; then
-  alias gui='lazygit'
+  alias lg='lazygit'
 fi
 
 if has_cmd "eza"; then
@@ -203,7 +217,7 @@ if has_cmd "nvim"; then
   export EDITOR="nvim --clean"
   export VISUAL="nvim"
 
-  alias vim="nvim"
+  alias vim="nvim --clean"
 fi
 
 if has_cmd "direnv"; then
