@@ -168,6 +168,7 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 
 alias src="source ~/.bashrc"
 alias dot="cd ~/.dotfiles"
+alias which="command -v"
 
 if has_cmd "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devkit"
