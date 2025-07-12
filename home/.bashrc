@@ -101,7 +101,12 @@ function git_worktree_clone() {
 
   setup_shared_dir
 
-  git_worktree_add --lock "$(git_main_branch)"
+  local main_branch
+  main_branch="$(git_main_branch)"
+
+  git_worktree_add --lock "$main_branch"
+  (cd "$main_branch" && git push -u origin "$main_branch")
+
   git_worktree_add --lock --detach dev
   git_worktree_add --lock --detach review
 
