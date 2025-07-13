@@ -76,10 +76,6 @@ function git_checkout_remote_branch() {
   git switch "$branch_name"
 }
 
-function git_worktree_switch() {
-  cd "$(git worktree list | fzf | awk '{print $1}')" || return
-}
-
 function setup_shared_dir() {
   mkdir -p .shared
 
@@ -162,6 +158,17 @@ function git_worktree_remove() {
 
   echo "Removing $worktree_path"
   git worktree remove "$worktree_path"
+}
+
+function git_worktree_switch() {
+  local selected_worktree
+  selected_worktree=$(git worktree list | fzf | awk '{print $1}')
+
+  if [ -z "$selected_worktree" ]; then
+    return 0
+  fi
+
+  cd "$selected_worktree" || return 1
 }
 
 function git_worktree_prune() {
