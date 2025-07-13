@@ -3,44 +3,57 @@ function source_if_exists() {
     source "$1"
   fi
 }
+
 function has_cmd() {
   command -v "$1" &>/dev/null || return 1
   return 0
 }
+
 function git_main_branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
+
 function git_all_branches() {
   git fetch origin
   git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
 }
+
 function git_find_branch() {
   git_all_branches | fzf | xclip -selection clipboard
 }
+
 function git_push_current_branch() {
   git push origin "$(git branch --show-current)" "$@"
 }
+
 function git_push_force_current_branch() {
   git_push_current_branch --force-with-lease "$@"
 }
+
 function git_sync_current_branch() {
   git pull origin "$(git branch --show-current)" "$@"
 }
+
 function git_sync_main_branch() {
   git pull origin "$(git_main_branch)"
 }
+
 function git_checkout_main_branch() {
   git switch "$(git_main_branch)"
 }
+
 function git_rebase_branch() {
   git rebase -i "$(git merge-base HEAD "$(git_main_branch)")"
 }
+
 function git_add_all() {
   git add . && git status -s
 }
+
 function git_unstage_all() {
   git restore --staged . && git status -s
 }
+
 function git_checkout_local_branch() {
   local branch_name="$1"
 
@@ -51,6 +64,7 @@ function git_checkout_local_branch() {
   git fetch origin
   git switch --create "$branch_name"
 }
+
 function git_checkout_remote_branch() {
   local branch_name="$1"
 
@@ -61,9 +75,11 @@ function git_checkout_remote_branch() {
   git fetch origin
   git switch "$branch_name"
 }
+
 function git_worktree_switch() {
   cd "$(git worktree list | fzf | awk '{print $1}')" || return
 }
+
 function setup_shared_dir() {
   mkdir -p .shared
 
@@ -73,6 +89,7 @@ function setup_shared_dir() {
     echo 'use flake "../nix"' >.shared/.envrc
   fi
 }
+
 function setup_worktree() {
   local path="$1"
 
@@ -84,12 +101,14 @@ function setup_worktree() {
     direnv allow "$path"
   fi
 }
+
 function git_worktree_add() {
   git worktree add "$@"
 
   local path="${*: -1}"
   setup_worktree "$path"
 }
+
 function git_worktree_clone() {
   local url="$1"
   local path="${url##*/}"
@@ -112,6 +131,7 @@ function git_worktree_clone() {
 
   cd "$original_dir" || return
 }
+
 function git_worktree_init() {
   local name="$1"
   local main_branch="main"
@@ -128,6 +148,7 @@ function git_worktree_init() {
   git_worktree_add --lock --detach dev
   git_worktree_add --lock --detach review
 }
+
 function git_worktree_remove() {
   local selected_worktree
   selected_worktree=$(git worktree list | fzf)
@@ -142,6 +163,7 @@ function git_worktree_remove() {
   echo "Removing $worktree_path"
   git worktree remove "$worktree_path"
 }
+
 function git_worktree_prune() {
   local branches
   branches=$(git worktree list --porcelain | grep "prunable" -B 1 | grep "branch" | sed "s@branch refs/heads/@@" | xargs -r)
@@ -154,15 +176,19 @@ function git_worktree_prune() {
   git worktree prune
   echo "$branches" | xargs git branch -D
 }
+
 function eza_list_files() {
   command eza --icons --colour=auto --sort=type --group-directories-first "$@"
 }
+
 function xclip_copy() {
   xclip -selection clipboard
 }
+
 function bat_cat() {
   bat --style=plain "$@"
 }
+
 function is_wsl() {
   [ -n "$WSL_DISTRO_NAME" ]
 }
