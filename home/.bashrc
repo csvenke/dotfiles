@@ -273,6 +273,14 @@ if has_cmd "fzf"; then
   eval "$(fzf --bash)"
 fi
 
+if has_cmd "pacman"; then
+  alias update-system='sudo pacman -Syu'
+fi
+
+if has_cmd "apt"; then
+  alias update-system='sudo apt update && sudo apt upgrade'
+fi
+
 if is_wsl; then
   export BROWSER='explorer.exe'
 
