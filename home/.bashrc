@@ -204,9 +204,15 @@ export DOTFILES="$HOME/.dotfiles"
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-alias src="source ~/.bashrc"
-alias dot="cd ~/.dotfiles"
 alias which="command -v"
+
+if [ -d "$HOME/.dotfiles" ]; then
+  export DOTFILES="$HOME/.dotfiles"
+
+  alias update-dotfiles="(cd ~/.dotfiles && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)"
+  alias src="source ~/.bashrc"
+  alias dot="cd ~/.dotfiles"
+fi
 
 if has_cmd "nix"; then
   alias flake-init="nix flake init -t github:csvenke/devkit"
