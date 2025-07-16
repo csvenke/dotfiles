@@ -71,6 +71,7 @@
                 (azure-cli.withExtensions [
                   azure-cli-extensions.azure-devops
                 ])
+                neofetch
                 neovim
                 claude-code
                 opencode
