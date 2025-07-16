@@ -15,6 +15,7 @@
       ".config/direnv",
       ".config/lazygit",
       ".config/nix",
+      ".config/opencode",
       ".machine/.bashrc"
     ],
     "unlink": [
