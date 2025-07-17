@@ -54,6 +54,10 @@ function git_unstage_all() {
   git restore --staged . && git status -s
 }
 
+function git_find_commit() {
+  git log --oneline --color=always | fzf --ansi --preview 'git show --color=always --no-patch {1}'
+}
+
 function git_checkout_local_branch() {
   local branch_name="$1"
 
@@ -220,6 +224,7 @@ fi
 
 if has_cmd "git"; then
   alias gfb='git_find_branch'
+  alias gfc='git_find_commit'
   alias gcm='git_checkout_main_branch'
   alias gcb='git_checkout_local_branch'
   alias gcB='git_checkout_remote_branch'
