@@ -204,14 +204,13 @@ function is_wsl() {
   [ -n "$WSL_DISTRO_NAME" ]
 }
 
-export DOTFILES="$HOME/.dotfiles"
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 alias which="command -v"
 
 if [ -d "$HOME/.dotfiles" ]; then
-  export DOTFILES="$HOME/.dotfiles"
+  export DOTFILES_PATH="$HOME/.dotfiles"
 
   alias update-dotfiles="(cd ~/.dotfiles && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)"
   alias src="source ~/.bashrc"
