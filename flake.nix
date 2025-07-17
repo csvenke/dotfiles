@@ -30,18 +30,42 @@
         in
         {
           packages = {
-            install = pkgs.writeShellApplication {
-              name = "install";
-              runtimeInputs = [ dotstrap ];
+            migrate = pkgs.writeShellApplication {
+              name = "migrate";
+              runtimeInputs = with pkgs; [
+                dotstrap
+                stow
+              ];
               text = ''
-                dotstrap install
+                DOTFILES_PATH="$HOME"/.dotfiles
+
+                dotstrap clean
+                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
               '';
             };
-            update = pkgs.writeShellApplication {
-              name = "update";
-              runtimeInputs = [ dotstrap ];
+
+            install = pkgs.writeShellApplication {
+              name = "install";
+              runtimeInputs = with pkgs; [
+                stow
+                git
+                nix
+              ];
               text = ''
-                dotstrap update
+                DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
+                DOTFILES_BRANCH="master"
+                DOTFILES_PATH="$HOME"/.dotfiles
+
+                if [ ! -d "$DOTFILES_PATH" ]; then
+                  git clone "$DOTFILES_URL" "$DOTFILES_PATH"
+                else
+                  git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
+                fi
+
+                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
+                nix profile install "$DOTFILES_PATH"
+                nix profile upgrade --all
+                nix profile wipe-history --older-than 7d
               '';
             };
 
@@ -49,6 +73,7 @@
               name = "dotfiles";
               paths = with pkgs; [
                 nix
+                stow
                 findutils
                 fd
                 starship
