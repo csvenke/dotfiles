@@ -75,6 +75,7 @@
                 neovim
                 claude-code
                 opencode
+                asciinema
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })
