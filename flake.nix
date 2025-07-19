@@ -26,27 +26,14 @@
               allowUnfree = true;
             };
           };
-          dotstrap = pkgs.callPackage ./packages/dotstrap { };
+          dotstrap-eject = pkgs.callPackage ./packages/dotstrap-eject { };
         in
         {
           packages = {
-            migrate = pkgs.writeShellApplication {
-              name = "migrate";
-              runtimeInputs = with pkgs; [
-                dotstrap
-                stow
-              ];
-              text = ''
-                DOTFILES_PATH="$HOME"/.dotfiles
-
-                dotstrap clean
-                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
-              '';
-            };
-
             install = pkgs.writeShellApplication {
               name = "install";
               runtimeInputs = with pkgs; [
+                dotstrap-eject
                 stow
                 git
                 nix
@@ -62,6 +49,7 @@
                   git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
                 fi
 
+                dotstrap-eject
                 stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
                 nix profile install "$DOTFILES_PATH"
                 nix profile upgrade --all
