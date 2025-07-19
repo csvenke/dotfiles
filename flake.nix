@@ -102,12 +102,8 @@
               packages = [ config.packages.default ];
             };
             default = pkgs.mkShell {
-              packages = with pkgs; [
-                python3Packages.setuptools
-                python3Packages.anthropic
-                python3Packages.halo
-                python3Packages.click
-                python3Packages.pyfiglet
+              inputsFrom = [
+                (pkgs.callPackage ./packages/llm/shell.nix { })
               ];
             };
           };
