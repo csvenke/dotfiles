@@ -9,6 +9,31 @@ function has_cmd() {
   return 0
 }
 
+function detect_system() {
+  if [ -f /etc/os-release ]; then
+    grep "^ID" /etc/os-release | cut -d"=" -f2 | tr -d '""'
+  else
+    uname | tr "[:upper:]" "[:lower:]"
+  fi
+}
+
+function update_system() {
+  case "$(detect_system)" in
+  "arch")
+    sudo pacman -Syu
+    ;;
+  "ubuntu")
+    sudo apt update && sudo apt upgrade
+    ;;
+  "darwin")
+    brew update && brew upgrade
+    ;;
+  *)
+    echo "system not supported"
+    ;;
+  esac
+}
+
 function git_main_branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
@@ -208,6 +233,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 alias which="command -v"
+alias update-system="update_system"
 
 if [ -d "$HOME/.dotfiles" ]; then
   export DOTFILES_PATH="$HOME/.dotfiles"
@@ -288,14 +314,6 @@ if has_cmd "fzf"; then
   export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
 
   eval "$(fzf --bash)"
-fi
-
-if has_cmd "pacman"; then
-  alias update-system='sudo pacman -Syu'
-fi
-
-if has_cmd "apt"; then
-  alias update-system='sudo apt update && sudo apt upgrade'
 fi
 
 if is_wsl; then
