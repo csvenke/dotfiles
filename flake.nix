@@ -20,6 +20,7 @@
           pkgs = import nixpkgs {
             inherit system;
             overlays = [
+              (import ./overlays/default.nix)
               inputs.neovim.overlays.default
             ];
             config = {
