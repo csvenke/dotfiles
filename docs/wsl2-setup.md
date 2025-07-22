@@ -80,6 +80,6 @@ localhostForwarding=true
 systemd=true
 
 [interop]
-enabled = false
+enabled = true
 appendWindowsPath = false
 ```
