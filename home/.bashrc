@@ -323,4 +323,5 @@ if is_wsl; then
   alias open='explorer.exe'
 fi
 
+source_if_exists "$HOME/.nix-profile/share/bash-completion/bash_completion"
 source_if_exists "$HOME/.machine/.bashrc"

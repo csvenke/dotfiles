@@ -61,6 +61,7 @@
             default = pkgs.buildEnv {
               name = "dotfiles";
               paths = with pkgs; [
+                bash-completion
                 nix
                 stow
                 findutils
