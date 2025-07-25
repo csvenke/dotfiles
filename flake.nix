@@ -90,6 +90,7 @@
                 claude-code
                 opencode
                 asciinema
+                asciinema-agg
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })
