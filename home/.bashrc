@@ -226,7 +226,7 @@ function bat_cat() {
 }
 
 function is_wsl() {
-  [ -n "$WSL_DISTRO_NAME" ]
+  uname -r | grep -qi microsoft
 }
 
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -322,8 +322,10 @@ if has_cmd "asciinema" && has_cmd "agg"; then
   alias record-gif="asciinema rec --overwrite recording.cast && agg recording.cast recording.gif"
 fi
 
-  alias start='explorer.exe'
-  alias open='explorer.exe'
+if is_wsl; then
+  alias explorer='/mnt/c/Windows/explorer.exe'
+  alias start='explorer'
+  alias open='explorer'
 fi
 
 source_if_exists "$HOME/.machine/.bashrc"
