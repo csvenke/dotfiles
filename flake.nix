@@ -89,8 +89,7 @@
                 neovim
                 claude-code
                 opencode
-                asciinema
-                asciinema-agg
+                (callPackage ./packages/record { })
                 (callPackage ./packages/tmux { })
                 (callPackage ./packages/dev { })
                 (callPackage ./packages/run { })

@@ -316,12 +316,6 @@ if has_cmd "fzf"; then
   eval "$(fzf --bash)"
 fi
 
-if has_cmd "asciinema" && has_cmd "agg"; then
-  alias agg="agg --font-family 'JetBrainsMono Nerd Font Mono'"
-  alias record="asciinema rec --overwrite recording.cast"
-  alias record-gif="asciinema rec --overwrite recording.cast && agg recording.cast recording.gif"
-fi
-
 if is_wsl; then
   alias explorer='/mnt/c/Windows/explorer.exe'
   alias start='explorer'
