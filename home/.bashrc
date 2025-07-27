@@ -282,6 +282,7 @@ if has_cmd "eza"; then
   alias ls='eza_list_files'
   alias la='ls -a'
   alias ll='ls -al'
+  alias tree='eza --tree'
 fi
 
 if has_cmd "xclip"; then
