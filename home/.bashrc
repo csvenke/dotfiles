@@ -235,6 +235,10 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 alias which="command -v"
 alias update-system="update_system"
 
+for data_dir in ${XDG_DATA_DIRS//:/ }; do
+  source_if_exists "$data_dir/bash-completion/bash_completion"
+done
+
 if [ -d "$HOME/.dotfiles" ]; then
   export DOTFILES_PATH="$HOME/.dotfiles"
 
@@ -311,7 +315,7 @@ if has_cmd "fzf"; then
     export FZF_DEFAULT_COMMAND='fd --type file'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   fi
-  export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
+  export FZF_DEFAULT_OPTS='--style minimal --ansi --layout=reverse --info=inline --border'
 
   eval "$(fzf --bash)"
 fi
