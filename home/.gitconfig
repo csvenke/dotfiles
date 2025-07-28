@@ -10,14 +10,32 @@
 [includeIf "gitdir:~/repos/altinn-studio/"]
   path = ~/repos/altinn-studio/.gitconfig
 
+[push]
+  autoSetupRemote = true
+
 [pull]
   rebase = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+
+[remote "origin"]
+  fetch = +refs/heads/*:refs/remotes/origin/*
 
 [rebase]
   autoStash = true
 
+[merge]
+  conflictstyle = zdiff3
+
 [diff]
   colorMoved = default
+  algorithm = histogram
+  colorMovedWS = allow-indentation-change
+
+[maintenance]
+  strategy = incremental
 
 [core]
   pager = delta
