@@ -1,67 +1,54 @@
-function main() {
-  local search_pattern="(^.git$)"
-  local search_paths_array=("$@")
+readonly BLUE='\033[34m'
+readonly GRAY='\033[90m'
+readonly RESET='\033[0m'
+readonly FOLDER_ICON=' '
 
-  if [ "${#search_paths_array[@]}" -eq 0 ]; then
-    mapfile -t search_paths_array < <(find_search_paths)
-  fi
-
-  local project_paths
-  project_paths=$(find_project_paths "$search_pattern" "${search_paths_array[@]}")
-
-  local selected_path
-  selected_path=$(select_path "$project_paths")
-
-  open_path "$selected_path"
+make_pretty_paths() {
+  awk -v blue="$BLUE" -v gray="$GRAY" -v reset="$RESET" -v icon="$FOLDER_ICON" '{
+    cmd = "basename " $1; cmd | getline base; close(cmd);
+    printf "%s%s%s%s %s%s%s\t%s\n", blue, icon, base, reset, gray, $1, reset, $1
+  }'
 }
 
-function find_search_paths() {
+find_search_paths() {
   fd --type d --max-depth 1 --absolute-path . "$HOME" | sed 's@/$@@'
 }
 
-function find_project_paths() {
-  local root_files="$1"
+find_project_paths() {
+  local -r root_files="$1"
   shift
-  local search_dir=("$@")
-  fd --max-depth 2 --hidden --follow --regex "$root_files" "${search_dir[@]}" -x dirname | sort -u
+  local -ra search_dirs=("$@")
+
+  fd --max-depth 2 --hidden --follow --regex "$root_files" "${search_dirs[@]}" \
+    --exec dirname | sort -u
 }
 
-function select_path() {
-  local project_paths="$1"
-  local pretty_project_paths
-  pretty_project_paths=$(make_pretty_paths "$project_paths")
+main() {
+  local -r search_pattern="(^.git$)"
+  local search_paths=("$@")
 
-  echo "$pretty_project_paths" | fzf --ansi --border=none --info=inline | unmake_pretty_path
-}
-
-function make_pretty_paths() {
-  echo "$1" |
-    awk '{ cmd = "basename " $1; cmd | getline base; close(cmd); printf "%s (%s)\n", base, $1 }' |
-    awk 'BEGIN { gray="\033[90m"; blue="\033[34m"; reset="\033[0m"; folderIcon=" "; } { print blue folderIcon $1 reset " " gray ""$2"" reset }'
-}
-
-function unmake_pretty_path() {
-  sed -n 's/.*(\(.*\)).*/\1/p'
-}
-
-function open_path() {
-  local path="$1"
-
-  if [[ -z "$path" ]]; then
-    return
+  if ((${#search_paths[@]} == 0)); then
+    mapfile -t search_paths < <(find_search_paths)
   fi
 
-  cd "$path" || return
+  local project_paths
+  project_paths=$(find_project_paths "$search_pattern" "${search_paths[@]}")
 
-  if [ -n "$VISUAL" ]; then
-    "$VISUAL"
-    return
-  fi
-
-  if [ -n "$EDITOR" ]; then
-    "$EDITOR"
-    return
-  fi
+  echo "$project_paths" | make_pretty_paths |
+    fzf \
+      --ansi \
+      --multi \
+      --tmux \
+      --style full \
+      --border none \
+      --delimiter $'\t' \
+      --with-nth 1 \
+      --bind "enter:execute-silent(
+        for line in {+}; do
+          path=\$(cut -f2 <<< \"\$line\")
+          tmux new-window -c \"\$path\" nvim
+        done
+      )+abort"
 }
 
 main "$@"
