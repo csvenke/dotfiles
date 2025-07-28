@@ -15,7 +15,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem =
-        { config, system, ... }:
+        { system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -27,40 +27,16 @@
               allowUnfree = true;
             };
           };
-          dotstrap-eject = pkgs.callPackage ./packages/dotstrap-eject { };
-        in
-        {
-          packages = {
-            install = pkgs.writeShellApplication {
-              name = "install";
-              runtimeInputs = with pkgs; [
-                dotstrap-eject
-                stow
-                git
-                nix
-              ];
-              text = ''
-                DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
-                DOTFILES_BRANCH="master"
-                DOTFILES_PATH="$HOME"/.dotfiles
+          packages = pkgs.lib.packagesFromDirectoryRecursive {
+            inherit (pkgs) callPackage;
+            directory = ./packages;
+          };
 
-                if [ ! -d "$DOTFILES_PATH" ]; then
-                  git clone "$DOTFILES_URL" "$DOTFILES_PATH"
-                else
-                  git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
-                fi
-
-                dotstrap-eject
-                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
-                nix profile install "$DOTFILES_PATH"
-                nix profile upgrade --all
-                nix profile wipe-history --older-than 7d
-              '';
-            };
-
-            default = pkgs.buildEnv {
-              name = "dotfiles";
-              paths = with pkgs; [
+          dotfiles = pkgs.buildEnv {
+            name = "dotfiles";
+            paths =
+              with pkgs;
+              [
                 bash-completion
                 nix
                 stow
@@ -87,21 +63,48 @@
                   azure-cli-extensions.azure-devops
                 ])
                 neofetch
+                tmux
                 neovim
                 claude-code
                 opencode
-                (callPackage ./packages/record { })
-                (callPackage ./packages/tmux { })
-                (callPackage ./packages/dev { })
-                (callPackage ./packages/run { })
-                (callPackage ./packages/llm { })
+              ]
+              ++ (builtins.attrValues packages);
+          };
+        in
+        {
+          packages = {
+            install = pkgs.writeShellApplication {
+              name = "install";
+              runtimeInputs = with pkgs; [
+                packages.dotstrapEject
+                stow
+                git
+                nix
               ];
+              text = ''
+                DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
+                DOTFILES_BRANCH="master"
+                DOTFILES_PATH="$HOME"/.dotfiles
+
+                if [ ! -d "$DOTFILES_PATH" ]; then
+                  git clone "$DOTFILES_URL" "$DOTFILES_PATH"
+                else
+                  git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
+                fi
+
+                dotstrap-eject
+                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
+                nix profile install "$DOTFILES_PATH"
+                nix profile upgrade --all
+                nix profile wipe-history --older-than 7d
+              '';
             };
+            default = dotfiles;
           };
 
           devShells = {
             ci = pkgs.mkShell {
-              packages = [ config.packages.default ];
+              packages = [ dotfiles ];
             };
             default = pkgs.mkShell {
               inputsFrom = [
