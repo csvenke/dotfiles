@@ -272,6 +272,23 @@ if has_cmd "git"; then
   alias gwa='git_worktree_add'
   alias gwr='git_worktree_remove'
   alias gwp='git_worktree_prune'
+
+  if has_cmd "tmux"; then
+    update_window_title() {
+      local git_repo_name
+      git_repo_name=$(git worktree list --porcelain 2>/dev/null | grep --max-count 1 "^worktree" | cut -d' ' -f2 | xargs basename 2>/dev/null)
+
+      if [ -z "$git_repo_name" ]; then
+        local dir_name
+        dir_name=$(pwd | xargs basename)
+        tmux rename-window "  $dir_name"
+      else
+        tmux rename-window " 󰊢 $git_repo_name"
+      fi
+    }
+
+    update_window_title
+  fi
 fi
 
 if has_cmd "lazygit"; then

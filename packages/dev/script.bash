@@ -51,16 +51,12 @@ function open_path() {
     return
   fi
 
-  cd "$path" || return
+  cd "$path" || return 1
 
   if [ -n "$VISUAL" ]; then
-    "$VISUAL"
-    return
-  fi
-
-  if [ -n "$EDITOR" ]; then
-    "$EDITOR"
-    return
+    exec "$VISUAL"
+  elif [ -n "$EDITOR" ]; then
+    exec "$EDITOR"
   fi
 }
 
