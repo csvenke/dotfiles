@@ -1,4 +1,4 @@
-function main() {
+main() {
   local search_pattern="(^.git$)"
   local search_paths_array=("$@")
 
@@ -15,18 +15,18 @@ function main() {
   open_path "$selected_path"
 }
 
-function find_search_paths() {
+find_search_paths() {
   fd --type d --max-depth 1 --absolute-path . "$HOME" | sed 's@/$@@'
 }
 
-function find_project_paths() {
+find_project_paths() {
   local root_files="$1"
   shift
   local search_dir=("$@")
   fd --max-depth 2 --hidden --follow --regex "$root_files" "${search_dir[@]}" -x dirname | sort -u
 }
 
-function select_path() {
+select_path() {
   local project_paths="$1"
   local pretty_project_paths
   pretty_project_paths=$(make_pretty_paths "$project_paths")
@@ -34,17 +34,17 @@ function select_path() {
   echo "$pretty_project_paths" | fzf --ansi --border=none --info=inline | unmake_pretty_path
 }
 
-function make_pretty_paths() {
+make_pretty_paths() {
   echo "$1" |
     awk '{ cmd = "basename " $1; cmd | getline base; close(cmd); printf "%s (%s)\n", base, $1 }' |
     awk 'BEGIN { gray="\033[90m"; blue="\033[34m"; reset="\033[0m"; folderIcon=" "; } { print blue folderIcon $1 reset " " gray ""$2"" reset }'
 }
 
-function unmake_pretty_path() {
+unmake_pretty_path() {
   sed -n 's/.*(\(.*\)).*/\1/p'
 }
 
-function open_path() {
+open_path() {
   local path="$1"
 
   if [[ -z "$path" ]]; then

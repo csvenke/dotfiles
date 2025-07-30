@@ -1,4 +1,4 @@
-function main() {
+main() {
   scripts=()
   runners=("npm_runner" "dotnet_runner")
 
@@ -25,7 +25,7 @@ function main() {
   eval "$selectedScript"
 }
 
-function npm_runner() {
+npm_runner() {
   if ! command -v npm &>/dev/null; then
     return 1
   fi
@@ -45,7 +45,7 @@ function npm_runner() {
   done <<<"$scriptNames"
 }
 
-function dotnet_runner() {
+dotnet_runner() {
   if ! command -v dotnet &>/dev/null; then
     return 1
   fi

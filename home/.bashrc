@@ -1,15 +1,15 @@
-function source_if_exists() {
+source_if_exists() {
   if test -r "$1"; then
     source "$1"
   fi
 }
 
-function has_cmd() {
+has_cmd() {
   command -v "$1" &>/dev/null || return 1
   return 0
 }
 
-function detect_system() {
+detect_system() {
   if [ -f /etc/os-release ]; then
     grep "^ID" /etc/os-release | cut -d"=" -f2 | tr -d '""'
   else
@@ -17,7 +17,7 @@ function detect_system() {
   fi
 }
 
-function update_system() {
+update_system() {
   case "$(detect_system)" in
   "arch")
     sudo pacman -Syu
@@ -34,56 +34,56 @@ function update_system() {
   esac
 }
 
-function git_main_branch() {
+git_main_branch() {
   git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
 }
 
-function git_all_branches() {
+git_all_branches() {
   git fetch origin
   git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
 }
 
-function git_find_branch() {
+git_find_branch() {
   git_all_branches | fzf | xclip -selection clipboard
 }
 
-function git_push_current_branch() {
+git_push_current_branch() {
   git push origin "$(git branch --show-current)" "$@"
 }
 
-function git_push_force_current_branch() {
+git_push_force_current_branch() {
   git_push_current_branch --force-with-lease "$@"
 }
 
-function git_sync_current_branch() {
+git_sync_current_branch() {
   git pull origin "$(git branch --show-current)" "$@"
 }
 
-function git_sync_main_branch() {
+git_sync_main_branch() {
   git pull origin "$(git_main_branch)"
 }
 
-function git_checkout_main_branch() {
+git_checkout_main_branch() {
   git switch "$(git_main_branch)"
 }
 
-function git_rebase_branch() {
+git_rebase_branch() {
   git rebase -i "$(git merge-base HEAD "$(git_main_branch)")"
 }
 
-function git_add_all() {
+git_add_all() {
   git add . && git status -s
 }
 
-function git_unstage_all() {
+git_unstage_all() {
   git restore --staged . && git status -s
 }
 
-function git_find_commit() {
+git_find_commit() {
   git log --oneline --color=always | fzf --ansi --preview 'git show --color=always --no-patch {1}'
 }
 
-function git_checkout_local_branch() {
+git_checkout_local_branch() {
   local branch_name="$1"
 
   if [ -z "$branch_name" ]; then
@@ -94,7 +94,7 @@ function git_checkout_local_branch() {
   git switch --create "$branch_name"
 }
 
-function git_checkout_remote_branch() {
+git_checkout_remote_branch() {
   local branch_name="$1"
 
   if [ -z "$branch_name" ]; then
@@ -105,7 +105,7 @@ function git_checkout_remote_branch() {
   git switch "$branch_name"
 }
 
-function setup_shared_dir() {
+setup_shared_dir() {
   mkdir -p .shared
 
   if has_cmd "nix"; then
@@ -115,7 +115,7 @@ function setup_shared_dir() {
   fi
 }
 
-function setup_worktree() {
+setup_worktree() {
   local path="$1"
 
   if [ -d ".shared" ]; then
@@ -127,14 +127,14 @@ function setup_worktree() {
   fi
 }
 
-function git_worktree_add() {
+git_worktree_add() {
   git worktree add "$@"
 
   local path="${*: -1}"
   setup_worktree "$path"
 }
 
-function git_worktree_clone() {
+git_worktree_clone() {
   local url="$1"
   local path="${url##*/}"
   local original_dir="$PWD"
@@ -157,7 +157,7 @@ function git_worktree_clone() {
   cd "$original_dir" || return
 }
 
-function git_worktree_init() {
+git_worktree_init() {
   local name="$1"
   local main_branch="main"
 
@@ -174,7 +174,7 @@ function git_worktree_init() {
   git_worktree_add --lock --detach review
 }
 
-function git_worktree_remove() {
+git_worktree_remove() {
   local selected_worktree
   selected_worktree=$(git worktree list | fzf)
 
@@ -189,7 +189,7 @@ function git_worktree_remove() {
   git worktree remove "$worktree_path"
 }
 
-function git_worktree_switch() {
+git_worktree_switch() {
   local selected_worktree
   selected_worktree=$(git worktree list | fzf | awk '{print $1}')
 
@@ -200,7 +200,7 @@ function git_worktree_switch() {
   cd "$selected_worktree" || return 1
 }
 
-function git_worktree_prune() {
+git_worktree_prune() {
   local branches
   branches=$(git worktree list --porcelain | grep "prunable" -B 1 | grep "branch" | sed "s@branch refs/heads/@@" | xargs -r)
 
@@ -213,23 +213,23 @@ function git_worktree_prune() {
   echo "$branches" | xargs git branch -D
 }
 
-function eza_list_files() {
+eza_list_files() {
   command eza --icons --colour=auto --sort=type --group-directories-first "$@"
 }
 
-function xclip_copy() {
+xclip_copy() {
   xclip -selection clipboard
 }
 
-function bat_cat() {
+bat_cat() {
   bat --style=plain "$@"
 }
 
-function is_wsl() {
+is_wsl() {
   uname -r | grep -qi microsoft
 }
 
-function is_inside_tmux() {
+is_inside_tmux() {
   [ -n "$TMUX" ]
 }
 
