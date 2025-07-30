@@ -229,6 +229,10 @@ function is_wsl() {
   uname -r | grep -qi microsoft
 }
 
+function is_inside_tmux() {
+  [ -n "$TMUX" ]
+}
+
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
@@ -329,7 +333,7 @@ fi
 
 source_if_exists "$HOME/.machine/.bashrc"
 
-if has_cmd "tmux"; then
+if is_inside_tmux; then
   function update_window_title() {
     local git_repo_name
     git_repo_name=$(git worktree list --porcelain 2>/dev/null | grep --max-count 1 "^worktree" | cut -d' ' -f2 | xargs basename 2>/dev/null)
@@ -344,8 +348,4 @@ if has_cmd "tmux"; then
   }
 
   PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}update_window_title"
-fi
-
-if has_cmd "tmux" && [ -n "$PS1" ] && [ -z "$TMUX" ]; then
-  tmux new -A -s default -c "$HOME"
 fi
