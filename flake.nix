@@ -45,6 +45,7 @@
                 starship
                 direnv
                 nix-direnv
+                mise
                 delta
                 ripgrep
                 jq

@@ -311,6 +311,10 @@ if has_cmd "direnv"; then
   eval "$(direnv hook bash)"
 fi
 
+if has_cmd "mise"; then
+  eval "$(mise activate bash)"
+fi
+
 if has_cmd "starship"; then
   eval "$(starship init bash)"
 fi
