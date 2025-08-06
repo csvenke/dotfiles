@@ -335,8 +335,6 @@ if is_wsl; then
   alias open='explorer'
 fi
 
-source_if_exists "$HOME/.machine/.bashrc"
-
 if is_inside_tmux; then
   function update_window_title() {
     local git_repo_name
@@ -353,3 +351,5 @@ if is_inside_tmux; then
 
   PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}update_window_title"
 fi
+
+source_if_exists "$HOME/.machine/.bashrc"
