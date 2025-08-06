@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "theme": "one-dark",
   "keybinds": {
     "messages_previous": "ctrl+p",
     "messages_next": "ctrl+n"
