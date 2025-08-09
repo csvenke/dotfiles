@@ -256,6 +256,7 @@ if has_cmd "nix"; then
 fi
 
 if has_cmd "git"; then
+  alias gd="git diff --staged"
   alias gfb='git_find_branch'
   alias gfc='git_find_commit'
   alias gcm='git_checkout_main_branch'
@@ -267,6 +268,7 @@ if has_cmd "git"; then
   alias gua='git_unstage_all'
   alias gpb='git_push_current_branch'
   alias gpB='git_push_force_current_branch'
+  alias gs="git status"
   alias gsb='git_sync_current_branch'
   alias gsm='git_sync_main_branch'
   alias grb='git_rebase_branch'
