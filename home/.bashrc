@@ -338,7 +338,7 @@ if is_wsl; then
 fi
 
 if is_inside_tmux; then
-  function update_window_title() {
+  update_window_title() {
     local git_repo_name
     git_repo_name=$(git worktree list --porcelain 2>/dev/null | grep --max-count 1 "^worktree" | cut -d' ' -f2 | xargs basename 2>/dev/null)
 
