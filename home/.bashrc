@@ -332,6 +332,7 @@ if has_cmd "fzf"; then
 fi
 
 if is_wsl; then
+  export BROWSER="/mnt/c/Windows/System32/rundll32.exe url.dll,FileProtocolHandler"
   alias explorer='/mnt/c/Windows/explorer.exe'
   alias start='explorer'
   alias open='explorer'
