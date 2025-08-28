@@ -29,6 +29,12 @@ Update system packages
 pacman -Syu --noconfirm
 ```
 
+Install packages
+
+```bash
+pacman -S shadow which vi
+```
+
 Setup locale
 
 ```bash
@@ -41,7 +47,7 @@ export LANG=en_US.UTF-8 \
 Setup sudo
 
 ```bash
-pacman -S sudo vi --noconfirm \
+pacman -S sudo --noconfirm \
     && echo "root ALL=(ALL:ALL) ALL" > /etc/sudoers \
     && echo "%wheel ALL=(ALL:ALL) ALL" >> /etc/sudoers
 ```
@@ -68,7 +74,7 @@ wsl --manage archlinux --set-default-user username
 
 ```conf
 [wsl2]
-localhostForwarding=true
+networkingMode=mirrored
 ```
 
 ### On wsl distro
