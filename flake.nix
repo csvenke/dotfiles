@@ -60,9 +60,6 @@
                 bat
                 htop-vim
                 gh
-                (azure-cli.withExtensions [
-                  azure-cli-extensions.azure-devops
-                ])
                 neofetch
                 tmux
                 neovim
