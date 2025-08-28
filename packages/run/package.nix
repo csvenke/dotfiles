@@ -1,8 +1,14 @@
-{ pkgs, lib }:
+{
+  writeShellApplication,
+  lib,
+  fzf,
+  jq,
+  findutils,
+}:
 
-pkgs.writeShellApplication {
+writeShellApplication {
   name = "run";
-  runtimeInputs = with pkgs; [
+  runtimeInputs = [
     fzf
     jq
     findutils

@@ -1,12 +1,16 @@
-{ pkgs }:
+{
+  writeShellApplication,
+  python3,
+  git,
+}:
 
 let
   src = ./.;
 in
 
-pkgs.writeShellApplication {
+writeShellApplication {
   name = "llm";
-  runtimeInputs = with pkgs; [
+  runtimeInputs = [
     (python3.withPackages (ps: [
       ps.anthropic
       ps.click

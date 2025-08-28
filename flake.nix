@@ -27,8 +27,10 @@
               allowUnfree = true;
             };
           };
-          packages = pkgs.lib.packagesFromDirectoryRecursive {
-            inherit (pkgs) callPackage;
+          inherit (pkgs) lib callPackage;
+
+          packages = lib.packagesFromDirectoryRecursive {
+            inherit callPackage;
             directory = ./packages;
           };
 
@@ -66,7 +68,7 @@
                 claude-code
                 opencode
               ]
-              ++ (builtins.attrValues packages);
+              ++ (lib.attrValues packages);
           };
         in
         {
@@ -95,6 +97,7 @@
                 nix profile wipe-history --older-than 7d
               '';
             };
+
             default = dotfiles;
           };
 
@@ -102,6 +105,7 @@
             ci = pkgs.mkShell {
               packages = [ dotfiles ];
             };
+
             default = pkgs.mkShell {
               inputsFrom = [
                 (pkgs.callPackage ./packages/llm/shell.nix { })
