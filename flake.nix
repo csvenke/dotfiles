@@ -74,7 +74,6 @@
             install = pkgs.writeShellApplication {
               name = "install";
               runtimeInputs = with pkgs; [
-                packages.dotstrapEject
                 stow
                 git
                 nix
@@ -90,7 +89,6 @@
                   git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
                 fi
 
-                dotstrap-eject
                 stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
                 nix profile install "$DOTFILES_PATH"
                 nix profile upgrade --all
