@@ -15,7 +15,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem =
-        { system, ... }:
+        { config, system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -32,43 +32,6 @@
           packages = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
             directory = ./packages;
-          };
-
-          dotfiles = pkgs.buildEnv {
-            name = "dotfiles";
-            paths =
-              with pkgs;
-              [
-                bash-completion
-                nix
-                stow
-                findutils
-                fd
-                starship
-                direnv
-                nix-direnv
-                mise
-                delta
-                ripgrep
-                jq
-                tldr
-                wget
-                git
-                lazygit
-                curl
-                fzf
-                xclip
-                eza
-                bat
-                htop-vim
-                gh
-                neofetch
-                tmux
-                neovim
-                claude-code
-                opencode
-              ]
-              ++ (lib.attrValues packages);
           };
         in
         {
@@ -98,12 +61,47 @@
               '';
             };
 
-            default = dotfiles;
+            default = pkgs.buildEnv {
+              name = "dotfiles";
+              paths =
+                with pkgs;
+                [
+                  bash-completion
+                  nix
+                  stow
+                  findutils
+                  fd
+                  starship
+                  direnv
+                  nix-direnv
+                  mise
+                  delta
+                  ripgrep
+                  jq
+                  tldr
+                  wget
+                  git
+                  lazygit
+                  curl
+                  fzf
+                  xclip
+                  eza
+                  bat
+                  htop-vim
+                  gh
+                  neofetch
+                  tmux
+                  neovim
+                  claude-code
+                  opencode
+                ]
+                ++ (lib.attrValues packages);
+            };
           };
 
           devShells = {
             ci = pkgs.mkShell {
-              packages = [ dotfiles ];
+              packages = [ config.packages.default ];
             };
 
             default = pkgs.mkShell {
