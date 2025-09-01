@@ -94,6 +94,7 @@
                   neovim
                   claude-code
                   opencode
+                  gemini-cli
                 ]
                 ++ (lib.attrValues packages);
             };
