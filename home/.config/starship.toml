@@ -4,3 +4,7 @@ command_timeout = 3000
 
 [package]
 disabled = true
+
+[character]
+error_symbol = "[✗](bold cyan)"
+success_symbol = "[❯](bold cyan)"
