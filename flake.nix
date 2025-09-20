@@ -54,7 +54,7 @@
                   git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
                 fi
 
-                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
+                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
                 nix profile install "$DOTFILES_PATH"
                 nix profile upgrade --all
                 nix profile wipe-history --older-than 7d
