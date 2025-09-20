@@ -356,7 +356,3 @@ if is_inside_tmux; then
 fi
 
 source_if_exists "$HOME/.machine/.bashrc"
-
-if has_cmd "tmux" && [ -n "$PS1" ] && [ -z "$TMUX" ]; then
-  tmux new -A -s default -c "$HOME"
-fi
