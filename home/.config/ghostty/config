@@ -1,3 +1,16 @@
+# Fonts
+font-family = "JetBrainsMono Nerd Font"
+font-style = Regular
 font-size = 16
 font-thicken = true
+
+# Shell
+shell-integration-features = no-cursor
+
+# Cursor 
+cursor-style = "block"
+cursor-style-blink = false
+cursor-invert-fg-bg = true
+
+# Macos
 macos-option-as-alt = true
