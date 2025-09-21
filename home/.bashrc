@@ -338,6 +338,10 @@ if is_wsl; then
   alias open='explorer'
 fi
 
+if has_cmd "tmux"; then
+  alias t='tmux new -A -s default'
+fi
+
 if is_inside_tmux; then
   update_window_title() {
     local git_repo_name
