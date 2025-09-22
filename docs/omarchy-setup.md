@@ -41,6 +41,8 @@ input {
 }
 ```
 
+**Issue**: Integrated camera is not functioning 
+
 #### Audio
 
 **Issue**: Internal speakers are not working  
