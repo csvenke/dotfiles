@@ -31,7 +31,8 @@
 #### Input Devices
 
 **Issue**: TouchBar is not functional  
-**Solution**: Remap capslock to escape
+
+**Solution 1**: Remap capslock to escape
 
 Add to `.config/hypr/input.conf`:
 
@@ -39,6 +40,29 @@ Add to `.config/hypr/input.conf`:
 input {
   kb_options = caps:escape
 }
+```
+
+**Solution 2**: Remap capslock with keyd
+
+
+```bash
+sudo pacman -S keyd
+sudo systemctl enable keyd --now
+sudo keyd reload
+```
+
+```conf
+[ids]
+
+*
+
+[main]
+
+# Maps capslock to escape when pressed and control when held.
+capslock = overload(control, esc)
+
+# Remaps the escape key to capslock
+esc = capslock
 ```
 
 **Issue**: Integrated camera is not functioning 
