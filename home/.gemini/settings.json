@@ -1,7 +1,15 @@
 {
-  "selectedAuthType": "oauth-personal",
-  "hideBanner": true,
-  "hideTips": true,
-  "showMemoryUsage": true,
-  "disableAutoUpdate": true
+  "general": {
+    "disableAutoUpdate": true
+  },
+  "ui": {
+    "hideTips": true,
+    "hideBanner": true,
+    "showMemoryUsage": true
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  }
 }
