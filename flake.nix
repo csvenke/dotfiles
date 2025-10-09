@@ -89,7 +89,7 @@
                   bat
                   htop-vim
                   gh
-                  neofetch
+                  fastfetch
                   tmux
                   neovim
                   claude-code
