@@ -95,7 +95,6 @@
                   claude-code
                   opencode
                   gemini-cli
-                  github-copilot-cli
                 ]
                 ++ (lib.attrValues packages);
             };
