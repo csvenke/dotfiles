@@ -3,9 +3,8 @@
     "disableAutoUpdate": true
   },
   "ui": {
-    "hideTips": true,
-    "hideBanner": true,
-    "showMemoryUsage": true
+    "showMemoryUsage": true,
+    "theme": "ANSI"
   },
   "security": {
     "auth": {
@@ -13,3 +12,4 @@
     }
   }
 }
+
