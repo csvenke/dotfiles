@@ -37,3 +37,6 @@
 [core]
   pager = delta
   excludesfile = ~/.gitignore.global
+
+[rerere]
+  enabled = true
