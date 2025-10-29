@@ -50,7 +50,27 @@ def commit(claude: Claude, full: bool) -> None:
     current_branch = execute(["git", "branch", "--show-current"])
 
     prompt = f""" 
-        Generate a commit message for the following git diff. Follow the conventional commit format.
+        Generate a commit message for the following git diff. Follow the conventional commit format for semantic versioning.
+
+        ## CRITICAL: Semantic Commit Type Selection
+        The commit type determines version bumping in semantic versioning:
+        - feat: MINOR version bump (new functionality, new features, new capabilities)
+        - fix: PATCH version bump (bug fixes, corrections to existing functionality)
+        - BREAKING CHANGE: MAJOR version bump (incompatible API changes)
+
+        OTHER types (docs, style, refactor, test, chore, ci, build, perf) DO NOT trigger version bumps.
+
+        IMPORTANT: Choose the type carefully based on the actual impact:
+        - Use 'feat' ONLY for user-facing features or new capabilities
+        - Use 'fix' ONLY for actual bug fixes
+        - Use 'chore' for maintenance tasks, dependency updates, config changes, tooling
+        - Use 'refactor' for code restructuring without behavior change
+        - Use 'docs' for documentation-only changes
+        - Use 'ci' for CI/CD pipeline changes
+        - Use 'build' for build system/dependency changes
+        - Use 'test' for test-only changes
+
+        When in doubt, prefer non-versioning types (chore, refactor, etc.) over feat/fix unless the change genuinely adds new functionality or fixes a bug.
 
         ## Repository context
         Current branch: {current_branch}
@@ -71,23 +91,23 @@ def commit(claude: Claude, full: bool) -> None:
         ```
 
         ## Examples
-        Here are examples of clear, direct commit messages:
+        Here are examples of clear, direct commit messages with correct type usage:
 
-        ### Example 1 (bug fix):
+        ### Example 1 (bug fix - PATCH bump):
         ```gitcommit
         fix: prevent null pointer exception in user validation
 
         Closes: #1234
         ```
 
-        ### Example 2 (feature addition):
+        ### Example 2 (new feature - MINOR bump):
         ```gitcommit
         feat: add pagination to search results endpoint
 
         Closes: #4321
         ```
 
-        ### Example 3 (refactoring):
+        ### Example 3 (refactoring - NO bump):
         ```gitcommit
         refactor: extract database connection logic into separate module
 
@@ -98,14 +118,14 @@ def commit(claude: Claude, full: bool) -> None:
         Fixes: #2134
         ```
 
-        ### Example 4 (configuration change):
+        ### Example 4 (configuration change - NO bump):
         ```gitcommit
         chore: increase API rate limit from 100 to 500 requests/minute
 
         Fixes: #3124
         ```
 
-        ### Example 5 (dependency update):
+        ### Example 5 (dependency update - NO bump):
         ```gitcommit
         chore: upgrade pytest from 7.1.0 to 7.4.2
 
@@ -115,7 +135,7 @@ def commit(claude: Claude, full: bool) -> None:
         Related work items: #8345
         ```
 
-        ### Example 6 (breaking change):
+        ### Example 6 (breaking change - MAJOR bump):
         ```gitcommit
         feat: change user ID format from integer to UUID
 
