@@ -1,3 +1,6 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
 source_if_exists() {
   if test -r "$1"; then
     source "$1"
