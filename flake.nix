@@ -63,9 +63,7 @@
 
             bump = pkgs.writeShellApplication {
               name = "bump";
-              runtimeInputs = [ packages.update-github-package ];
               text = ''
-                update-github-package overlays/opencode/package.nix sst/opencode
                 nix flake update
               '';
             };
