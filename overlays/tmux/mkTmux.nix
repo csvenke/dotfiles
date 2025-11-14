@@ -29,5 +29,8 @@ tmux.overrideAttrs (oldAttrs: {
       wrapProgram $out/bin/tmux \
         --add-flags "-f ${configWithPlugins}" \
         --prefix PATH : "${lib.makeBinPath dependencies}"
+
+      # Remove bash-completion to avoid conflicts with bash-completion package
+      rm -rf $out/share/bash-completion
     '';
 })
