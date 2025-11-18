@@ -1,0 +1,136 @@
+// Core Settings
+default_mode "locked"
+default_layout "minimal"
+mouse_mode true
+copy_on_select true
+session_serialization false
+show_startup_tips false
+show_release_notes false
+// UI & Appearance
+pane_frames false
+styled_underlines true
+ui {
+    pane_frames {
+        rounded_corners true
+        hide_session_name false
+    }
+}
+theme "nordic"
+themes {
+    nordic {
+        fg "#D8DEE9"
+        bg "#2E3440"
+        black "#191D24"
+        red "#BF616A"
+        green "#8FBCBB"
+        yellow "#EBCB8B"
+        blue "#5E81AC"
+        magenta "#B48EAD"
+        cyan "#8FBCBB"
+        white "#E5E9F0"
+        orange "#D08770"
+    }
+}
+// Keybindings
+keybinds clear-defaults=true {
+    shared_except "locked" {
+        bind "Esc" {
+            SwitchToMode "locked"
+        }
+    }
+    locked {
+        bind "Ctrl Space" {
+            SwitchToMode "normal"
+        }
+    }
+    normal {
+        // Tab management
+        bind "c" {
+            NewTab
+            SwitchToMode "locked"
+        }
+        bind "Shift Tab" {
+            GoToPreviousTab
+        }
+        bind "Tab" {
+            GoToNextTab
+        }
+        bind "," {
+            SwitchToMode "renametab"
+            TabNameInput 0
+        }
+        // Pane creation
+        bind "s" {
+            NewPane "down"
+            SwitchToMode "locked"
+        }
+        bind "v" {
+            NewPane "right"
+            SwitchToMode "locked"
+        }
+        // Pane navigation
+        bind "h" {
+            MoveFocus "left"
+        }
+        bind "j" {
+            MoveFocus "down"
+        }
+        bind "k" {
+            MoveFocus "up"
+        }
+        bind "l" {
+            MoveFocus "right"
+        }
+        // Pane resize
+        bind "H" {
+            Resize "Left"
+        }
+        bind "J" {
+            Resize "Down"
+        }
+        bind "K" {
+            Resize "Up"
+        }
+        bind "L" {
+            Resize "Right"
+        }
+        // Pane toggles
+        bind "f" {
+            ToggleFocusFullscreen
+            SwitchToMode "locked"
+        }
+        bind "p" {
+            ToggleFloatingPanes
+            SwitchToMode "locked"
+        }
+        // Session management
+        bind "w" {
+            LaunchOrFocusPlugin "session-manager"
+            SwitchToMode "locked"
+        }
+        bind "q" {
+            Detach
+        }
+        bind "x" {
+            CloseFocus
+        }
+        // Custom workflows
+        bind "d" {
+            NewTab {
+                cwd "~"
+                layout "start-dev"
+            }
+            SwitchToMode "locked"
+        }
+    }
+    renametab {
+        bind "esc" {
+            UndoRenameTab
+            SwitchToMode "locked"
+        }
+        bind "enter" {
+            SwitchToMode "locked"
+        }
+    }
+}
+

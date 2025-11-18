@@ -97,7 +97,7 @@
                   htop-vim
                   gh
                   fastfetch
-                  tmux
+                  zellij
                   neovim
                   claude-code
                   opencode
