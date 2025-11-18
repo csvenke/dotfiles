@@ -12,6 +12,8 @@ main() {
   local selected_path
   selected_path=$(select_path "$project_paths")
 
+  zellij_integration "$selected_path"
+
   open_path "$selected_path"
 }
 
@@ -31,7 +33,7 @@ select_path() {
   local pretty_project_paths
   pretty_project_paths=$(make_pretty_paths "$project_paths")
 
-  echo "$pretty_project_paths" | fzf --ansi --border=none --info=inline | unmake_pretty_path
+  echo "$pretty_project_paths" | fzf --ansi --border=none --info=inline --padding=30% | unmake_pretty_path
 }
 
 make_pretty_paths() {
@@ -42,6 +44,13 @@ make_pretty_paths() {
 
 unmake_pretty_path() {
   sed -n 's/.*(\(.*\)).*/\1/p'
+}
+
+zellij_integration() {
+  local path="$1"
+  if command -v zellij >/dev/null 2>&1 && [ -n "${ZELLIJ:-}" ]; then
+    zellij action rename-tab "$(basename "$path")"
+  fi
 }
 
 open_path() {

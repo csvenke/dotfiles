@@ -232,10 +232,6 @@ is_wsl() {
   uname -r | grep -qi microsoft
 }
 
-is_inside_tmux() {
-  [ -n "$TMUX" ]
-}
-
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
@@ -341,25 +337,9 @@ if is_wsl; then
   alias open='explorer'
 fi
 
-if has_cmd "tmux"; then
-  alias t='tmux new -A -s default'
-fi
-
-if is_inside_tmux; then
-  update_window_title() {
-    local git_repo_name
-    git_repo_name=$(git worktree list --porcelain 2>/dev/null | grep --max-count 1 "^worktree" | cut -d' ' -f2 | xargs basename 2>/dev/null)
-
-    if [ -n "$git_repo_name" ]; then
-      tmux rename-window " 󰊢 $git_repo_name"
-    else
-      local dir_name
-      dir_name=$(pwd | xargs basename)
-      tmux rename-window "  $dir_name"
-    fi
-  }
-
-  PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}update_window_title"
+if has_cmd "zellij"; then
+  alias z='[ -n "$ZELLIJ" ] || zellij attach --create master'
+  alias zd='zellij -n start-dev'
 fi
 
 source_if_exists "$HOME/.machine/.bashrc"
