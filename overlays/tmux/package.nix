@@ -7,7 +7,16 @@
 }:
 
 let
-  mkTmux = callPackage ./mkTmux.nix { inherit tmux; };
+  tmuxLatest = tmux.overrideAttrs (oldAttrs: rec {
+    version = "348f16093c35cbb318281e68f4405dae5b2627d1";
+    src = fetchFromGitHub {
+      owner = "tmux";
+      repo = "tmux";
+      rev = version;
+      sha256 = "sha256-TXApnm9VpHEeUnfzz+jKc8q5RJBqv54eBd8d2sVNW3E=";
+    };
+  });
+  mkTmux = callPackage ./mkTmux.nix { tmux = tmuxLatest; };
 in
 
 mkTmux {
