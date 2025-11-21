@@ -77,6 +77,15 @@ wsl --manage archlinux --set-default-user username
 networkingMode=mirrored
 ```
 
+### Alacritty
+
+`%APPDATA%\alacritty\alacritty.toml`
+
+```toml
+[terminal]
+shell = "wsl --cd ~"
+```
+
 ### On wsl distro
 
 `/etc/wsl.conf`
