@@ -37,6 +37,9 @@ keybinds clear-defaults=true {
         bind "Esc" {
             SwitchToMode "locked"
         }
+        bind "Ctrl Space" {
+            SwitchToMode "locked"
+        }
     }
     locked {
         bind "Ctrl Space" {
