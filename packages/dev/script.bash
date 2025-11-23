@@ -12,6 +12,11 @@ main() {
   local selected_path
   selected_path=$(select_path "$project_paths")
 
+  # Zellij integration
+  if command -v zellij >/dev/null 2>&1 && [ -n "${ZELLIJ:-}" ]; then
+    zellij action rename-tab "$(basename "$selected_path")"
+  fi
+
   open_path "$selected_path"
 }
 
