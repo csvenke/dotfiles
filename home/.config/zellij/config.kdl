@@ -72,29 +72,29 @@ keybinds clear-defaults=true {
             SwitchToMode "locked"
         }
         // Pane navigation
-        bind "h" {
+        bind "Ctrl h" "h" {
             MoveFocus "left"
         }
-        bind "j" {
+        bind "Ctrl j" "j" {
             MoveFocus "down"
         }
-        bind "k" {
+        bind "Ctrl k" "k" {
             MoveFocus "up"
         }
-        bind "l" {
+        bind "Ctrl l" "l" {
             MoveFocus "right"
         }
         // Pane resize
-        bind "H" {
+        bind "Alt h" {
             Resize "Left"
         }
-        bind "J" {
+        bind "Alt j" {
             Resize "Down"
         }
-        bind "K" {
+        bind "Alt k" {
             Resize "Up"
         }
-        bind "L" {
+        bind "Alt l" {
             Resize "Right"
         }
         // Pane toggles
