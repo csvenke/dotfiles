@@ -38,6 +38,7 @@ keybinds clear-defaults=true {
             SwitchToMode "locked"
         }
         bind "Ctrl Space" {
+            Write 0
             SwitchToMode "locked"
         }
     }
