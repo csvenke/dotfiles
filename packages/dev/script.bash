@@ -2,6 +2,10 @@ main() {
   local search_pattern="(^.git$)"
   local search_paths_array=("$@")
 
+  if [ "${#search_paths_array[@]}" -eq 0 ] && [ -n "${DEV_PATHS:-}" ]; then
+    read -ra search_paths_array <<<"$DEV_PATHS"
+  fi
+
   if [ "${#search_paths_array[@]}" -eq 0 ]; then
     mapfile -t search_paths_array < <(find_search_paths)
   fi
