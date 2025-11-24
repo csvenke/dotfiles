@@ -117,6 +117,13 @@ keybinds clear-defaults=true {
         bind "x" {
             CloseFocus
         }
+        // Search
+        bind "?" {
+            SwitchToMode "entersearch"
+        }
+        bind "/" {
+            SwitchToMode "entersearch"
+        }
         // Custom workflows
         bind "d" {
             NewTab {
@@ -133,6 +140,28 @@ keybinds clear-defaults=true {
         }
         bind "enter" {
             SwitchToMode "locked"
+        }
+    }
+    entersearch {
+        bind "esc" {
+            SwitchToMode "normal"
+        }
+        bind "enter" {
+            SwitchToMode "search"
+        }
+    }
+    search {
+        bind "n" {
+            Search "down"
+        }
+        bind "N" {
+            Search "up"
+        }
+        bind "Ctrl d" {
+            HalfPageScrollDown
+        }
+        bind "Ctrl u" {
+            HalfPageScrollUp
         }
     }
 }
