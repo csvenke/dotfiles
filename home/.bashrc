@@ -234,6 +234,7 @@ is_wsl() {
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
+export COLORTERM=truecolor
 
 alias which="command -v"
 alias update-system="update_system"
