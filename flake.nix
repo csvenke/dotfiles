@@ -61,6 +61,19 @@
               '';
             };
 
+            fix-broken-profile = pkgs.writeShellApplication {
+              name = "fix-broken-profile";
+              text = ''
+                DOTFILES_PATH="$HOME"/.dotfiles
+
+                nix-collect-garbage -d
+                rm ~/.local/state/nix/profiles/profile*
+                rm ~/.nix-profile
+                nix profile add "$DOTFILES_PATH"
+                nix profile list
+              '';
+            };
+
             default = pkgs.buildEnv {
               name = "dotfiles";
               paths =
