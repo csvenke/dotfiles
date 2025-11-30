@@ -67,11 +67,11 @@ keybinds clear-defaults=true {
             TabNameInput 0
         }
         // Pane creation
-        bind "s" {
+        bind "s" "v" {
             NewPane
             SwitchToMode "locked"
         }
-        bind "S" {
+        bind "S" "V" {
             NewPane
         }
         // Pane navigation
