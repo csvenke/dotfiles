@@ -61,13 +61,6 @@
               '';
             };
 
-            bump = pkgs.writeShellApplication {
-              name = "bump";
-              text = ''
-                nix flake update
-              '';
-            };
-
             default = pkgs.buildEnv {
               name = "dotfiles";
               paths =
