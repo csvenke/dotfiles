@@ -1,6 +1,6 @@
 // Core Settings
 default_mode "locked"
-default_layout "minimal"
+default_layout "compact"
 mouse_mode true
 copy_on_select true
 session_serialization false
