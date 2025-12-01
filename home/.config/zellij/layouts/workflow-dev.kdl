@@ -5,5 +5,8 @@ layout {
         }
         children
     }
+    tab {
+        pane command="dev" close_on_exit=true
+    }
 }
 

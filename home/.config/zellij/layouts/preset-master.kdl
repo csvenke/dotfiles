@@ -5,10 +5,8 @@ layout {
         }
         children
     }
-    tab {
-        pane command="dev" close_on_exit=true {
-
-        }
+    tab name="dotfiles" cwd="~/.dotfiles" {
+        pane command="nvim" close_on_exit=true
     }
 }
 

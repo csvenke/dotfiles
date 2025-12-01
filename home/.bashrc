@@ -339,8 +339,8 @@ if is_wsl; then
 fi
 
 if has_cmd "zellij"; then
-  alias z='[ -n "$ZELLIJ" ] || zellij attach --create master'
-  alias zd='zellij -n start-dev'
+  alias z='[ -n "$ZELLIJ" ] || zellij -l preset-master attach -c master'
+  alias zd='zellij -n workflow-dev'
 fi
 
 source_if_exists "$HOME/.machine/.bashrc"

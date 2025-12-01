@@ -1,6 +1,6 @@
 // Core Settings
 default_mode "locked"
-default_layout "compact"
+default_layout "preset-master"
 mouse_mode true
 copy_on_select true
 session_serialization false
@@ -141,7 +141,7 @@ keybinds clear-defaults=true {
         bind "d" {
             NewTab {
                 cwd "~"
-                layout "start-dev"
+                layout "workflow-dev"
             }
             SwitchToMode "locked"
         }
