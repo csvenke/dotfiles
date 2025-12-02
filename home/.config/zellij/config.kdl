@@ -48,6 +48,10 @@ keybinds clear-defaults=true {
         }
     }
     normal {
+        // Escape hatches
+        bind "a" "i" "o" "Space" {
+            SwitchToMode "locked"
+        }
         // Tab management
         bind "c" {
             NewTab
