@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    opencode = {
+      url = "github:sst/opencode";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     neovim = {
       url = "github:csvenke/neovim-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +25,10 @@
             inherit system;
             overlays = [
               (import ./overlays/default.nix)
-              inputs.neovim.overlays.default
+              (final: prev: {
+                neovim = inputs.neovim.packages.${system}.default;
+                opencode = inputs.opencode.packages.${system}.default;
+              })
             ];
             config = {
               allowUnfree = true;
