@@ -9,3 +9,4 @@
 .opencode
 .claude
 !.claude/settings.json
+!AGENTS.md
