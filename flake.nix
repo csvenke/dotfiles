@@ -112,7 +112,6 @@
                   fastfetch
                   zellij
                   neovim
-                  claude-code
                   gemini-cli
                   opencode
                   context7-mcp
