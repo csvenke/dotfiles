@@ -9,11 +9,7 @@ NEVER guess config options, APIs, or settings. ALWAYS verify they exist first.
 
 ### Documentation References
 
-- Zellij: https://zellij.dev/documentation/configuration.html
-- Ghostty: https://ghostty.org/docs/config/reference
-- Alacritty: https://alacritty.org/config-alacritty.html
-- Direnv: https://direnv.net/man/direnv.1.html
-- OpenCode: https://opencode.ai/config.json
+Use context7 MCP to look up documentation for libraries and frameworks.
 
 ## Build/Test Commands
 

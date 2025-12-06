@@ -113,8 +113,9 @@
                   zellij
                   neovim
                   claude-code
-                  opencode
                   gemini-cli
+                  opencode
+                  context7-mcp
                 ]
                 ++ (lib.attrValues packages);
             };
