@@ -8,6 +8,10 @@
       url = "github:sst/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dev-cli = {
+      url = "github:csvenke/dev-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     neovim = {
       url = "github:csvenke/neovim-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +32,7 @@
               (final: prev: {
                 neovim = inputs.neovim.packages.${system}.default;
                 opencode = inputs.opencode.packages.${system}.default;
+                dev-cli = inputs.dev-cli.packages.${system}.default;
               })
             ];
             config = {
@@ -115,6 +120,7 @@
                   gemini-cli
                   opencode
                   context7-mcp
+                  dev-cli
                 ]
                 ++ (lib.attrValues packages);
             };
