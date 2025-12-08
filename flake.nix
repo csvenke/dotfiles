@@ -23,7 +23,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = nixpkgs.lib.systems.flakeExposed;
       perSystem =
-        { config, system, ... }:
+        { system, ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -47,7 +47,7 @@
           };
         in
         {
-          packages = {
+          packages = packages // {
             install = pkgs.writeShellApplication {
               name = "install";
               runtimeInputs = with pkgs; [
@@ -127,10 +127,6 @@
           };
 
           devShells = {
-            ci = pkgs.mkShell {
-              packages = [ config.packages.default ];
-            };
-
             default = pkgs.mkShell {
               inputsFrom = [
                 (pkgs.callPackage ./packages/llm/shell.nix { })
