@@ -1,15 +1,29 @@
 {
   "general": {
-    "disableAutoUpdate": true
+    "disableAutoUpdate": true,
+    "disableUpdateNag": true,
+    "previewFeatures": true
+  },
+  "model": {
+    "name": "gemini-2.5-pro"
   },
   "ui": {
     "showMemoryUsage": true,
-    "theme": "ANSI"
+    "theme": "ANSI",
+    "footer": {
+      "hideSandboxStatus": true
+    },
+    "useAlternateBuffer": true
   },
   "security": {
     "auth": {
       "selectedType": "oauth-personal"
     }
+  },
+  "mcpServers": {
+    "context7": {
+      "command": "context7-mcp",
+      "trust": true
+    }
   }
 }
-
