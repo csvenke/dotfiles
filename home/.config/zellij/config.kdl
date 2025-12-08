@@ -107,15 +107,12 @@ keybinds clear-defaults=true {
         // Pane toggles
         bind "f" {
             ToggleFocusFullscreen
-            SwitchToMode "locked"
         }
         bind "p" {
             ToggleFloatingPanes
-            SwitchToMode "locked"
         }
         bind "e" {
             TogglePaneEmbedOrFloating
-            SwitchToMode "locked"
         }
         // Session management
         bind "w" {
