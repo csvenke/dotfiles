@@ -132,7 +132,7 @@ keybinds clear-defaults=true {
         }
         // Session management
         bind "w" {
-            LaunchPlugin "zellij:session-manager" {
+            LaunchOrFocusPlugin "zellij:session-manager" {
                 floating true
             }
             SwitchToMode "locked"
