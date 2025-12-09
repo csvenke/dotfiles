@@ -1,6 +1,6 @@
 // Core Settings
 default_mode "locked"
-default_layout "preset-master"
+default_layout "preset-empty"
 mouse_mode true
 copy_on_select true
 session_serialization false
@@ -54,11 +54,15 @@ keybinds clear-defaults=true {
         }
         // Tab management
         bind "c" {
-            NewTab
+            NewTab {
+                cwd "~"
+            }
             SwitchToMode "locked"
         }
         bind "C" {
-            NewTab
+            NewTab {
+                cwd "~"
+            }
         }
         bind "Shift Tab" {
             GoToPreviousTab
