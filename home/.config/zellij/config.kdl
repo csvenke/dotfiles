@@ -53,13 +53,13 @@ keybinds clear-defaults=true {
             SwitchToMode "locked"
         }
         // Tab management
-        bind "c" {
+        bind "t" {
             NewTab {
                 cwd "~"
             }
             SwitchToMode "locked"
         }
-        bind "C" {
+        bind "T" {
             NewTab {
                 cwd "~"
             }
@@ -75,12 +75,33 @@ keybinds clear-defaults=true {
             TabNameInput 0
         }
         // Pane creation
-        bind "s" "v" {
+        bind "p" {
             NewPane
             SwitchToMode "locked"
         }
-        bind "S" "V" {
+        bind "P" {
             NewPane
+        }
+        bind "s" {
+            NewPane "down"
+            SwitchToMode "locked"
+        }
+        bind "S" {
+            NewPane "down"
+        }
+        bind "v" {
+            NewPane "right"
+            SwitchToMode "locked"
+        }
+        bind "V" {
+            NewPane "right"
+        }
+        bind "g" {
+            NewPane "stacked"
+            SwitchToMode "locked"
+        }
+        bind "G" {
+            NewPane "stacked"
         }
         // Pane navigation
         bind "Ctrl h" "h" {
@@ -109,18 +130,18 @@ keybinds clear-defaults=true {
             Resize "Right"
         }
         // Pane toggles
-        bind "f" {
+        bind "z" {
             ToggleFocusFullscreen
             SwitchToMode "locked"
         }
-        bind "F" {
+        bind "Z" {
             ToggleFocusFullscreen
         }
-        bind "p" {
+        bind "f" {
             ToggleFloatingPanes
             SwitchToMode "locked"
         }
-        bind "P" {
+        bind "F" {
             ToggleFloatingPanes
         }
         bind "e" {
