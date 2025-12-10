@@ -154,9 +154,6 @@ git_worktree_clone() {
   git_worktree_add --lock "$main_branch"
   (cd "$main_branch" && git push -u origin "$main_branch")
 
-  git_worktree_add --lock --detach dev
-  git_worktree_add --lock --detach review
-
   cd "$original_dir" || return
 }
 
@@ -173,8 +170,6 @@ git_worktree_init() {
 
   setup_shared_dir
   setup_worktree "$main_branch"
-  git_worktree_add --lock --detach dev
-  git_worktree_add --lock --detach review
 }
 
 git_worktree_remove() {
