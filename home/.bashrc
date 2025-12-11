@@ -295,10 +295,10 @@ if has_cmd "bat"; then
 fi
 
 if has_cmd "nvim"; then
-  export EDITOR="nvim --clean"
+  export EDITOR="nvim"
   export VISUAL="nvim"
 
-  alias vim="nvim --clean"
+  alias vim="nvim"
 fi
 
 if has_cmd "direnv"; then
