@@ -1,6 +1,7 @@
 // Core Settings
 default_mode "locked"
 default_layout "preset-empty"
+on_force_close "quit"
 mouse_mode true
 copy_on_select true
 session_serialization false
@@ -69,6 +70,21 @@ keybinds clear-defaults=true {
         }
         bind "Tab" {
             GoToNextTab
+        }
+        bind "1" {
+            GoToTab 1
+        }
+        bind "2" {
+            GoToTab 2
+        }
+        bind "3" {
+            GoToTab 3
+        }
+        bind "4" {
+            GoToTab 4
+        }
+        bind "5" {
+            GoToTab 5
         }
         bind "," {
             SwitchToMode "renametab"
@@ -153,9 +169,7 @@ keybinds clear-defaults=true {
         }
         // Session management
         bind "w" {
-            LaunchPlugin "zellij:session-manager" {
-                floating true
-            }
+            LaunchOrFocusPlugin "zellij:session-manager"
             SwitchToMode "locked"
         }
         bind "Ctrl q" {
