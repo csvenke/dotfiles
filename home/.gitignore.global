@@ -15,5 +15,8 @@ CLAUDE.md
 CONTEXT.md
 AGENTS.md
 
-#gemini
+# gemini
 GEMINI.md
+
+# mise
+mise.local.toml
