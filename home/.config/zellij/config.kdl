@@ -189,14 +189,6 @@ keybinds clear-defaults=true {
         bind "/" {
             SwitchToMode "entersearch"
         }
-        // Custom workflows
-        bind "d" {
-            NewTab {
-                cwd "~"
-                layout "workflow-dev"
-            }
-            SwitchToMode "locked"
-        }
     }
     renametab {
         bind "esc" {
