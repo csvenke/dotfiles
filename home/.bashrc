@@ -337,4 +337,10 @@ if has_cmd "zellij"; then
   alias z='[ -n "$ZELLIJ" ] || zellij -l preset-master attach -c master'
 fi
 
+if has_cmd "dev"; then
+  alias d='dev'
+  alias dd='dev'
+  alias devcd='cd $(dev -p)'
+fi
+
 source_if_exists "$HOME/.machine/.bashrc"
