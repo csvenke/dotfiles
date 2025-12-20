@@ -73,17 +73,6 @@
               '';
             };
 
-            update = pkgs.writeShellApplication {
-              name = "update";
-              text = ''
-                DOTFILES_PATH="$HOME"/.dotfiles
-
-                if [ -d "$DOTFILES_PATH" ]; then
-                  (cd "$DOTFILES_PATH" && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)
-                fi
-              '';
-            };
-
             fix-broken-profile = pkgs.writeShellApplication {
               name = "fix-broken-profile";
               text = ''

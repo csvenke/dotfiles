@@ -243,6 +243,7 @@ if [ -d "$HOME/.dotfiles" ]; then
 
   alias src="source ~/.bashrc"
   alias dot="cd ~/.dotfiles"
+  alias update-dotfiles="(cd ~/.dotfiles && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)"
 fi
 
 if _has_cmd "nix"; then
