@@ -339,7 +339,7 @@ fi
 if _has_cmd "dev"; then
   alias d='dev'
   alias dd='dev'
-  alias devcd='cd $(dev -p)'
+  alias dc='cd $(dev -p)'
 fi
 
 _source_if_exists "$HOME/.machine/.bashrc"
