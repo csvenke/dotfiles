@@ -30,7 +30,7 @@
 
 #### Input Devices
 
-**Issue**: TouchBar is not functional  
+**Issue**: TouchBar is not functional
 
 **Solution 1**: Remap capslock to escape
 
@@ -44,12 +44,13 @@ input {
 
 **Solution 2**: Remap capslock with keyd
 
-
 ```bash
 sudo pacman -S keyd
 sudo systemctl enable keyd --now
 sudo keyd reload
 ```
+
+Put the following in `/etc/keyd/default.conf`
 
 ```conf
 [ids]
@@ -65,7 +66,7 @@ capslock = overload(control, esc)
 esc = capslock
 ```
 
-**Issue**: Integrated camera is not functioning 
+**Issue**: Integrated camera is not functioning
 
 #### Audio
 
