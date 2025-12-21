@@ -4,10 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    opencode = {
-      url = "github:sst/opencode";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dev-cli = {
       url = "github:csvenke/dev-cli";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,7 +27,6 @@
               (import ./overlays/default.nix)
               (final: prev: {
                 neovim = inputs.neovim.packages.${system}.default;
-                opencode = inputs.opencode.packages.${system}.default;
                 dev-cli = inputs.dev-cli.packages.${system}.default;
               })
             ];
