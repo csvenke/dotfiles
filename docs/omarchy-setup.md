@@ -21,7 +21,7 @@
 
 2. Configure Hyprland lid switch behavior:
 
-   Add to `.config/hypr/binding.conf`:
+   Add to `.config/hypr/bindings.conf`:
 
    ```hyprlang
    bindl = , switch:on:Lid Switch, exec, hyprctl keyword monitor "eDP-1,disable"
