@@ -113,7 +113,13 @@ _setup_shared_dir() {
 
   if _has_cmd "nix"; then
     git worktree add --lock --orphan nix
-    (cd nix && nix flake init -t github:csvenke/devkit && nix flake lock)
+    (
+      cd nix || return
+      nix flake init -t github:csvenke/devkit
+      nix flake lock
+      git add .
+      git commit -m "genesis"
+    )
     echo 'use flake "../nix"' >.shared/.envrc
   fi
 }
