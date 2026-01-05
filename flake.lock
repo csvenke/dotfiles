@@ -182,11 +182,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767489056,
-        "narHash": "sha256-FHzOX109frI8WGFcPVfbsjoOiHIMyusks0QQg9BMMac=",
+        "lastModified": 1767529524,
+        "narHash": "sha256-nYEu6plviQSJmsG0pRfoKgKPyAPYXm4u78JLXSU0z8o=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "c68e8e3d5a8eec82589c7f72f0c3d01b5eac3551",
+        "rev": "3851c8f2c4b9e772e8ada832240ddb250ec6a929",
         "type": "github"
       },
       "original": {
