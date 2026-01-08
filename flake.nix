@@ -110,7 +110,7 @@
                   htop-vim
                   gh
                   fastfetch
-                  zellij
+                  tmux
                   neovim
                   gemini-cli
                   opencode

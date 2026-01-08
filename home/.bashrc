@@ -233,12 +233,21 @@ _is_wsl() {
   uname -r | grep -qi microsoft
 }
 
+_reload_configs() {
+  _source_if_exists "$HOME/.bashrc"
+
+  if [ -n "$TMUX" ] && test -r "$HOME/.config/tmux/tmux.conf"; then
+    tmux source "$HOME/.config/tmux/tmux.conf"
+  fi
+}
+
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export COLORTERM=truecolor
 
 alias which="command -v"
 alias update-system="_update_system"
+alias src="_reload_configs"
 
 for data_dir in ${XDG_DATA_DIRS//:/ }; do
   _source_if_exists "$data_dir/bash-completion/bash_completion"
@@ -246,8 +255,6 @@ done
 
 if [ -d "$HOME/.dotfiles" ]; then
   export DOTFILES_PATH="$HOME/.dotfiles"
-
-  alias src="source ~/.bashrc"
   alias dot="cd ~/.dotfiles"
   alias update-dotfiles="(cd ~/.dotfiles && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)"
 fi
@@ -339,8 +346,9 @@ if _is_wsl; then
   alias open='explorer'
 fi
 
-if _has_cmd "zellij"; then
-  alias z='[ -n "$ZELLIJ" ] || zellij -l preset-master attach -c master'
+if _has_cmd "tmux"; then
+  alias t='[ -n "$TMUX" ] || tmux new -A -s default'
+  alias z='[ -n "$TMUX" ] || tmux new -A -s default'
 fi
 
 if _has_cmd "dev"; then
