@@ -111,6 +111,7 @@
                   gh
                   fastfetch
                   tmux
+                  nodejs
                   neovim
                   gemini-cli
                   opencode
