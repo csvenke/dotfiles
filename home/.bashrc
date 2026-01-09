@@ -311,7 +311,8 @@ if _has_cmd "nvim"; then
   export EDITOR="nvim"
   export VISUAL="nvim"
 
-  alias vim="nvim"
+  alias vi="nvim --clean"
+  alias vim="nvim --clean"
 fi
 
 if _has_cmd "direnv"; then
