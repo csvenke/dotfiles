@@ -98,3 +98,23 @@ systemd=true
 enabled = true
 appendWindowsPath = false
 ```
+
+## Neovide setup (optional)
+
+### Install neovide
+
+```bash
+scoop install neovide
+```
+
+### Configure neovide to always use wsl
+
+`%APPDATA%/neovide/config.toml`
+
+```toml
+wsl = true
+
+[font]
+normal = ["JetBrainsMono Nerd Font"]
+size = 14.0
+```
