@@ -108,8 +108,42 @@ _git_checkout_remote_branch() {
   git switch "$branch_name"
 }
 
-_setup_shared_dir() {
+_run_worktree_hook() {
+  local hook_name="$1"
+  local worktree_path="$2"
+  local hook_path
+  hook_path="$(pwd)/.hooks/$hook_name"
+
+  if [ ! -x "$hook_path" ]; then
+    return
+  fi
+
+  if [ -f "$worktree_path/.envrc" ] && _has_cmd "direnv"; then
+    direnv exec "$worktree_path" bash -c "cd '$worktree_path' && '$hook_path'"
+  else
+    (cd "$worktree_path" && "$hook_path")
+  fi
+}
+
+_init_worktree_repo() {
   mkdir -p .shared
+  mkdir -p .hooks
+
+  if [ ! -f ".hooks/after-worktree-add.sh.sample" ]; then
+    cat >".hooks/after-worktree-add.sh.sample" <<'EOF'
+#!/usr/bin/env bash
+# This hook is executed after a new worktree is created.
+# To enable this hook, rename this file to "after-worktree-add.sh".
+#
+# The hook runs from inside the new worktree directory.
+#
+# Example:
+#   if [ -f "package-lock.json" ]; then
+#     npm ci
+#   fi
+EOF
+    chmod +x ".hooks/after-worktree-add.sh.sample"
+  fi
 
   if _has_cmd "nix"; then
     git worktree add --lock --orphan nix
@@ -122,6 +156,24 @@ _setup_shared_dir() {
     )
     echo 'use flake "../nix"' >.shared/.envrc
   fi
+}
+
+_migrate_worktree_repo() {
+  if [ ! -d ".git" ] || [ ! -f ".git/HEAD" ]; then
+    echo "Not in a worktree repo root"
+    return 1
+  fi
+
+  mkdir -p .shared
+  mkdir -p .hooks
+
+  if [ ! -f ".hooks/after-worktree-add.sh.sample" ]; then
+    touch ".hooks/after-worktree-add.sh.sample"
+    chmod +x ".hooks/after-worktree-add.sh.sample"
+    echo "Created .hooks/after-worktree-add.sh.sample"
+  fi
+
+  echo "Migration complete"
 }
 
 _setup_worktree() {
@@ -141,6 +193,7 @@ _git_worktree_add() {
 
   local path="${*: -1}"
   _setup_worktree "$path"
+  _run_worktree_hook "after-worktree-add.sh" "$path"
 }
 
 _git_worktree_clone() {
@@ -152,7 +205,7 @@ _git_worktree_clone() {
   cd "$path" || return
   git clone --bare "$url" .git || return
 
-  _setup_shared_dir
+  _init_worktree_repo
 
   local main_branch
   main_branch="$(_git_main_branch)"
@@ -174,7 +227,7 @@ _git_worktree_init() {
   git worktree add --orphan --lock "$main_branch"
   (cd "$main_branch" && touch README.md && git add . && git commit -m "genesis")
 
-  _setup_shared_dir
+  _init_worktree_repo
   _setup_worktree "$main_branch"
 }
 
@@ -286,6 +339,7 @@ if _has_cmd "git"; then
   alias gwa='_git_worktree_add'
   alias gwr='_git_worktree_remove'
   alias gwp='_git_worktree_prune'
+  alias gwm='_migrate_worktree_repo'
 fi
 
 if _has_cmd "lazygit"; then
