@@ -2,7 +2,10 @@
   path = ~/.gitconfig.personal
 
 [includeIf "gitdir:~/repos/github/"]
-  path = ~/repos/github/.gitconfig
+  path = ~/.gitconfig.personal
+
+[includeIf "gitdir:~/repos/gitlab/"]
+  path = ~/repos/gitlab/.gitconfig
 
 [includeIf "gitdir:~/repos/azure-devops/"]
   path = ~/repos/azure-devops/.gitconfig
