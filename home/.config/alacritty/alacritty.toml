@@ -3,7 +3,7 @@ title = "Terminal"
 dynamic_title = false
 
 [font]
-size = 9
+size = 14
 
 [font.normal]
 family = "JetBrainsMono Nerd Font"
