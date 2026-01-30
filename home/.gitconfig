@@ -18,13 +18,30 @@
 
 [pull]
   rebase = true
+  ff = only
 
 [fetch]
   prune = true
   pruneTags = true
 
+[branch]
+  autoSetupMerge = always
+  autoSetupRebase = always
+
 [rebase]
   autoStash = true
+  autoSquash = true
+  updateRefs = true
+  rescheduleFailedExec = true
+
+[worktree]
+  guessRemote = true
+
+[checkout]
+  defaultRemote = origin
+
+[advice]
+  detachedHead = true
 
 [merge]
   conflictstyle = zdiff3
