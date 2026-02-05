@@ -113,7 +113,6 @@
                   tmux
                   nodejs
                   neovim
-                  gemini-cli
                   opencode
                   dev-cli
                 ]
