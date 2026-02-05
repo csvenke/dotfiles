@@ -6,7 +6,7 @@
     "context7": {
       "enabled": true,
       "type": "remote",
-      "url": "https://mcp.context7.com/sse"
+      "url": "https://mcp.context7.com/mcp"
     }
   }
 }
