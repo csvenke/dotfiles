@@ -115,7 +115,6 @@
                   neovim
                   gemini-cli
                   opencode
-                  context7-mcp
                   dev-cli
                 ]
                 ++ (lib.attrValues packages);
