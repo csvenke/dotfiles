@@ -114,6 +114,7 @@
                   nodejs
                   neovim
                   opencode
+                  beads
                   dev-cli
                 ]
                 ++ (lib.attrValues packages);
