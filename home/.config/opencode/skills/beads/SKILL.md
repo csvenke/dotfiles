@@ -22,10 +22,6 @@
 - `bd close <id>` - Mark complete.
 - `bd dep add <issue> <depends-on>` - Add dependency (issue depends on depends-on).
 
-### Syncing
-
-- `bd sync --squash` - Update the local beads data file. This does NOT commit or push.
-
 ## Common Workflows
 
 **Starting work:**
