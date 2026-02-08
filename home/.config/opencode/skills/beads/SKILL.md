@@ -40,5 +40,4 @@ bd update <id> --status=in_progress
 
 ```bash
 bd close <id1> <id2>
-bd sync --squash
 ```
