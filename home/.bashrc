@@ -128,6 +128,9 @@ _run_worktree_hook() {
 }
 
 _init_worktree_repo() {
+  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git fetch origin
+
   mkdir -p .shared
   mkdir -p .hooks
 
@@ -164,6 +167,12 @@ _migrate_worktree_repo() {
   if [ ! -d ".git" ] || [ ! -f ".git/HEAD" ]; then
     echo "Not in a worktree repo root"
     return 1
+  fi
+
+  if ! git config --get remote.origin.fetch >/dev/null 2>&1; then
+    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    git fetch origin
+    echo "Fixed missing remote.origin.fetch config"
   fi
 
   mkdir -p .shared
