@@ -59,11 +59,13 @@ _git_push_force_current_branch() {
 }
 
 _git_sync_current_branch() {
-  git pull origin "$(git branch --show-current)" "$@"
+  git fetch origin
+  git rebase origin/"$(git branch --show-current)" "$@"
 }
 
 _git_sync_main_branch() {
-  git pull origin "$(_git_main_branch)"
+  git fetch origin
+  git rebase origin/"$(_git_main_branch)"
 }
 
 _git_checkout_main_branch() {
