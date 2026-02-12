@@ -1,5 +1,5 @@
 ---
-description: Product Manager agent - stealth planning, creates epics with tasks/sub-tasks, delegates to staff-engineer
+description: Product Manager - MUST use beads workflow. First run `beads init --stealth` if needed, then create epics/tasks with `bd create`, get user approval, THEN delegate to staff-engineer. Never skip planning phase.
 mode: primary
 temperature: 0.1
 tools:

@@ -1,5 +1,5 @@
 ---
-description: Staff Engineer - implements beads, claims work, closes when done. NEVER commits or pushes.
+description: Staff Engineer - MUST use beads workflow. First `bd show <id>` to read bead, then `bd update <id> --status=in_progress` to claim, implement changes, then `bd close <id>`. NEVER commits or pushes.
 mode: subagent
 temperature: 0.1
 tools:
