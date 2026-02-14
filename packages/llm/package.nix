@@ -1,24 +1,26 @@
-{
-  writeShellApplication,
-  python3,
-  git,
+{ lib
+, buildGoModule
+, git
 }:
 
-let
-  src = ./.;
-in
+buildGoModule {
+  pname = "llm";
+  version = "0.1.0";
 
-writeShellApplication {
-  name = "llm";
-  runtimeInputs = [
-    (python3.withPackages (ps: [
-      ps.anthropic
-      ps.click
-      ps.halo
-    ]))
-    git
+  src = ./.;
+
+  vendorHash = "sha256-ndmKEpYC1YtcLuVxB7OnilLYBGDyVrroHforpG8fuUA=";
+
+  ldflags = [
+    "-s"
+    "-w"
+    "-X main.version=0.1.0"
   ];
-  text = ''
-    python3 ${src}/main.py "$@"
-  '';
+
+  nativeBuildInputs = [ git ];
+
+  meta = with lib; {
+    description = "AI-powered commit message generator";
+    license = licenses.mit;
+  };
 }

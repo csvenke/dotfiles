@@ -1,0 +1,102 @@
+Generate a commit message for the following git diff. Follow the conventional commit format for semantic versioning.
+
+## CRITICAL: Semantic Commit Type Selection
+The commit type determines version bumping in semantic versioning:
+- feat: MINOR version bump (new functionality, new features, new capabilities)
+- fix: PATCH version bump (bug fixes, corrections to existing functionality)
+- BREAKING CHANGE: MAJOR version bump (incompatible API changes)
+
+OTHER types (docs, style, refactor, test, chore, ci, build, perf) DO NOT trigger version bumps.
+
+IMPORTANT: Choose the type carefully based on the actual impact:
+- Use 'feat' ONLY for user-facing features or new capabilities
+- Use 'fix' ONLY for actual bug fixes
+- Use 'chore' for maintenance tasks, dependency updates, config changes, tooling
+- Use 'refactor' for code restructuring without behavior change
+- Use 'docs' for documentation-only changes
+- Use 'ci' for CI/CD pipeline changes
+- Use 'build' for build system/dependency changes
+- Use 'test' for test-only changes
+
+When in doubt, prefer non-versioning types (chore, refactor, etc.) over feat/fix unless the change genuinely adds new functionality or fixes a bug.
+
+## Repository context
+Current branch: {{.Branch}}
+
+Recent commits:
+```
+{{.RecentCommits}}
+```
+
+Diff stat:
+```
+{{.DiffStat}}
+```
+
+Staged diff:
+```
+{{.StagedDiff}}
+```
+
+## Examples
+Here are examples of clear, direct commit messages with correct type usage:
+
+### Example 1 (bug fix - PATCH bump):
+```gitcommit
+fix: prevent null pointer exception in user validation
+
+Closes: #1234
+```
+
+### Example 2 (new feature - MINOR bump):
+```gitcommit
+feat: add pagination to search results endpoint
+
+Closes: #4321
+```
+
+### Example 3 (refactoring - NO bump):
+```gitcommit
+refactor: extract database connection logic into separate module
+
+* move connection pooling to db/pool.py
+* update imports in affected services
+* add connection timeout configuration
+
+Fixes: #2134
+```
+
+### Example 4 (configuration change - NO bump):
+```gitcommit
+chore: increase API rate limit from 100 to 500 requests/minute
+
+Fixes: #3124
+```
+
+### Example 5 (dependency update - NO bump):
+```gitcommit
+chore: upgrade pytest from 7.1.0 to 7.4.2
+
+* update test fixtures for new assertion format
+* fix deprecated warning in conftest.py
+
+Related work items: #8345
+```
+
+### Example 6 (breaking change - MAJOR bump):
+```gitcommit
+feat: change user ID format from integer to UUID
+
+* update database schema and migrations
+* modify API responses to use string IDs
+* update client SDK documentation
+
+BREAKING CHANGE: user IDs are now UUIDs instead of integers
+
+Related work items: #9663
+```
+
+Based on the examples above, and previous commits, create a commit message that accurately describes the changes in the diff.
+Reference issue(s) in commit footer if possible. Issue numbers are often in branch name
+
+IMPORTANT: Return ONLY the commit message text without any markdown formatting, code blocks, or additional explanation.
