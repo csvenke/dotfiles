@@ -1,39 +1,78 @@
-# Beads Workflow
+---
+name: beads
+description: "Command reference for the bd issue tracker (beads). Use when creating, querying, claiming, or closing issues with bd commands."
+---
 
-## Core Rules
+# Task Tracker (Beads)
 
-- Track strategic work in beads.
-- Use `bd create` for all new issues (tasks, features, bugs).
-- Check `bd ready` for available work.
+Command reference for the `bd` issue tracker. All commands support `--json` for programmatic parsing.
 
-## Essential Commands
-
-### Finding Work
-
-- `bd ready` - Show issues ready to work (no blockers).
-- `bd list --status=open` - All open issues.
-- `bd list --status=in_progress` - Your active work.
-- `bd show <id>` - Detailed issue view with dependencies.
-
-### Creating & Updating
-
-- `bd create --title="..." --type=task|bug|feature --priority=2` - New issue.
-- `bd update <id> --status=in_progress` - Claim work.
-- `bd close <id>` - Mark complete.
-- `bd dep add <issue> <depends-on>` - Add dependency (issue depends on depends-on).
-
-## Common Workflows
-
-**Starting work:**
+## Setup
 
 ```bash
-bd ready
-bd show <id>
-bd update <id> --status=in_progress
+bd init --stealth
 ```
 
-**Completing work:**
+## Commands
+
+### Create
+
+Title is a **positional argument**, not a flag.
 
 ```bash
-bd close <id1> <id2>
+# Epic
+bd create "<title>" --type=epic --description="<desc>"
+
+# Task (standalone)
+bd create "<title>" --type=task --description="<desc>" --acceptance="<criteria>"
+
+# Task (child of epic)
+bd create "<title>" --type=task --parent=<epic-id> \
+  --description="<desc>" --acceptance="<criteria>"
+```
+
+Use `--silent` to output only the issue ID (for scripting).
+
+### Dependencies
+
+Both arguments are positional.
+
+```bash
+bd dep add <task-id> <depends-on-id>
+```
+
+### Query
+
+```bash
+# Unblocked work
+bd ready --json
+
+# Unblocked work under an epic
+bd ready --parent=<epic-id> --json
+
+# Full issue details
+bd show <id> --json
+
+bd list --status=<open|in_progress|closed> --json
+```
+
+### Claim (atomic)
+
+```bash
+bd update <id> --claim --json
+```
+
+Sets assignee + status=in_progress atomically. If already claimed, the command fails.
+
+### Close
+
+```bash
+bd close <id>
+```
+
+### Epic Closure
+
+```bash
+# Close epics where all children are complete
+bd epic close-eligible
 ```
