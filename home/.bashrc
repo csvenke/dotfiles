@@ -163,7 +163,7 @@ EOF
   fi
 }
 
-_migrate_worktree_repo() {
+_git_worktree_migrate() {
   if [ ! -d ".git" ] || [ ! -f ".git/HEAD" ]; then
     echo "Not in a worktree repo root"
     return 1
@@ -179,7 +179,18 @@ _migrate_worktree_repo() {
   mkdir -p .hooks
 
   if [ ! -f ".hooks/after-worktree-add.sh.sample" ]; then
-    touch ".hooks/after-worktree-add.sh.sample"
+    cat >".hooks/after-worktree-add.sh.sample" <<'EOF'
+#!/usr/bin/env bash
+# This hook is executed after a new worktree is created.
+# To enable this hook, rename this file to "after-worktree-add.sh".
+#
+# The hook runs from inside the new worktree directory.
+#
+# Example:
+#   if [ -f "package-lock.json" ]; then
+#     npm ci
+#   fi
+EOF
     chmod +x ".hooks/after-worktree-add.sh.sample"
     echo "Created .hooks/after-worktree-add.sh.sample"
   fi
@@ -350,7 +361,7 @@ if _has_cmd "git"; then
   alias gwa='_git_worktree_add'
   alias gwr='_git_worktree_remove'
   alias gwp='_git_worktree_prune'
-  alias gwm='_migrate_worktree_repo'
+  alias gwm='_git_worktree_migrate'
 fi
 
 if _has_cmd "lazygit"; then
