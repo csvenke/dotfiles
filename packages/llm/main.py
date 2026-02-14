@@ -32,19 +32,30 @@ def ask(claude: Claude, question: str) -> None:
     default=False,
     help="Include full file diff context",
 )
+@click.option(
+    "--amend",
+    "-a",
+    is_flag=True,
+    default=False,
+    help="Amend the previous commit",
+)
 @pass_claude
-def commit(claude: Claude, full: bool) -> None:
+def commit(claude: Claude, full: bool, amend: bool) -> None:
     """Draft a commit message"""
-    diff_stat = execute(["git", "diff", "--staged", "--stat"])
+    diff_command = ["git", "diff", "--staged"]
+    if amend:
+        diff_command.append("HEAD~1")
+
+    diff_stat = execute(diff_command + ["--stat"])
 
     if not diff_stat:
-        print("No staged changes to commit.")
+        print("No changes to commit.")
         return
 
     if full:
-        staged_diff = execute(["git", "diff", "--staged", "-W"])
+        staged_diff = execute(diff_command + ["-W"])
     else:
-        staged_diff = execute(["git", "diff", "--staged"])
+        staged_diff = execute(diff_command)
 
     recent_commits = execute(["git", "log", "--format=%s%n%b", "-5"])
     current_branch = execute(["git", "branch", "--show-current"])
@@ -154,9 +165,13 @@ def commit(claude: Claude, full: bool) -> None:
         IMPORTANT: Return ONLY the commit message text without any markdown formatting, code blocks, or additional explanation.
     """
 
-    commit = claude.message(prompt)
+    commit_message = claude.message(prompt)
 
-    subprocess.run(["git", "commit", "-m", commit, "-e"])
+    commit_command = ["git", "commit", "-m", commit_message, "-e"]
+    if amend:
+        commit_command.insert(2, "--amend")
+
+    subprocess.run(commit_command)
 
 
 def execute(args: list[str]) -> str:
