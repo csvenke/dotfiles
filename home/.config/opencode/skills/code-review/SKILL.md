@@ -9,8 +9,6 @@ Perform code reviews at the level of a Staff or Principal engineer - evaluating 
 
 ## Review Philosophy
 
-Senior engineers ask different questions than junior reviewers:
-
 - Junior: "Does this code work?"
 - Senior: "Should this code exist? What are the second-order effects?"
 
@@ -20,7 +18,7 @@ Every review should consider: **If this ships and I'm paged at 3am, what will I 
 
 ### 1. Triage: Size Up the Change
 
-Before diving in, assess scope and risk to calibrate effort. See [review-strategy.md](references/review-strategy.md) for detailed guidance.
+Assess scope and risk to calibrate effort. See [review-strategy.md](references/review-strategy.md) for detailed guidance.
 
 | Change Size | Characteristics                                         | Review Strategy                                                                      |
 | ----------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------ |
@@ -29,47 +27,18 @@ Before diving in, assess scope and risk to calibrate effort. See [review-strateg
 | **Medium**  | Feature additions, refactors, 100-500 lines             | Structured review across all dimensions                                              |
 | **Large**   | 500+ lines, multiple concerns, architectural changes    | Break into logical chunks, focus on high-risk areas first, consider requesting split |
 
-**Time management principle**: A 5-line config change doesn't need 30 minutes of security analysis. A 1000-line refactor doesn't need line-by-line style feedback.
+A 5-line config change doesn't need 30 minutes of security analysis. A 1000-line refactor doesn't need line-by-line style feedback.
 
 ### 2. Gather Context
 
-Before reviewing code, understand:
+Understand: what problem is being solved, why this approach, and what's the scope of impact.
 
-- What problem is being solved?
-- Why this approach over alternatives?
-- What's the scope of impact?
+- For PRs: `gh pr view <N> --json title,body,files,additions,deletions` and `gh pr diff <N>`
+- For branches: `git diff main...<branch>`, `git log --oneline main..<branch>`
+- For commits: `git show <sha>`
+- For staged/unstaged: `git diff --cached`, `git diff`
 
-**Getting the code to review:**
-
-From GitHub PRs:
-
-```bash
-gh pr view <NUMBER> --json title,body,files,additions,deletions
-gh pr diff <NUMBER>
-```
-
-From Git:
-
-```bash
-git diff main...<branch>          # Branch diff
-git diff main...<branch> --stat   # Summary of changes
-git log --oneline main..<branch>  # Commit history
-git show <commit>                 # Single commit
-git diff --cached                 # Staged changes
-```
-
-From other sources:
-
-- Patch files: `git apply --stat patch.diff` to preview
-- Direct code: Review as provided, ask for context if needed
-- Files: Compare against previous versions or known-good state
-
-**When context is limited:**
-
-- Read commit messages or change descriptions carefully
-- Look at test names to understand intent
-- Examine file paths for domain context
-- Ask clarifying questions before critiquing
+When context is limited, read commit messages carefully and ask clarifying questions before critiquing.
 
 ### 3. Review Across Six Dimensions
 
@@ -90,79 +59,20 @@ Evaluate changes against these dimensions, weighted by relevance:
 - **Medium risk** (features, refactors, dependency updates): Focus on relevant dimensions
 - **Low risk** (docs, tests, cosmetic): Quick sanity check, approve and move on
 
-### 4. Ask Clarifying Questions First
+### 4. Clarify Before Critiquing
 
-Before providing a final review, identify gaps in understanding. It's better to ask upfront than to critique based on wrong assumptions.
+If intent, motivation, or impact is unclear, ask specific questions before providing the review. Don't critique based on wrong assumptions.
 
-**Ask when:**
+Good: "What's the expected behavior when X happens?" / "Is this intended to replace Y, or work alongside it?"
+Bad: "Why didn't you use X instead?" (critique disguised as question) / "Are you sure this works?" (lacks specificity)
 
-- The intent or motivation isn't clear from context
-- A design decision seems odd but might have a good reason
-- You're not sure if behavior is intentional or a bug
-- The scope of impact is unclear
-- You lack domain knowledge to evaluate correctness
+If no clarification is needed, proceed directly to the review.
 
-**Don't ask when:**
+### 5. Calibrate and Deliver Feedback
 
-- The answer is in the code, commit messages, or description
-- You can make a reasonable assumption and note it
-- The question is rhetorical criticism disguised as a question
+Only comment when it justifies the author's time: real risk, conflicts with established patterns, future confusion, or a significantly better approach. Skip stylistic preferences without team conventions, marginal improvements, and anything linters should catch.
 
-**Good clarifying questions:**
-
-- "What's the expected behavior when X happens?"
-- "Is this intended to replace Y, or work alongside it?"
-- "What's driving the timeline on this change?"
-- "Are there constraints I should know about?"
-- "How will this interact with [related system]?"
-
-**Poor clarifying questions:**
-
-- "Why didn't you use X instead?" (critique as question)
-- "Did you consider...?" (leading question)
-- "Are you sure this works?" (lacks specificity)
-
-**Format for asking:**
-
-```markdown
-## Before I Complete This Review
-
-I have a few questions to make sure I understand the change correctly:
-
-1. [Specific question about intent/behavior]
-2. [Specific question about scope/impact]
-
-Once I understand these, I can provide a complete review.
-```
-
-If no clarifying questions are needed, proceed directly to the review.
-
-### 5. Calibrate Feedback to Add Value
-
-Before leaving a comment, ask: "Does this feedback justify the author's time to address it?"
-
-**Comment when:**
-
-- There's a real risk (security, data loss, outage potential)
-- The change conflicts with established patterns
-- Future maintainers will be confused
-- There's a significantly better approach
-
-**Don't comment when:**
-
-- It's purely stylistic preference with no team convention
-- The "improvement" is marginal
-- You're restating what linters/CI should catch
-- The author clearly knows more about this area than you
-
-**For large changes specifically:**
-
-- Focus feedback on the 20% of code that carries 80% of the risk
-- Batch related comments rather than nitpicking line-by-line
-- Suggest splitting if the scope is too large to review well
-- It's okay to approve with suggestions for follow-up rather than blocking
-
-### 6. Provide Actionable Feedback
+For large changes: focus on the 20% of code carrying 80% of risk. Batch related comments. Approve with follow-up items rather than blocking on minor issues.
 
 Structure feedback by severity:
 
@@ -174,7 +84,7 @@ Structure feedback by severity:
 
 ## Output Format
 
-**When clarification is needed** - Ask first, review after:
+**When clarification is needed:**
 
 ```markdown
 ## Before I Complete This Review
@@ -187,19 +97,13 @@ I have a few questions to make sure I understand the change correctly:
 Once clarified, I'll provide a complete review.
 ```
 
-**For trivial/small changes** - Keep it brief:
+**For trivial/small changes:**
 
 ```markdown
-✅ LGTM - [one line summary of what was verified]
+LGTM - [one line summary of what was verified]
 ```
 
-or
-
-```markdown
-Quick question: [specific clarification needed]
-```
-
-**For medium/large changes** - Full structured review:
+**For medium/large changes:**
 
 ```markdown
 ## Summary
@@ -241,18 +145,7 @@ Quick question: [specific clarification needed]
 
 ## Principles
 
-### Think in Systems
-
-Every change exists in a larger context. Consider upstream dependencies, downstream consumers, and adjacent components.
-
-### Optimize for the Long Term
-
-Code is read far more than it's written. Favor clarity over cleverness, explicit over implicit, boring over novel.
-
-### Assume Good Intent
-
-The author made choices for reasons. Seek to understand before critiquing. Ask "what led to this approach?" not "why didn't you do X?"
-
-### Be Specific and Actionable
-
-"This is confusing" is not helpful. "This function does three things; consider splitting into X, Y, Z" is actionable.
+- **Think in Systems**: Every change exists in a larger context. Consider upstream dependencies, downstream consumers, and adjacent components.
+- **Optimize for the Long Term**: Favor clarity over cleverness, explicit over implicit, boring over novel.
+- **Assume Good Intent**: Seek to understand before critiquing. Ask "what led to this approach?" not "why didn't you do X?"
+- **Be Specific and Actionable**: "This is confusing" is not helpful. "This function does three things; consider splitting into X, Y, Z" is actionable.
