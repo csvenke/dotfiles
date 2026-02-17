@@ -96,6 +96,24 @@
         "nixpkgs-lib": "nixpkgs-lib_4"
       },
       "locked": {
+        "lastModified": 1769996383,
+        "narHash": "sha256-AnYjnFWgS49RlqX7LrC4uA+sCCDBj0Ry/WOJ5XWAsa0=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "57928607ea566b5db3ad13af0e57e921e6b12381",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_5": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_5"
+      },
+      "locked": {
         "lastModified": 1717285511,
         "narHash": "sha256-iKzJcpdXih14qYVcZ9QC9XuZYnPc6T8YImb6dX166kw=",
         "owner": "hercules-ci",
@@ -157,6 +175,27 @@
         "type": "github"
       }
     },
+    "llm-cli": {
+      "inputs": {
+        "flake-parts": "flake-parts_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771357808,
+        "narHash": "sha256-I+A5pNuMD3DRdq7EtUnGCxhOaToZxGg5qtV04HYCVlI=",
+        "owner": "csvenke",
+        "repo": "llm-cli",
+        "rev": "d43a4acc56c72587899bf41de8b5b441a0e57343",
+        "type": "github"
+      },
+      "original": {
+        "owner": "csvenke",
+        "repo": "llm-cli",
+        "type": "github"
+      }
+    },
     "luvit-meta": {
       "flake": false,
       "locked": {
@@ -175,7 +214,7 @@
     },
     "neovim": {
       "inputs": {
-        "flake-parts": "flake-parts_3",
+        "flake-parts": "flake-parts_4",
         "nix-gen-luarc-json": "nix-gen-luarc-json",
         "nixpkgs": [
           "nixpkgs"
@@ -197,7 +236,7 @@
     },
     "nix-gen-luarc-json": {
       "inputs": {
-        "flake-parts": "flake-parts_4",
+        "flake-parts": "flake-parts_5",
         "git-hooks": "git-hooks",
         "luvit-meta": "luvit-meta",
         "nixpkgs": [
@@ -282,6 +321,21 @@
     },
     "nixpkgs-lib_4": {
       "locked": {
+        "lastModified": 1769909678,
+        "narHash": "sha256-cBEymOf4/o3FD5AZnzC3J9hLbiZ+QDT/KDuyHXVJOpM=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "72716169fe93074c333e8d0173151350670b824c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib_5": {
+      "locked": {
         "lastModified": 1717284937,
         "narHash": "sha256-lIbdfCsf8LMFloheeE6N31+BMIeixqyQWbSr2vk79EQ=",
         "type": "tarball",
@@ -312,6 +366,7 @@
       "inputs": {
         "dev-cli": "dev-cli",
         "flake-parts": "flake-parts_2",
+        "llm-cli": "llm-cli",
         "neovim": "neovim",
         "nixpkgs": "nixpkgs"
       }

@@ -8,6 +8,10 @@
       url = "github:csvenke/dev-cli";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    llm-cli = {
+      url = "github:csvenke/llm-cli";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     neovim = {
       url = "github:csvenke/neovim-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +32,7 @@
               (final: prev: {
                 neovim = inputs.neovim.packages.${system}.default;
                 dev-cli = inputs.dev-cli.packages.${system}.default;
+                llm-cli = inputs.llm-cli.packages.${system}.default;
               })
             ];
             config = {
@@ -116,16 +121,9 @@
                   opencode
                   beads
                   dev-cli
+                  llm-cli
                 ]
                 ++ (lib.attrValues packages);
-            };
-          };
-
-          devShells = {
-            default = pkgs.mkShell {
-              inputsFrom = [
-                (pkgs.callPackage ./packages/llm/shell.nix { })
-              ];
             };
           };
         };
