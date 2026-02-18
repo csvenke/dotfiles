@@ -38,7 +38,11 @@ _update_system() {
 }
 
 _git_main_branch() {
-  git remote show origin | grep "HEAD branch:" | sed "s/HEAD branch://" | tr -d " \t\n\r"
+  git rev-parse --abbrev-ref refs/remotes/origin/HEAD | cut -d/ -f2
+}
+
+_git_main_worktree_path() {
+  git worktree list | grep "\[$(_git_main_branch)\]" | awk '{print $1}'
 }
 
 _git_all_branches() {
@@ -51,7 +55,15 @@ _git_find_branch() {
 }
 
 _git_push_current_branch() {
-  git push origin "$(git branch --show-current)" "$@"
+  local current_branch
+  current_branch="$(git branch --show-current)"
+
+  if [ -z "$current_branch" ]; then
+    echo "Error: Could not find current branch!"
+    return
+  fi
+
+  git push origin "${current_branch}" "$@"
 }
 
 _git_push_force_current_branch() {
@@ -60,20 +72,47 @@ _git_push_force_current_branch() {
 
 _git_sync_current_branch() {
   git fetch origin
-  git rebase origin/"$(git branch --show-current)" "$@"
+
+  local current_branch
+  current_branch="$(git branch --show-current)"
+
+  if [ -z "$current_branch" ]; then
+    echo "Error: Could not find current branch!"
+    return
+  fi
+
+  git rebase origin/"${current_branch}" "$@"
 }
 
 _git_sync_main_branch() {
   git fetch origin
-  git rebase origin/"$(_git_main_branch)"
+
+  local main_branch
+  main_branch="$(_git_main_branch)"
+
+  if [ -z "$main_branch" ]; then
+    echo "Error: Could not find main branch!"
+    return
+  fi
+
+  local main_worktree_path
+  main_worktree_path="$(_git_main_worktree_path)"
+
+  if [[ -d "$main_worktree_path" && "$main_worktree_path" != "$(pwd)" ]]; then
+    git -C "$main_worktree_path" reset --hard "origin/${main_branch}"
+  fi
+
+  git rebase "origin/${main_branch}"
 }
 
 _git_checkout_main_branch() {
+  git fetch origin
   git switch "$(_git_main_branch)"
 }
 
 _git_rebase_branch() {
-  git rebase -i "$(git merge-base HEAD "$(_git_main_branch)")"
+  git fetch origin
+  git rebase -i "$(git merge-base origin/HEAD "$(_git_main_branch)")"
 }
 
 _git_add_all() {
