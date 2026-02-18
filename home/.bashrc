@@ -38,7 +38,7 @@ _update_system() {
 }
 
 _git_main_branch() {
-  git rev-parse --abbrev-ref refs/remotes/origin/HEAD | cut -d/ -f2
+  git rev-parse --abbrev-ref refs/remotes/origin/HEAD | sed 's|^origin/||'
 }
 
 _git_main_worktree_path() {
