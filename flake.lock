@@ -183,11 +183,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1771540694,
-        "narHash": "sha256-ce72+nYTIP5c1sYh+3TpJgzbJxrkFRLluUitHuzpBYY=",
+        "lastModified": 1771788462,
+        "narHash": "sha256-8540n6KXIKwAC2HWnbgiyjjxHwOUFYsg+zt7ewif16A=",
         "owner": "csvenke",
         "repo": "llm-cli",
-        "rev": "7f1b918c9a1c3fb00c49c9ff882add71bd6c93ef",
+        "rev": "ebfaf3ea4ba68deba24a1f09d722c1962f7d3351",
         "type": "github"
       },
       "original": {
