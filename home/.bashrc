@@ -41,7 +41,7 @@ _git_main_branch() {
   git rev-parse --abbrev-ref refs/remotes/origin/HEAD | sed 's|^origin/||'
 }
 
-_git_main_worktree_path() {
+_git_worktree_main_path() {
   git worktree list | grep "\[$(_git_main_branch)\]" | awk '{print $1}'
 }
 
@@ -96,7 +96,7 @@ _git_sync_main_branch() {
   fi
 
   local main_worktree_path
-  main_worktree_path="$(_git_main_worktree_path)"
+  main_worktree_path="$(_git_worktree_main_path)"
 
   if [[ -d "$main_worktree_path" && "$main_worktree_path" != "$(pwd)" ]]; then
     git -C "$main_worktree_path" reset --hard "origin/${main_branch}"
@@ -105,7 +105,7 @@ _git_sync_main_branch() {
   git rebase "origin/${main_branch}"
 }
 
-_git_checkout_main_branch() {
+_git_switch_main_branch() {
   git fetch origin
   git switch "$(_git_main_branch)"
 }
@@ -127,7 +127,7 @@ _git_find_commit() {
   git log --oneline --color=always | fzf --ansi --preview 'git show --color=always --no-patch {1}'
 }
 
-_git_checkout_local_branch() {
+_git_switch_local_branch() {
   local branch_name="$1"
 
   if [ -z "$branch_name" ]; then
@@ -138,7 +138,7 @@ _git_checkout_local_branch() {
   git switch --create "$branch_name"
 }
 
-_git_checkout_remote_branch() {
+_git_switch_remote_branch() {
   local branch_name="$1"
 
   if [ -z "$branch_name" ]; then
@@ -149,7 +149,7 @@ _git_checkout_remote_branch() {
   git switch "$branch_name"
 }
 
-_run_worktree_hook() {
+_git_worktree_run_repo_hook() {
   local hook_name="$1"
   local worktree_path="$2"
   local hook_path
@@ -166,7 +166,7 @@ _run_worktree_hook() {
   fi
 }
 
-_init_worktree_repo() {
+_git_worktree_setup_repo() {
   git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
   git fetch origin
 
@@ -237,7 +237,7 @@ EOF
   echo "Migration complete"
 }
 
-_setup_worktree() {
+_git_worktree_setup_worktree() {
   local path="$1"
 
   if [ -d ".shared" ]; then
@@ -253,8 +253,8 @@ _git_worktree_add() {
   git worktree add "$@"
 
   local path="${*: -1}"
-  _setup_worktree "$path"
-  _run_worktree_hook "after-worktree-add.sh" "$path"
+  _git_worktree_setup_worktree "$path"
+  _git_worktree_run_repo_hook "after-worktree-add.sh" "$path"
 }
 
 _git_worktree_clone() {
@@ -266,7 +266,7 @@ _git_worktree_clone() {
   cd "$path" || return
   git clone --bare "$url" .git || return
 
-  _init_worktree_repo
+  _git_worktree_setup_repo
 
   local main_branch
   main_branch="$(_git_main_branch)"
@@ -288,8 +288,8 @@ _git_worktree_init() {
   git worktree add --orphan --lock "$main_branch"
   (cd "$main_branch" && touch README.md && git add . && git commit -m "genesis")
 
-  _init_worktree_repo
-  _setup_worktree "$main_branch"
+  _git_worktree_setup_repo
+  _git_worktree_setup_worktree "$main_branch"
 }
 
 _git_worktree_remove() {
@@ -381,9 +381,9 @@ if _has_cmd "git"; then
   alias gd="git diff --staged"
   alias gfb='_git_find_branch'
   alias gfc='_git_find_commit'
-  alias gcm='_git_checkout_main_branch'
-  alias gcb='_git_checkout_local_branch'
-  alias gcB='_git_checkout_remote_branch'
+  alias gcm='_git_switch_main_branch'
+  alias gcb='_git_switch_local_branch'
+  alias gcB='_git_switch_remote_branch'
   alias gca='git commit --amend'
   alias gcA='git commit --amend --no-edit'
   alias gaa='_git_add_all'
