@@ -393,7 +393,7 @@ if [ -d "$HOME/.config/dotfiles" ]; then
 fi
 
 if _has_cmd "nix"; then
-  alias flake-init="nix flake init -t github:csvenke/devkit"
+  alias devkit-init="nix flake init -t github:csvenke/devkit"
 fi
 
 if _has_cmd "git"; then
