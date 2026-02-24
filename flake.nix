@@ -56,9 +56,24 @@
                 nix
               ];
               text = ''
+                migrate_dotfiles_path_to_xdg_config_v1() {
+                  local new="$1"
+                  local old="$HOME/.dotfiles"
+
+                  if [[ ! -d "$old" && -d "$new" ]]; then
+                    return
+                  fi
+
+                  stow -v --dir="$old/home" --target="$HOME" --delete .
+                  mv "$old" "$new"
+                  nix profile remove dotfiles
+                }
+
                 DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
                 DOTFILES_BRANCH="master"
-                DOTFILES_PATH="$HOME"/.dotfiles
+                DOTFILES_PATH="$HOME/.config/dotfiles"
+
+                migrate_dotfiles_path_to_xdg_config_v1 "$DOTFILES_PATH"
 
                 if [ ! -d "$DOTFILES_PATH" ]; then
                   git clone "$DOTFILES_URL" "$DOTFILES_PATH"
@@ -75,8 +90,11 @@
 
             fix-broken-profile = pkgs.writeShellApplication {
               name = "fix-broken-profile";
+              runtimeInputs = with pkgs; [
+                nix
+              ];
               text = ''
-                DOTFILES_PATH="$HOME"/.dotfiles
+                DOTFILES_PATH="$HOME/.config/dotfiles"
 
                 nix-collect-garbage -d
                 rm ~/.local/state/nix/profiles/profile*

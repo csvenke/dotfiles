@@ -355,6 +355,24 @@ _reload_configs() {
   fi
 }
 
+_dotfiles_cd() {
+  if [ -z "$DOTFILES_PATH" ]; then
+    echo "dotfiles: path not set"
+    return 1
+  fi
+
+  cd "$DOTFILES_PATH" || return
+}
+
+_dotfiles_update() {
+  if [ -z "$DOTFILES_PATH" ]; then
+    echo "dotfiles: path not set"
+    return 1
+  fi
+
+  (cd "$DOTFILES_PATH" && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)
+}
+
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export COLORTERM=truecolor
@@ -367,10 +385,11 @@ for data_dir in ${XDG_DATA_DIRS//:/ }; do
   _source_if_exists "$data_dir/bash-completion/bash_completion"
 done
 
-if [ -d "$HOME/.dotfiles" ]; then
-  export DOTFILES_PATH="$HOME/.dotfiles"
-  alias dot="cd ~/.dotfiles"
-  alias update-dotfiles="(cd ~/.dotfiles && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)"
+if [ -d "$HOME/.config/dotfiles" ]; then
+  export DOTFILES_PATH="$HOME/.config/dotfiles"
+
+  alias dot="_dotfiles_cd"
+  alias update-dotfiles="_dotfiles_update"
 fi
 
 if _has_cmd "nix"; then
