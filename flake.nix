@@ -58,6 +58,10 @@
           packages = scripts // {
             default = pkgs.buildEnv {
               name = "dotfiles";
+              pathsToLink = [
+                "/bin"
+                "/share"
+              ];
               paths =
                 with pkgs;
                 [
