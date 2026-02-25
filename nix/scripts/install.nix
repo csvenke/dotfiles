@@ -21,9 +21,9 @@ writeShellApplication {
         return
       fi
 
+      nix profile remove --all
       stow -v --dir="$old/home" --target="$HOME" --delete .
       mv "$old" "$new"
-      nix profile remove dotfiles
     }
 
     DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
