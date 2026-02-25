@@ -28,7 +28,6 @@
           pkgs = import nixpkgs {
             inherit system;
             overlays = [
-              (import ./overlays/default.nix)
               (final: prev: {
                 neovim = inputs.neovim.packages.${system}.default;
                 dev-cli = inputs.dev-cli.packages.${system}.default;
@@ -43,67 +42,15 @@
 
           packages = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
-            directory = ./packages;
+            directory = ./nix/packages;
+          };
+          scripts = lib.packagesFromDirectoryRecursive {
+            inherit callPackage;
+            directory = ./nix/scripts;
           };
         in
         {
-          packages = packages // {
-            install = pkgs.writeShellApplication {
-              name = "install";
-              runtimeInputs = with pkgs; [
-                stow
-                git
-                nix
-              ];
-              text = ''
-                migrate_dotfiles_path_to_xdg_config_v1() {
-                  local new="$1"
-                  local old="$HOME/.dotfiles"
-
-                  if [[ ! -d "$old" && -d "$new" ]]; then
-                    return
-                  fi
-
-                  stow -v --dir="$old/home" --target="$HOME" --delete .
-                  mv "$old" "$new"
-                  nix profile remove dotfiles
-                }
-
-                DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
-                DOTFILES_BRANCH="master"
-                DOTFILES_PATH="$HOME/.config/dotfiles"
-
-                migrate_dotfiles_path_to_xdg_config_v1 "$DOTFILES_PATH"
-
-                if [ ! -d "$DOTFILES_PATH" ]; then
-                  git clone "$DOTFILES_URL" "$DOTFILES_PATH"
-                else
-                  git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
-                fi
-
-                stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
-                nix profile add "$DOTFILES_PATH"
-                nix profile upgrade --all
-                nix profile wipe-history --older-than 7d
-              '';
-            };
-
-            fix-broken-profile = pkgs.writeShellApplication {
-              name = "fix-broken-profile";
-              runtimeInputs = with pkgs; [
-                nix
-              ];
-              text = ''
-                DOTFILES_PATH="$HOME/.config/dotfiles"
-
-                nix-collect-garbage -d
-                rm ~/.local/state/nix/profiles/profile*
-                rm ~/.nix-profile
-                nix profile add "$DOTFILES_PATH"
-                nix profile list
-              '';
-            };
-
+          packages = scripts // {
             default = pkgs.buildEnv {
               name = "dotfiles";
               paths =
@@ -126,14 +73,12 @@
                   git
                   lazygit
                   curl
-                  fzf
                   xclip
                   eza
                   bat
                   htop-vim
                   gh
                   fastfetch
-                  tmux
                   nodejs
                   neovim
                   opencode
