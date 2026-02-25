@@ -39,24 +39,71 @@
                 llm-cli = inputs.llm-cli.packages.${system}.default;
               })
             ];
-            config = {
-              allowUnfree = true;
-            };
           };
-          inherit (pkgs) lib callPackage;
+          inherit (pkgs)
+            lib
+            callPackage
+            buildEnv
+            writeShellScriptBin
+            ;
 
           packages = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
             directory = ./nix/packages;
           };
-          scripts = lib.packagesFromDirectoryRecursive {
-            inherit callPackage;
-            directory = ./nix/scripts;
+
+          mkShellScriptApp = content: {
+            type = "app";
+            program = writeShellScriptBin "program" content;
           };
         in
         {
-          packages = scripts // {
-            default = pkgs.buildEnv {
+          apps = {
+            install = mkShellScriptApp /* bash */ ''
+              migrate_dotfiles_path_to_xdg_config() {
+                local new="$1"
+                local old="$HOME/.dotfiles"
+
+                if [[ ! -d "$old" && -d "$new" ]]; then
+                  return
+                fi
+
+                nix profile remove --all
+                stow -v --dir="$old/home" --target="$HOME" --delete .
+                mv "$old" "$new"
+              }
+
+              DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
+              DOTFILES_BRANCH="master"
+              DOTFILES_PATH="$HOME/.config/dotfiles"
+
+              migrate_dotfiles_path_to_xdg_config "$DOTFILES_PATH"
+
+              if [ ! -d "$DOTFILES_PATH" ]; then
+                git clone "$DOTFILES_URL" "$DOTFILES_PATH"
+              else
+                git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
+              fi
+
+              stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
+              nix profile add "$DOTFILES_PATH"
+              nix profile upgrade --all
+              nix profile wipe-history --older-than 7d
+            '';
+
+            fix-broken-profile = mkShellScriptApp /* bash */ ''
+              DOTFILES_PATH="$HOME/.config/dotfiles"
+
+              nix-collect-garbage -d
+              rm ~/.local/state/nix/profiles/profile*
+              rm ~/.nix-profile
+              nix profile add "$DOTFILES_PATH"
+              nix profile list
+            '';
+          };
+
+          packages = {
+            default = buildEnv {
               name = "dotfiles";
               pathsToLink = [
                 "/bin"
