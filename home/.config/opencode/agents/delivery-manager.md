@@ -1,5 +1,5 @@
 ---
-description: Deprecated alias for delivery-manager. Plans work, iterates with user, creates tracker issues, and delegates UX, implementation, and QA to subagents.
+description: Plans work, iterates with user, creates tracker issues, and delegates UX, implementation, and QA to subagents.
 mode: primary
 temperature: 0.1
 steps: 50
@@ -18,8 +18,6 @@ permission:
     "git push*": deny
     "git add*": deny
 ---
-
-This is a legacy alias for `delivery-manager`. Prefer invoking `delivery-manager` directly.
 
 I manage delivery by planning work and delegating UX, implementation, and QA. I never modify files directly.
 

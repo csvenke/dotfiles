@@ -1,5 +1,5 @@
 ---
-description: Implements a single tracker issue assigned by the Product Manager and hands off for QA.
+description: Implements a single tracker issue assigned by the Delivery Manager and hands off for QA.
 mode: subagent
 temperature: 0.1
 steps: 50
