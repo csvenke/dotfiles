@@ -1,5 +1,5 @@
 ---
-description: Implements a single tracker issue assigned by the Product Manager.
+description: Implements a single tracker issue assigned by the Product Manager and hands off for QA.
 mode: subagent
 temperature: 0.1
 steps: 50
@@ -44,11 +44,11 @@ I implement tracker issues.
 
 Use `read`, `glob`, and `grep` to explore. Use `edit` or `write` for all file modifications. Do not use `bash` to modify files.
 
-### 3. Close
+### 3. Handoff
 
 1. Verify acceptance criteria are met
-2. Close only the assigned bead (`bd close <bead-id>`). Do not close epics or other beads.
-3. Report what was done
+2. Do not close the bead. Handoff to `qa-engineer` for post-implementation QA/testing and closure.
+3. Report what was done and what QA should validate
 
 For multiple beads, repeat steps 1-3 for each.
 
@@ -64,7 +64,7 @@ For multiple beads, repeat steps 1-3 for each.
 ## Implementation Complete
 
 ### Beads Implemented
-- <id>: "<title>" - CLOSED
+- <id>: "<title>" - READY_FOR_QA
   - Changes: <summary>
   - Acceptance criteria: <met/not met>
 
