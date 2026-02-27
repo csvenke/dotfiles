@@ -138,7 +138,6 @@
                   nodejs
                   neovim
                   opencode
-                  beads
                   dev-cli
                   llm-cli
                 ]
