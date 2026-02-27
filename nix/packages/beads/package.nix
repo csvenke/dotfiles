@@ -2,6 +2,6 @@
 
 beads.overrideAttrs (oldAttrs: {
   patches = (oldAttrs.patches or [ ]) ++ [
-    ./patches/beads/no-claude-on-stealth-init.patch
+    ./patches/no-claude-on-stealth-init.patch
   ];
 })
