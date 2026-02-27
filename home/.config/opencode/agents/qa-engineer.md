@@ -50,7 +50,8 @@ Use `read`, `glob`, and `grep` to explore. Use `edit` or `write` for all file mo
 
 1. If QA passes, close only the assigned bead (`bd close <bead-id>`)
 2. If QA fails, do not close -- leave in_progress and report exact gaps
-3. Report outcome with evidence
+3. If QA fails, classify defect ownership (`staff-engineer` for implementation defects, `ux-designer` for UX/design defects)
+4. Report outcome with evidence
 
 For multiple beads, repeat steps 1-3 for each.
 
@@ -61,15 +62,20 @@ For multiple beads, repeat steps 1-3 for each.
 
 ### Beads Evaluated
 - <id>: "<title>" - <CLOSED/IN_PROGRESS>
+  - State: <CLOSED/NEEDS_REWORK>
   - QA result: <pass/fail>
   - Acceptance criteria: <met/not met>
   - Tests run: <commands and result>
+  - Recommended rework owner: <staff-engineer/ux-designer/none>
 
 ### Files Changed
 - `path/to/file`: <description>
 
 ### Notes
 - <handoff context or remaining gaps>
+
+### Blockers
+- <none or blockers>
 
 ### Git Reminder
 Changes NOT committed. Run: git add -A && git commit -m "<message>"

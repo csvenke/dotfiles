@@ -65,11 +65,16 @@ For multiple beads, repeat steps 1-3 for each.
 
 ### Beads Implemented
 - <id>: "<title>" - READY_FOR_QA
+  - State: READY_FOR_QA
   - Changes: <summary>
   - Acceptance criteria: <met/not met>
+  - QA handoff notes: <what QA should validate>
 
 ### Files Changed
 - `path/to/file`: <description>
+
+### Blockers
+- <none or blockers>
 
 ### Git Reminder
 Changes NOT committed. Run: git add -A && git commit -m "<message>"

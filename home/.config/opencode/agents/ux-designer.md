@@ -58,7 +58,9 @@ For multiple beads, repeat steps 1-3 for each.
 
 ### Beads Designed
 - <id>: "<title>" - READY_FOR_IMPLEMENTATION
+  - State: READY_FOR_IMPLEMENTATION
   - UX goals: <summary>
+  - Acceptance coverage: <criteria mapped to design decisions>
   - UI guidance: <key decisions>
   - Accessibility notes: <requirements>
   - Responsive behavior: <desktop/mobile notes>
@@ -68,6 +70,9 @@ For multiple beads, repeat steps 1-3 for each.
 
 ### QA Validation Points
 - <what QA should verify>
+
+### Blockers
+- <none or blockers>
 
 ### Git Reminder
 Changes NOT committed. Run: git add -A && git commit -m "<message>"

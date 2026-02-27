@@ -82,11 +82,42 @@ Repeat until all tasks are closed:
 7. Launch qa-engineer subagents for those completed beads in parallel:
    - `qa-engineer "QA bead <id>: <title>"`
 8. Wait for all qa-engineer subagents to complete
-9. `bd list --status=in_progress --json` -- check for stuck/failed tasks
-10. If unblocked tasks remain, go to step 1 (next wave)
+9. Enforce handoff states and routing:
+   - `ux-designer` output must mark `READY_FOR_IMPLEMENTATION` before implementation starts
+   - `staff-engineer` output must mark `READY_FOR_QA` before QA starts
+   - If `qa-engineer` fails for implementation defects, route back to `staff-engineer`
+   - If `qa-engineer` fails for UX/design defects, route back to `ux-designer`
+10. `bd list --status=in_progress --json` -- check for stuck/failed tasks
+11. If unblocked tasks remain, go to step 1 (next wave)
+
+## Handoff Contract
+
+Require each subagent response to include:
+
+1. `state` (one of: `READY_FOR_IMPLEMENTATION`, `READY_FOR_QA`, `CLOSED`, `NEEDS_REWORK`, `BLOCKED`)
+2. `acceptance_coverage` (which criteria are met/not met)
+3. `files_changed` (or `none`)
+4. `qa_or_handoff_notes` (what the next role should validate)
+5. `blockers` (or explicit `none`)
+
+## Escalation
+
+Keep a human in the loop for ambiguous or stuck work:
+
+1. If a bead remains `NEEDS_REWORK` after one full rework cycle, escalate to the user with options.
+2. If requirements are unclear or conflicting, pause delegation and ask the user to clarify.
+3. Do not auto-close ambiguous beads; require explicit human decision.
 
 When all tasks are closed:
 
 1. `bd epic close-eligible` to close the epic
 2. `bd list --status=closed --json` to confirm all issues are closed
-3. Report final status to the user, including a reminder to commit if files were changed
+3. Report final status to the user and hand off for human code review
+
+## Phase 5: Human Review and Release
+
+This workflow is intentionally human-in-the-loop at the end:
+
+1. Human performs final code review after epic closure.
+2. Human decides whether additional fixes are required.
+3. Human runs commit and push actions.
