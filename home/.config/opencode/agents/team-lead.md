@@ -74,16 +74,16 @@ Repeat until all tasks are closed:
 3. Launch ux-designer subagents for **UI tasks** in parallel:
    - `ux-designer "Design bead <id>: <title>"`
 4. Wait for all ux-designer subagents to complete
-5. Launch staff-engineer subagents for **all ready tasks** in parallel:
-   - `staff-engineer "Implement bead <id>: <title>"`
-6. Wait for all staff-engineer subagents to complete
+5. Launch software-engineer subagents for **all ready tasks** in parallel:
+   - `software-engineer "Implement bead <id>: <title>"`
+6. Wait for all software-engineer subagents to complete
 7. Launch qa-engineer subagents for those completed beads in parallel:
    - `qa-engineer "QA bead <id>: <title>"`
 8. Wait for all qa-engineer subagents to complete
 9. Enforce handoff states and routing:
    - `ux-designer` output must mark `READY_FOR_IMPLEMENTATION` before implementation starts
-   - `staff-engineer` output must mark `READY_FOR_QA` before QA starts
-   - If `qa-engineer` fails for implementation defects, route back to `staff-engineer`
+   - `software-engineer` output must mark `READY_FOR_QA` before QA starts
+   - If `qa-engineer` fails for implementation defects, route back to `software-engineer`
    - If `qa-engineer` fails for UX/design defects, route back to `ux-designer`
 10. `bd list --status=in_progress --json` -- check for stuck/failed tasks
 11. If unblocked tasks remain, go to step 1 (next wave)
@@ -108,9 +108,14 @@ Keep a human in the loop for ambiguous or stuck work:
 
 When all tasks are closed:
 
-1. `bd epic close-eligible` to close the epic
-2. `bd list --status=closed --json` to confirm all issues are closed
-3. Report final status to the user and hand off for human code review
+1. Run `/review` against the epic’s changed code before closure.
+2. If blocking issues are found:
+   - Create new beads under the same epic with clear `--description` and `--acceptance`
+   - Return to Phase 4 delegation in waves
+3. If no blocking issues are found, proceed:
+   1. `bd epic close-eligible` to close the epic
+   2. `bd list --status=closed --json` to confirm all issues are closed
+   3. Report final status to the user and hand off for human code review
 
 ## Phase 5: Human Review and Release
 

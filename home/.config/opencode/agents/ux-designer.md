@@ -1,5 +1,5 @@
 ---
-description: Designs UI and UX solutions for tracker issues and hands off implementation-ready guidance to staff-engineer.
+description: Designs UI and UX solutions for tracker issues and hands off implementation-ready guidance to software-engineer.
 mode: subagent
 temperature: 0.1
 steps: 50
@@ -31,7 +31,9 @@ I design UI and UX for tracker issues and prepare implementation-ready handoff d
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and acceptance criteria
-4. Identify UX scope, constraints, and user-facing outcomes
+4. Claim the issue atomically as `ux-designer`: `bd update <id> --claim --actor=ux-designer --json`
+   - If claim fails, exit and do not make any file changes
+5. Identify UX scope, constraints, and user-facing outcomes
 
 ### 2. Design
 
@@ -45,7 +47,7 @@ Use `read`, `glob`, and `grep` to explore. Use `edit` or `write` for all file mo
 
 ### 3. Handoff
 
-1. Do not close the bead. Handoff to `staff-engineer` for implementation.
+1. Do not close the bead. Handoff to `software-engineer` for implementation.
 2. Report design decisions and implementation guidance.
 3. List validation points for QA.
 

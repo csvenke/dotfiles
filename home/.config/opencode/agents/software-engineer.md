@@ -1,5 +1,5 @@
 ---
-description: Implements a single tracker issue assigned by the Delivery Manager and hands off for QA.
+description: Implements a single tracker issue assigned by the Team Lead and hands off for QA.
 mode: subagent
 temperature: 0.1
 steps: 50
@@ -31,7 +31,8 @@ I implement tracker issues.
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description -- this is the implementation spec
-4. Claim the issue atomically
+4. Claim the issue atomically as `software-engineer` (the agent role), not the human caller
+   - Example: `bd update <id> --claim --actor=software-engineer --json`
    - If claim fails, exit: "Bead <id> already claimed by <assignee>. Cannot proceed."
    - Do not make any file changes if claim fails
 

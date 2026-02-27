@@ -31,7 +31,9 @@ I validate completed tracker issues and gate closure on QA outcomes.
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and acceptance criteria
-4. Confirm implementation work exists and is ready for QA
+4. Claim the issue atomically as `qa-engineer`: `bd update <id> --claim --actor=qa-engineer --json`
+   - If claim fails, exit and do not make any file changes
+5. Confirm implementation work exists and is ready for QA
    - If implementation is missing or incomplete, exit with failure context
 
 ### 2. Validate
@@ -50,7 +52,7 @@ Use `read`, `glob`, and `grep` to explore. Use `edit` or `write` for all file mo
 
 1. If QA passes, close only the assigned bead (`bd close <bead-id>`)
 2. If QA fails, do not close -- leave in_progress and report exact gaps
-3. If QA fails, classify defect ownership (`staff-engineer` for implementation defects, `ux-designer` for UX/design defects)
+3. If QA fails, classify defect ownership (`software-engineer` for implementation defects, `ux-designer` for UX/design defects)
 4. Report outcome with evidence
 
 For multiple beads, repeat steps 1-3 for each.
@@ -66,7 +68,7 @@ For multiple beads, repeat steps 1-3 for each.
   - QA result: <pass/fail>
   - Acceptance criteria: <met/not met>
   - Tests run: <commands and result>
-  - Recommended rework owner: <staff-engineer/ux-designer/none>
+  - Recommended rework owner: <software-engineer/ux-designer/none>
 
 ### Files Changed
 - `path/to/file`: <description>
