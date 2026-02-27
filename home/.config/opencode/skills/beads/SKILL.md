@@ -59,10 +59,33 @@ bd list --status=<open|in_progress|closed> --json
 ### Claim (atomic)
 
 ```bash
-bd update <id> --claim --json
+bd update <id> --claim --actor=<role> --json
 ```
 
-Sets assignee + status=in_progress atomically. If already claimed, the command fails.
+Sets assignee + status=in_progress atomically. If already claimed, the command fails. Use `--actor` to identify the claiming role (e.g., `--actor=software-engineer`).
+
+### Release (unclaim)
+
+```bash
+bd update <id> --status=open --assignee="" --json
+```
+
+Resets assignee and status so the next agent in the pipeline can claim.
+
+### Design Notes
+
+```bash
+bd update <id> --design="<notes>"
+```
+
+Attach implementation-ready design notes to a bead (used by UX handoff).
+
+### Comments
+
+```bash
+bd comments <id> --json
+bd comments add <id> "<message>"
+```
 
 ### Close
 
@@ -74,5 +97,12 @@ bd close <id>
 
 ```bash
 # Close epics where all children are complete
-bd epic close-eligible
+bd epic close-eligible --json
 ```
+
+### Global Flags
+
+These flags work on any `bd` command:
+
+- `--actor=<name>` — set the actor name for audit trail (default: `$BD_ACTOR` or `$USER`)
+- `--json` — output in JSON format
