@@ -3,7 +3,7 @@ description: Designs UI and UX solutions for tracker issues assigned by the team
 mode: subagent
 hidden: true
 temperature: 0.4
-steps: 40
+steps: 100
 tools:
   read: true
   write: true
@@ -17,7 +17,6 @@ permission:
     "*": allow
     "git commit*": deny
     "git push*": deny
-    "git add*": deny
     "bd sync*": deny
     "bd create*": deny
 ---

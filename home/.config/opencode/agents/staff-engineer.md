@@ -3,7 +3,7 @@ description: Reviews code changes for quality, security, and correctness. Used b
 mode: subagent
 hidden: true
 temperature: 0.1
-steps: 30
+steps: 75
 tools:
   read: true
   write: false

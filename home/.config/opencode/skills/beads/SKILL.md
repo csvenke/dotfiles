@@ -17,18 +17,18 @@ bd init --stealth
 
 ### Create
 
-Title is a **positional argument**, not a flag.
+Title is a **positional argument**, not a flag. Always use `--force` to avoid prefix mismatch errors.
 
 ```bash
 # Epic
-bd create "<title>" --type=epic --description="<desc>"
+bd create "<title>" --type=epic --description="<desc>" --force
 
 # Task (standalone)
-bd create "<title>" --type=task --description="<desc>" --acceptance="<criteria>"
+bd create "<title>" --type=task --description="<desc>" --acceptance="<criteria>" --force
 
 # Task (child of epic)
 bd create "<title>" --type=task --parent=<epic-id> \
-  --description="<desc>" --acceptance="<criteria>"
+  --description="<desc>" --acceptance="<criteria>" --force
 ```
 
 Use `--silent` to output only the issue ID (for scripting).

@@ -3,7 +3,7 @@ description: Implements a single tracker issue assigned by the team lead and han
 mode: subagent
 hidden: true
 temperature: 0.1
-steps: 40
+steps: 100
 tools:
   read: true
   write: true
@@ -17,7 +17,6 @@ permission:
     "*": allow
     "git commit*": deny
     "git push*": deny
-    "git add*": deny
     "bd sync*": deny
     "bd create*": deny
 ---

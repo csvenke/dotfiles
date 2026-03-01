@@ -2,6 +2,9 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "nordic",
   "plugin": ["opencode-gemini-auth"],
+  "permission": {
+    "external_directory": "allow"
+  },
   "mcp": {
     "context7": {
       "enabled": true,
