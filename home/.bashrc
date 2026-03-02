@@ -190,6 +190,9 @@ EOF
   fi
 
   if _has_cmd "nix"; then
+    local create_shared_envrc="true"
+    git cat-file -e HEAD:.envrc >/dev/null 2>&1 && create_shared_envrc="false"
+
     git worktree add --lock --orphan nix
     (
       cd nix || return
@@ -198,7 +201,10 @@ EOF
       git add .
       git commit -m "genesis"
     )
-    echo 'use flake "../nix"' >.shared/.envrc
+
+    if [ "$create_shared_envrc" = "true" ]; then
+      echo 'use flake "../nix"' >.shared/.envrc
+    fi
   fi
 }
 
