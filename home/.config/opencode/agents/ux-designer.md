@@ -36,7 +36,7 @@ All file operations (read, glob, grep, edit, write) must stay within the git wor
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and acceptance criteria
-4. Claim the issue atomically as `ux-designer`: `bd update <id> --claim --actor=ux-designer --json`
+4. Claim the issue atomically as `ux-designer`: `bd update <id> --claim --actor=ux-designer`
    - If claim fails, exit and do not make any file changes
 5. Identify UX scope, constraints, and user-facing outcomes
 

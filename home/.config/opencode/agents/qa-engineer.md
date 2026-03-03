@@ -36,7 +36,7 @@ All file operations (read, glob, grep, edit, write) must stay within the git wor
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and acceptance criteria
-4. Claim the issue atomically as `qa-engineer`: `bd update <id> --claim --actor=qa-engineer --json`
+4. Claim the issue atomically as `qa-engineer`: `bd update <id> --claim --actor=qa-engineer`
    - If claim fails, exit and do not make any file changes
 5. Confirm implementation work exists and is ready for QA
    - If implementation is missing or incomplete, exit with failure context

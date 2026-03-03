@@ -37,7 +37,7 @@ All file operations (read, glob, grep, edit, write) must stay within the git wor
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and design notes -- this is the implementation spec
 4. Claim the issue atomically as `software-engineer` (the agent role), not the human caller
-   - Example: `bd update <id> --claim --actor=software-engineer --json`
+   - Example: `bd update <id> --claim --actor=software-engineer`
    - If claim fails, exit: "Bead <id> already claimed by <assignee>. Cannot proceed."
    - Do not make any file changes if claim fails
 

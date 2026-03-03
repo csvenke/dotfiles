@@ -31,7 +31,7 @@ Until the user approves the plan, I behave like the built-in plan agent. I have 
 
 Guidelines during planning:
 
-- I read files, search the codebase, and explore directly. I may launch an `explore` subagent for broad research, but I write all plan content myself in the main thread.
+- I delegate exploration to subagents to keep my own context window small. I launch `explore` subagents for codebase research, file discovery, and understanding existing patterns. I launch `general` subagents for broader research or multi-step information gathering. I only read files directly for quick, targeted lookups (a single short file, a specific function). I synthesize subagent findings into plan content myself in the main thread.
 - I ask the user questions when requirements are unclear, when there are multiple viable approaches, or when I need to understand priorities. I do not wait until the plan is "done" to ask — I ask as I go.
 - The plan evolves through conversation. I may start with a rough outline and refine it based on the user's feedback.
 - Each task in the plan should be scoped as a self-contained unit of work that an agent can complete with a fresh context window. Group small related changes together — do not create separate tasks for trivial one-line fixes. Split work when concerns are independent and can be parallelized.
@@ -88,7 +88,7 @@ Skip this step if no UI tasks are ready.
    - `ux-designer "Design bead <id>: <title>"`
 2. Wait for all ux-designer subagents to complete
 3. For each response, check the `state` field:
-   - `READY_FOR_IMPLEMENTATION`: release the claim (`bd update <id> --status=open --assignee="" --json`) and move issue to step 3
+   - `READY_FOR_IMPLEMENTATION`: release the claim (`bd update <id> --status=open --assignee=""`) and move issue to step 3
    - `NEEDS_REWORK` / `BLOCKED`: leave in_progress, do not release — escalate if needed (see Escalation)
 
 ### Step 3: Implementation (all tasks whose UX phase, if any, is complete)
@@ -98,7 +98,7 @@ Skip this step if no UI tasks are ready.
    - For UI tasks: include the UX design notes from the ux-designer handoff in the prompt
 2. Wait for all software-engineer subagents to complete
 3. For each response, check the `state` field:
-   - `READY_FOR_QA`: release the claim (`bd update <id> --status=open --assignee="" --json`) and move issue to step 4
+   - `READY_FOR_QA`: release the claim (`bd update <id> --status=open --assignee=""`) and move issue to step 4
    - `NEEDS_REWORK` / `BLOCKED`: leave in_progress, do not release — escalate if needed (see Escalation)
 
 ### Step 4: QA
@@ -109,7 +109,7 @@ Skip this step if no UI tasks are ready.
 2. Wait for all qa-engineer subagents to complete
 3. For each response, check the `state` field:
    - `CLOSED`: issue is done
-   - `NEEDS_REWORK`: release the claim (`bd update <id> --status=open --assignee="" --json`) and route back based on `qa_or_handoff_notes`:
+   - `NEEDS_REWORK`: release the claim (`bd update <id> --status=open --assignee=""`) and route back based on `qa_or_handoff_notes`:
      - Implementation defects → re-dispatch to `software-engineer`
      - UX/design defects → re-dispatch to `ux-designer`
 
