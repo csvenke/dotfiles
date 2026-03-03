@@ -498,4 +498,9 @@ if _has_cmd "dev"; then
   alias dc='cd $(dev -p)'
 fi
 
+if _has_cmd "opencode"; then
+  alias opencode='opencode --port'
+  alias oc='opencode --port'
+fi
+
 _source_if_exists "$HOME/.machine/.bashrc"
