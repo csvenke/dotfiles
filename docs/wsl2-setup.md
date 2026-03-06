@@ -99,6 +99,54 @@ enabled = true
 appendWindowsPath = false
 ```
 
+## Docker setup (optional)
+
+Install Docker Engine from Arch packages
+
+```bash
+sudo pacman -Syu
+sudo pacman -S docker
+```
+
+Enable and start Docker
+
+```bash
+sudo systemctl enable --now docker.service
+```
+
+Test
+
+```bash
+sudo docker version
+sudo docker run --rm hello-world
+```
+
+Add your user to the docker group
+
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+Test without sudo
+
+```bash
+docker ps
+```
+
+Install docker compose package and optionally lazydocker for tui
+
+```bash
+sudo pacman -S docker-compose lazydocker
+```
+
+Verify everything
+
+```bash
+docker info
+docker compose version
+```
+
 ## Neovide setup (optional)
 
 ### Install neovide
