@@ -408,10 +408,6 @@ _dotfiles_update() {
   (cd "$DOTFILES_PATH" && git checkout HEAD -- flake.lock && nix flake update && nix run .#install)
 }
 
-_opencode_with_port() {
-  command opencode "$@" --port
-}
-
 export XDG_CONFIG_HOME="$HOME/.config"
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export COLORTERM=truecolor
@@ -532,8 +528,7 @@ if _has_cmd "dev"; then
 fi
 
 if _has_cmd "opencode"; then
-  alias opencode='_opencode_with_port'
-  alias oc='_opencode_with_port'
+  alias oc='opencode'
 fi
 
 _source_if_exists "$HOME/.machine/.bashrc"
