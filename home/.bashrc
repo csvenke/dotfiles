@@ -45,6 +45,10 @@ _git_worktree_main_path() {
   git worktree list | grep "\[$(_git_main_branch)\]" | awk '{print $1}'
 }
 
+_git_worktree_base_path() {
+  git worktree list | head -1 | awk '{print $1}'
+}
+
 _git_all_branches() {
   git fetch origin
   git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
@@ -151,9 +155,12 @@ _git_switch_remote_branch() {
 
 _git_worktree_run_repo_hook() {
   local hook_name="$1"
-  local worktree_path="$2"
+  local worktree_name="$2"
+  local worktree_base_path="${3:-$(pwd)}"
+  local worktree_path="$worktree_base_path/$worktree_name"
+
   local hook_path
-  hook_path="$(pwd)/.hooks/$hook_name"
+  hook_path="$worktree_base_path/.hooks/$hook_name"
 
   if [ ! -x "$hook_path" ]; then
     return
@@ -167,9 +174,6 @@ _git_worktree_run_repo_hook() {
 }
 
 _git_worktree_setup_repo() {
-  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-  git fetch origin
-
   mkdir -p .shared
   mkdir -p .hooks
 
@@ -199,7 +203,7 @@ EOF
       nix flake init -t github:csvenke/devkit
       nix flake lock
       git add .
-      git commit -m "genesis"
+      git commit -m "chore: initialize nix worktree"
     )
 
     if [ "$create_shared_envrc" = "true" ]; then
@@ -244,23 +248,44 @@ EOF
 }
 
 _git_worktree_setup_worktree() {
-  local path="$1"
+  local worktree_name="$1"
+  local worktree_base_path="${2:-$(pwd)}"
+  local worktree_path="$worktree_base_path/$worktree_name"
 
-  if [ -d ".shared" ]; then
-    cp -r .shared/. "$path/"
+  if [ -d "$worktree_base_path/.shared" ]; then
+    cp -r "$worktree_base_path/.shared/." "$worktree_path/"
   fi
 
-  if _has_cmd "direnv" && [ -f "$path/.envrc" ]; then
-    direnv allow "$path"
+  if _has_cmd "direnv" && [ -f "$worktree_path/.envrc" ]; then
+    direnv allow "$worktree_path"
   fi
 }
 
 _git_worktree_add() {
-  git worktree add "$@"
+  local worktree_name="$1"
 
-  local path="${*: -1}"
-  _git_worktree_setup_worktree "$path"
-  _git_worktree_run_repo_hook "after-worktree-add.sh" "$path"
+  if [ -z "$worktree_name" ]; then
+    echo "git worktree name is missing"
+    return
+  fi
+
+  local branch_type="${2:-"feature"}"
+
+  local worktree_base_path
+  worktree_base_path=$(_git_worktree_base_path)
+
+  if [ -z "$worktree_base_path" ]; then
+    echo "git worktree base path not found"
+    return
+  fi
+
+  local worktree_path="$worktree_base_path/$worktree_name"
+
+  git worktree add -B "$branch_type/$worktree_name" "$worktree_path"
+  _git_worktree_setup_worktree "$worktree_name" "$worktree_base_path"
+  (_git_worktree_run_repo_hook "after-worktree-add.sh" "$worktree_name" "$worktree_base_path")
+
+  cd "$worktree_path" || return
 }
 
 _git_worktree_clone() {
@@ -272,12 +297,16 @@ _git_worktree_clone() {
   cd "$path" || return
   git clone --bare "$url" .git || return
 
+  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git fetch origin
+
   _git_worktree_setup_repo
 
   local main_branch
   main_branch="$(_git_main_branch)"
 
-  _git_worktree_add --lock "$main_branch"
+  git worktree add --lock "$main_branch"
+  _git_worktree_setup_worktree "$main_branch"
   (cd "$main_branch" && git push -u origin "$main_branch")
 
   cd "$original_dir" || return
@@ -285,14 +314,14 @@ _git_worktree_clone() {
 
 _git_worktree_init() {
   local name="$1"
-  local main_branch="main"
+  local main_branch="${2:-"master"}"
 
   mkdir "$name"
   cd "$name" || return
 
   git init --bare .git -b "$main_branch" || return
   git worktree add --orphan --lock "$main_branch"
-  (cd "$main_branch" && touch README.md && git add . && git commit -m "genesis")
+  (cd "$main_branch" && touch README.md && git add . && git commit -m "chore: initialize repository")
 
   _git_worktree_setup_repo
   _git_worktree_setup_worktree "$main_branch"
