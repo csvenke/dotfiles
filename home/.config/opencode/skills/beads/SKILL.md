@@ -5,7 +5,14 @@ description: "Command reference for the bd issue tracker (beads). Use when creat
 
 # Task Tracker (Beads)
 
-Command reference for the `bd` issue tracker. All commands support `--json` for programmatic parsing.
+Short command reference for `bd`.
+
+- Prefer plain output.
+- Use `--json` only for multi-item routing, filtering, or validation.
+- Use `--silent` when you only need the created issue ID.
+- Title is positional for `bd create`.
+- Use `--force` on `bd create`.
+- Use `--actor=<name>` on any command when audit trail matters.
 
 ## Setup
 
@@ -13,96 +20,47 @@ Command reference for the `bd` issue tracker. All commands support `--json` for 
 bd init --stealth
 ```
 
-## Commands
-
-### Create
-
-Title is a **positional argument**, not a flag. Always use `--force` to avoid prefix mismatch errors.
+## Create
 
 ```bash
-# Epic
 bd create "<title>" --type=epic --description="<desc>" --force
 
-# Task (standalone)
 bd create "<title>" --type=task --description="<desc>" --acceptance="<criteria>" --force
 
-# Task (child of epic)
 bd create "<title>" --type=task --parent=<epic-id> \
   --description="<desc>" --acceptance="<criteria>" --force
 ```
 
-Use `--silent` to output only the issue ID (for scripting).
-
-### Dependencies
-
-Both arguments are positional.
+## Query
 
 ```bash
-bd dep add <task-id> <depends-on-id>
-```
-
-### Query
-
-```bash
-# Unblocked work
-bd ready --json
-
-# Unblocked work under an epic
+bd ready
+bd ready --parent=<epic-id>
 bd ready --parent=<epic-id> --json
 
-# Full issue details
-bd show <id> --json
-
-bd list --status=<open|in_progress|closed> --json
+bd show <id>
+bd list --status=<open|in_progress|closed>
 ```
 
-### Claim (atomic)
+## Update
 
 ```bash
-bd update <id> --claim --actor=<role> --json
-```
-
-Sets assignee + status=in_progress atomically. If already claimed, the command fails. Use `--actor` to identify the claiming role (e.g., `--actor=software-engineer`).
-
-### Release (unclaim)
-
-```bash
-bd update <id> --status=open --assignee="" --json
-```
-
-Resets assignee and status so the next agent in the pipeline can claim.
-
-### Design Notes
-
-```bash
+bd update <id> --claim --actor=<role>
+bd update <id> --status=open --assignee=""
 bd update <id> --design="<notes>"
 ```
 
-Attach implementation-ready design notes to a bead (used by UX handoff).
+- `--claim` is atomic and sets assignee plus `in_progress`.
+- If claim fails, another agent already has the bead.
 
-### Comments
+## Other
 
 ```bash
-bd comments <id> --json
+bd dep add <task-id> <depends-on-id>
+
+bd comments <id>
 bd comments add <id> "<message>"
-```
 
-### Close
-
-```bash
 bd close <id>
+bd epic close-eligible
 ```
-
-### Epic Closure
-
-```bash
-# Close epics where all children are complete
-bd epic close-eligible --json
-```
-
-### Global Flags
-
-These flags work on any `bd` command:
-
-- `--actor=<name>` — set the actor name for audit trail (default: `$BD_ACTOR` or `$USER`)
-- `--json` — output in JSON format
