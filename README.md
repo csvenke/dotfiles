@@ -7,11 +7,11 @@
 ## Usage
 
 ```bash
-nix run github:csvenke/dotfiles#install
+nix run github:csvenke/dotfiles#sync
 ```
 
 Without flakes enabled
 
 ```bash
-nix run github:csvenke/dotfiles#install --extra-experimental-features 'nix-command flakes'
+nix run github:csvenke/dotfiles#sync --extra-experimental-features 'nix-command flakes'
 ```

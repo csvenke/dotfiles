@@ -24,7 +24,7 @@ Skills are stored in `home/.config/opencode/skills/` and provide specialized kno
 - Check/test flake: `nix flake check`
 - Enter dev shell: `nix develop`
 - Build specific package: `nix build .#<package-name>`
-- Install dotfiles: `nix run .#install`
+- Sync dotfiles: `nix run .#sync`
 - Update flake inputs: `nix flake update`
 
 ## Code Style

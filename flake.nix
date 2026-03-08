@@ -59,7 +59,7 @@
         in
         {
           apps = {
-            install = mkShellScriptApp /* bash */ ''
+            sync = mkShellScriptApp /* bash */ ''
               migrate_dotfiles_path_to_xdg_config() {
                 local new="$1"
                 local old="$HOME/.dotfiles"
@@ -87,7 +87,6 @@
 
               stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
               nix profile add "$DOTFILES_PATH"
-              nix profile upgrade --all
               nix profile wipe-history --older-than 7d
             '';
 
