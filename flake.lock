@@ -221,11 +221,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772586954,
-        "narHash": "sha256-72hPE5bEJoznKjNDZoKr+n8Q061hTOMJZ+T3NnV6JDM=",
+        "lastModified": 1772897817,
+        "narHash": "sha256-EuXM54LLrcKPFIvLyF9o201eaA35hGPYOGQr3YGIi78=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "18bf1928bff30d26be7abddf12fb01cfea351dc2",
+        "rev": "c6d5bcf2e10a417bd7a6368c2ad3be2d9e3970bd",
         "type": "github"
       },
       "original": {
@@ -260,11 +260,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1772624091,
-        "narHash": "sha256-QKyJ0QGWBn6r0invrMAK8dmJoBYWoOWy7lN+UHzW1jc=",
+        "lastModified": 1772773019,
+        "narHash": "sha256-E1bxHxNKfDoQUuvriG71+f+s/NT0qWkImXsYZNFFfCs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "80bdc1e5ce51f56b19791b52b2901187931f5353",
+        "rev": "aca4d95fce4914b3892661bcb80b8087293536c6",
         "type": "github"
       },
       "original": {
