@@ -46,7 +46,7 @@ _git_worktree_main_path() {
 }
 
 _git_worktree_base_path() {
-  git worktree list | head -1 | awk '{print $1}'
+  dirname "$(git rev-parse --path-format=absolute --git-common-dir)"
 }
 
 _git_all_branches() {
