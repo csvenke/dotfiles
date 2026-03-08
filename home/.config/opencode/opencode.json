@@ -10,6 +10,11 @@
       "enabled": true,
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "playwright-test": {
+      "enabled": true,
+      "type": "local",
+      "command": ["npx", "playwright", "run-test-mcp-server"]
     }
   }
 }
