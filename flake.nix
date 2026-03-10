@@ -99,7 +99,7 @@
             };
             fix-broken-profile = {
               type = "app";
-              program = "${./scripts/fix-broken-profile.sh.sh}";
+              program = "${./scripts/fix-broken-profile.sh}";
               meta.description = "Fix broken nix profile";
             };
           };
