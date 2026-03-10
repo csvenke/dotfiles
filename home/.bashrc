@@ -405,7 +405,7 @@ _dotfiles_update() {
     return 1
   fi
 
-  (cd "$DOTFILES_PATH" && git checkout HEAD -- flake.lock && nix flake update && nix run .#sync)
+  (cd "$DOTFILES_PATH" && git checkout HEAD -- flake.lock && nix flake update && nix run .#bootstrap)
 }
 
 export XDG_CONFIG_HOME="$HOME/.config"

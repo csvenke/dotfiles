@@ -1,10 +1,8 @@
-{
-  fzf,
-  fetchFromGitHub,
-  stdenv,
-}:
+final: prev:
 
 let
+  inherit (prev) fetchFromGitHub stdenv;
+
   fzf-tab-completion = stdenv.mkDerivation rec {
     pname = "fzf-tab-completion";
     version = "4850357beac6f8e37b66bd78ccf90008ea3de40b";
@@ -22,14 +20,16 @@ let
   };
 in
 
-fzf.overrideAttrs (oldAttrs: {
-  postPatch =
-    (oldAttrs.postPatch or "")
-    # bash
-    + ''
-      echo "" >> shell/completion.bash
-      echo "# Load fzf-tab-completion enhancement" >> shell/completion.bash
-      echo "source ${fzf-tab-completion}/share/fzf-tab-completion/fzf-bash-completion.sh" >> shell/completion.bash
-      echo "bind -x '\"\\t\": fzf_bash_completion'" >> shell/completion.bash
-    '';
-})
+{
+  fzf = prev.fzf.overrideAttrs (oldAttrs: {
+    postPatch =
+      (oldAttrs.postPatch or "")
+      # bash
+      + ''
+        echo "" >> shell/completion.bash
+        echo "# Load fzf-tab-completion enhancement" >> shell/completion.bash
+        echo "source ${fzf-tab-completion}/share/fzf-tab-completion/fzf-bash-completion.sh" >> shell/completion.bash
+        echo "bind -x '\"\\t\": fzf_bash_completion'" >> shell/completion.bash
+      '';
+  });
+}

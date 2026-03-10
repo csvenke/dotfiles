@@ -38,109 +38,75 @@
                 dev-cli = inputs.dev-cli.packages.${system}.default;
                 llm-cli = inputs.llm-cli.packages.${system}.default;
               })
+              (import ./nix/overlays/tmux)
+              (import ./nix/overlays/fzf)
+              (import ./nix/overlays/beads)
             ];
           };
-          inherit (pkgs)
-            lib
-            callPackage
-            buildEnv
-            writeShellScriptBin
-            ;
+          inherit (pkgs) lib callPackage buildEnv;
 
-          packages = lib.packagesFromDirectoryRecursive {
+          customTools = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
-            directory = ./nix/packages;
+            directory = ./nix/tools;
           };
 
-          mkShellScriptApp = content: {
-            type = "app";
-            program = writeShellScriptBin "program" content;
-          };
+          homePackages =
+            with pkgs;
+            [
+              bash-completion
+              nix
+              stow
+              findutils
+              fd
+              starship
+              direnv
+              nix-direnv
+              mise
+              delta
+              ripgrep
+              jq
+              tldr
+              wget
+              git
+              lazygit
+              curl
+              xclip
+              eza
+              bat
+              htop-vim
+              gh
+              fastfetch
+              nodejs
+              tmux
+              fzf
+              beads
+              neovim
+              opencode
+            ]
+            ++ lib.attrValues customTools;
         in
         {
           apps = {
-            sync = mkShellScriptApp /* bash */ ''
-              migrate_dotfiles_path_to_xdg_config() {
-                local new="$1"
-                local old="$HOME/.dotfiles"
-
-                if [[ ! -d "$old" && -d "$new" ]]; then
-                  return
-                fi
-
-                nix profile remove --all
-                stow -v --dir="$old/home" --target="$HOME" --delete .
-                mv "$old" "$new"
-              }
-
-              DOTFILES_URL="https://github.com/csvenke/dotfiles.git"
-              DOTFILES_BRANCH="master"
-              DOTFILES_PATH="$HOME/.config/dotfiles"
-
-              migrate_dotfiles_path_to_xdg_config "$DOTFILES_PATH"
-
-              if [ ! -d "$DOTFILES_PATH" ]; then
-                git clone "$DOTFILES_URL" "$DOTFILES_PATH"
-              else
-                git -C "$DOTFILES_PATH" pull origin "$DOTFILES_BRANCH"
-              fi
-
-              stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
-              nix profile add "$DOTFILES_PATH"
-              nix profile wipe-history --older-than 7d
-            '';
-
-            fix-broken-profile = mkShellScriptApp /* bash */ ''
-              DOTFILES_PATH="$HOME/.config/dotfiles"
-
-              nix-collect-garbage -d
-              rm ~/.local/state/nix/profiles/profile*
-              rm ~/.nix-profile
-              nix profile add "$DOTFILES_PATH"
-              nix profile list
-            '';
+            bootstrap = {
+              type = "app";
+              program = "${./scripts/bootstrap.sh}";
+              meta.description = "Bootstrap dotfiles on the system";
+            };
+            eject = {
+              type = "app";
+              program = "${./scripts/eject.sh}";
+              meta.description = "Remove dotfiles completly from the system";
+            };
+            fix-broken-profile = {
+              type = "app";
+              program = "${./scripts/fix-broken-profile.sh.sh}";
+              meta.description = "Fix broken nix profile";
+            };
           };
-
           packages = {
             default = buildEnv {
               name = "dotfiles";
-              pathsToLink = [
-                "/bin"
-                "/share"
-              ];
-              paths =
-                with pkgs;
-                [
-                  bash-completion
-                  nix
-                  stow
-                  findutils
-                  fd
-                  starship
-                  direnv
-                  nix-direnv
-                  mise
-                  delta
-                  ripgrep
-                  jq
-                  tldr
-                  wget
-                  git
-                  lazygit
-                  curl
-                  xclip
-                  eza
-                  bat
-                  htop-vim
-                  gh
-                  fastfetch
-                  nodejs
-                  neovim
-                  opencode
-                  dev-cli
-                  llm-cli
-                ]
-                ++ (lib.attrValues packages);
+              paths = homePackages;
             };
           };
         };

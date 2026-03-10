@@ -1,13 +1,14 @@
-{
-  lib,
-  tmux,
-  writeText,
-  makeWrapper,
-  tmuxPlugins,
-  fetchFromGitHub,
-}:
+final: prev:
 
 let
+  inherit (prev)
+    lib
+    makeWrapper
+    tmuxPlugins
+    fetchFromGitHub
+    writeText
+    ;
+
   bundledPlugins = [
     (tmuxPlugins.mkTmuxPlugin rec {
       pluginName = "sensible";
@@ -51,18 +52,20 @@ let
     ${pluginInitScript}
   '';
 in
+{
+  tmux = prev.tmux.overrideAttrs (oldAttrs: {
+    nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ makeWrapper ];
+    postInstall =
+      (oldAttrs.postInstall or "")
+      +
+      # bash
+      ''
+        wrapProgram $out/bin/tmux \
+          --add-flags "-f ${config}"
 
-tmux.overrideAttrs (oldAttrs: {
-  nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ makeWrapper ];
-  postInstall =
-    (oldAttrs.postInstall or "")
-    +
-    # bash
-    ''
-      wrapProgram $out/bin/tmux \
-        --add-flags "-f ${config}"
+        # Remove bash-completion to avoid conflicts with bash-completion package
+        rm -rf $out/share/bash-completion
+      '';
+  });
 
-      # Remove bash-completion to avoid conflicts with bash-completion package
-      rm -rf $out/share/bash-completion
-    '';
-})
+}
