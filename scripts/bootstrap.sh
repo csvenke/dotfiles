@@ -14,4 +14,5 @@ fi
 
 stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
 nix profile add "$DOTFILES_PATH"
+nix profile upgrade dotfiles
 nix profile wipe-history --older-than 7d

@@ -45,7 +45,7 @@
           };
           inherit (pkgs) lib callPackage buildEnv;
 
-          customTools = lib.packagesFromDirectoryRecursive {
+          tools = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
             directory = ./nix/tools;
           };
@@ -82,8 +82,10 @@
               beads
               neovim
               opencode
+              llm-cli
+              dev-cli
             ]
-            ++ lib.attrValues customTools;
+            ++ (lib.attrValues tools);
         in
         {
           apps = {
