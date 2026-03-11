@@ -22,7 +22,7 @@ build_session_name() {
   fi
 
   branch="$(git -C "$root" branch --show-current 2>/dev/null || true)"
-  if [[ -z "$branch" ]]; then
+  if [[ -z $branch ]]; then
     branch="$(git -C "$root" rev-parse --short HEAD 2>/dev/null || printf "%s" "nogit")"
   fi
 
