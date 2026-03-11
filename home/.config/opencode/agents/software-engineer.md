@@ -49,7 +49,7 @@ Stay within the git worktree.
 2. Study existing patterns in the codebase — naming, structure, error handling, test style
 3. Read and preserve the issue metadata (`risk`, `test_expectation`, `areas_touched`, `fast_lane`, and any repo bootstrap commands included by the team lead). If metadata is omitted, assume the team defaults.
 4. Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
-5. If the prompt says `validation-specialist` will run after implementation, treat your validation as local smoke proof only
+5. If the prompt says `automation-engineer` will run after implementation, treat your validation as local smoke proof only
 6. Implement the changes as specified
 7. Add or update tests when the issue changes behavior, fixes a bug, introduces logic worth protecting, or the acceptance criteria require coverage
 8. Load the `tdd` skill only when it will materially help write or restructure tests. Do not load it by default for every issue.
@@ -57,7 +57,7 @@ Stay within the git worktree.
    - prefer targeted unit or integration tests
    - run lint or typecheck only when relevant
    - for `fast_lane=true`, prefer the lightest credible checks
-   - if `validation-specialist` will run next, avoid heavy, noisy, or server-starting commands unless needed to unblock implementation
+   - if `automation-engineer` will run next, avoid heavy, noisy, or server-starting commands unless needed to unblock implementation
    - otherwise avoid full-suite or server-starting runs unless clearly required
 
 ### Phase 3: Handoff

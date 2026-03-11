@@ -53,7 +53,7 @@ Stay within the git worktree. Do not modify code or tests.
    - `risk=medium` or `test_expectation=regression`: run targeted regression coverage
    - `risk=high` or `test_expectation=e2e`: run heavier validation, including integration or E2E when required
    - `fast_lane=true`: keep validation lightweight unless the evidence suggests hidden risk
-5. Use validation-specialist evidence when present, and do not rerun the exact same broad commands unless that repetition is needed as independent evidence.
+5. Use automation-engineer evidence when present, and do not rerun the exact same broad commands unless that repetition is needed as independent evidence.
 6. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
 7. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
 8. Verify each acceptance criterion with evidence.
