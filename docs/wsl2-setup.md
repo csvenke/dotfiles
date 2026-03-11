@@ -134,10 +134,10 @@ Test without sudo
 docker ps
 ```
 
-Install docker compose package and optionally lazydocker for tui
+Install buildx, compose package and optionally lazydocker for tui
 
 ```bash
-sudo pacman -S docker-compose lazydocker
+sudo pacman -S docker-buildx docker-compose lazydocker
 ```
 
 Verify everything
