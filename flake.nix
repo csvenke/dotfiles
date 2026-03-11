@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     dev-cli = {
       url = "github:csvenke/dev-cli";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -19,14 +23,24 @@
   };
 
   outputs =
-    inputs@{ flake-parts, nixpkgs, ... }:
+    inputs@{
+      flake-parts,
+      treefmt-nix,
+      nixpkgs,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
-        "x86_64-linux"
+        "aarch64-darwin"
         "aarch64-linux"
         "x86_64-darwin"
-        "aarch64-darwin"
+        "x86_64-linux"
       ];
+
+      imports = [
+        treefmt-nix.flakeModule
+      ];
+
       perSystem =
         { system, ... }:
         let
@@ -105,11 +119,21 @@
               meta.description = "Fix broken nix profile";
             };
           };
+
           packages = {
             default = buildEnv {
               name = "dotfiles";
               paths = homePackages;
             };
+          };
+
+          treefmt.config = {
+            projectRootFile = "flake.nix";
+            programs.nixfmt.enable = true;
+            programs.prettier.enable = true;
+            programs.shfmt.enable = true;
+            programs.stylua.enable = true;
+            programs.taplo.enable = true;
           };
         };
     };
