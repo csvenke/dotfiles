@@ -21,11 +21,6 @@ build_session_name() {
     repo="$(sanitize_name "$(basename "$root")")"
   fi
 
-  branch="$(git -C "$root" branch --show-current 2>/dev/null || true)"
-  if [[ -z $branch ]]; then
-    branch="$(git -C "$root" rev-parse --short HEAD 2>/dev/null || printf "%s" "nogit")"
-  fi
-
   hash="$(printf "%s" "${root}:${branch}" | md5sum | cut -c1-6)"
   printf "popup-%s-%s" "$repo" "$hash"
 }
