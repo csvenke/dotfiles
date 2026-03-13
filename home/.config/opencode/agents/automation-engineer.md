@@ -37,8 +37,8 @@ Stay within the git worktree. Do not modify code or tests.
 
 1. Parse the bead ID from the task prompt.
 2. Load the `beads` skill if issue details are needed.
-3. Claim the issue atomically as `automation-engineer`: `bd update <id> --claim --actor=automation-engineer`
-   - If claim fails, exit and do not run commands.
+3. Verify the bead is pre-claimed for `automation-engineer`: `bd show <id>` and confirm `assignee=automation-engineer` and `status=in_progress`
+   - If the assignee does not match, exit and do not run commands.
 4. Read the implementation handoff, relevant repo bootstrap commands, and any `domain-architect` brief.
 5. If metadata is omitted, assume the team defaults.
 6. Treat repo bootstrap commands as the source of truth. If a needed command is missing, return that gap instead of guessing.

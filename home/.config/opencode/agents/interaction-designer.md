@@ -38,8 +38,8 @@ Stay within the git worktree.
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and acceptance criteria
-4. Claim the issue atomically as `interaction-designer`: `bd update <id> --claim --actor=interaction-designer`
-   - If claim fails, exit and do not make any file changes
+4. Verify the bead is pre-claimed for `interaction-designer`: `bd show <id>` and confirm `assignee=interaction-designer` and `status=in_progress`
+   - If the assignee does not match, exit and do not make any file changes
 5. Identify UX scope, constraints, and user-facing outcomes
 
 ### Phase 2: Design

@@ -98,7 +98,7 @@ Dependencies should reflect real ordering constraints only.
 - `discovery-engineer` recommendations are advisory. Explicit issue metadata wins when they conflict.
 - Use `automation-engineer` before QA when command execution is heavy, noisy, or likely to dominate context.
 - Pass only the relevant bootstrap fields and specialist brief excerpts downstream. Do not forward raw logs or unnecessary context.
-- `team-lead` never claims work beads. Design, implementation, validation, and QA beads are claimed only by the worker agent doing that step.
+- `team-lead` pre-claims beads on behalf of the target worker before dispatching. Workers verify the pre-claim instead of claiming themselves.
 
 ### Dispatch matrix
 
@@ -117,7 +117,7 @@ Repeat until all tasks are closed.
 
 ### Global Execution Rules
 
-- **Release Claims**: Whenever a task changes hands (e.g., from implementation to QA, or returning to `NEEDS_REWORK`), you MUST release the claim first using `bd update <id> --status=open --assignee=""`.
+- **Handoff Claims**: Whenever a task changes hands (e.g., from implementation to QA, or returning to `NEEDS_REWORK`), release the previous claim and immediately pre-claim for the next target: `bd update <id> --status=open --assignee=""` then `bd update <id> --claim --actor=<next-role>`. For first dispatch from `open` state, only the pre-claim is needed. The bead must always be pre-claimed for the target worker before dispatching.
 - **Structured Context**: When including brief excerpts or bootstrap commands in downstream prompts, wrap them in clear XML tags like `<repo_bootstrap>` or `<domain_invariants>` so the subagent can easily parse them.
 - **High-Signal Audit Trail**: You must maintain a persistent history of critical architectural and UX decisions. Do NOT log routine state changes, implementation details, or test runs to `beads`. You MUST use `bd comments add <id> "<summary>"` to log:
   - The core invariants discovered by `domain-architect`.
@@ -155,9 +155,9 @@ For tasks with likely hidden invariants, legacy constraints, or underspecified a
 
 Before dispatching any worker agent:
 
-- Check that the bead is not already claimed.
-- If it is accidentally claimed by `team-lead`, release the claim first.
-- If it is claimed by any other assignee, do not dispatch. Escalate instead.
+- Pre-claim the bead for the target worker: `bd update <id> --claim --actor=<target-role>` (release first if currently held — see Handoff Claims).
+- If the pre-claim fails (unexpected holder), escalate instead of dispatching.
+- Tell the sub-agent in the dispatch prompt that the bead is pre-claimed.
 
 ### Step 2: Domain brief (selective)
 
@@ -179,7 +179,7 @@ Skip if no UI tasks are ready. Skip fast-lane tasks.
    - Include the relevant `domain-architect` brief excerpts when present
 2. Wait for all interaction-designer subagents to complete
 3. For each response, check the `state` field:
-   - `READY_FOR_IMPLEMENTATION`: release the claim, log the design decisions using `bd comments add <id> "<compact summary of UX design>"`, and move issue to step 4
+   - `READY_FOR_IMPLEMENTATION`: hand off to `software-engineer` (release and pre-claim per Handoff Claims), log the design decisions using `bd comments add <id> "<compact summary of UX design>"`, and move issue to step 4
    - `NEEDS_REWORK` / `BLOCKED`: leave in_progress, do not release — escalate if needed (see Escalation)
 
 ### Step 4: Implementation (all tasks whose prerequisite briefs, if any, are complete)
@@ -192,7 +192,7 @@ Skip if no UI tasks are ready. Skip fast-lane tasks.
    - For UI tasks: include the UX design notes from the interaction-designer handoff in the prompt
 2. Wait for all software-engineer subagents to complete
 3. For each response, check the `state` field:
-   - `READY_FOR_QA`: release the claim and route to step 5 when validation is needed; otherwise route to step 6. For `software-engineer`, this means implementation complete and may still pass through validation before QA.
+   - `READY_FOR_QA`: hand off to the next worker — pre-claim for `automation-engineer` (step 5) or `qa-engineer` (step 6) per Handoff Claims. For `software-engineer`, this means implementation complete and may still pass through validation before QA.
    - `NEEDS_REWORK` / `BLOCKED`: leave in_progress, do not release — escalate if needed (see Escalation)
 
 ### Step 5: Validation (selective)
@@ -208,8 +208,8 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
    - Include the relevant `domain-architect` brief excerpts when present
 2. Wait for all automation-engineer subagents to complete
 3. For each response, check the `state` field:
-   - `READY_FOR_QA`: release the claim and route to step 6
-   - `NEEDS_REWORK`: release the claim and route back to `software-engineer`
+   - `READY_FOR_QA`: hand off to `qa-engineer` (release and pre-claim per Handoff Claims)
+   - `NEEDS_REWORK`: hand off to `software-engineer` (release and pre-claim per Handoff Claims)
    - `BLOCKED`: leave in_progress and escalate
 
 ### Step 6: QA
@@ -226,9 +226,9 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
 2. Wait for all qa-engineer subagents to complete
 3. For each response, check the `state` field:
    - `CLOSED`: issue is done
-   - `NEEDS_REWORK`: release the claim and route back based on `qa_or_handoff_notes`:
-     - Implementation defects → re-dispatch to `software-engineer`
-     - UX/design defects → re-dispatch to `interaction-designer`
+   - `NEEDS_REWORK`: hand off based on `qa_or_handoff_notes` — pre-claim for the rework target per Handoff Claims:
+     - Implementation defects → hand off to `software-engineer`
+     - UX/design defects → hand off to `interaction-designer`
      - When routing back for rework, ONLY log it if it represents a fundamental design flaw, invariant violation, or architectural pivot: `bd comments add <id> "Rework requested: <core reason>"`. Do NOT log minor defects or test failures. If you see a previous rework comment on the issue, escalate instead of redispatching.
    - `BLOCKED`: leave in_progress and escalate
 
@@ -266,18 +266,18 @@ Role-specific extensions:
 
 ### Incomplete responses
 
-If a subagent response is missing required fields for its role, or hits its step limit and returns an unstructured summary, treat it as `NEEDS_REWORK`. Release the claim and escalate - do not silently re-dispatch.
+If a subagent response is missing required fields for its role, or hits its step limit and returns an unstructured summary, treat it as `NEEDS_REWORK`. Release the pre-claim and escalate - do not silently re-dispatch.
 
 ## Escalation
 
-- If a subagent hits its step limit or returns without a valid handoff, release the claim and escalate.
+- If a subagent hits its step limit or returns without a valid handoff, release the pre-claim and escalate.
 - If a task is permanently blocked or requires user intervention, log the exact architectural or systemic reason to the issue: `bd comments add <id> "BLOCKED: <reason>"`.
 - If an issue remains `NEEDS_REWORK` after one full rework cycle, escalate.
 - If requirements are unclear or conflicting, pause and ask the user.
 - Do not auto-close ambiguous issues.
 - If a test phase fails with likely port collision (`EADDRINUSE`/"port already in use"), requeue once in the sequential server-test lane before escalating.
 - When rework scope is unclear, use `discovery-engineer` to remap the likely fix surface before redispatching.
-- If a worker reports the bead was already claimed by `team-lead`, treat it as orchestration failure: release once, retry once, then escalate.
+- If a worker reports its pre-claim is missing or held by the wrong assignee, treat it as orchestration failure: release and re-pre-claim once, retry once, then escalate.
 
 ## Epic Closure
 

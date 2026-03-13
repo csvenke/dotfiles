@@ -33,15 +33,14 @@ Stay within the git worktree.
 
 ## Workflow
 
-### Phase 1: Claim
+### Phase 1: Verify Pre-Claim
 
 1. Parse the bead ID from the task prompt
 2. Load the `beads` skill (if not already loaded)
 3. Show the issue and read its full description and design notes -- this is the implementation spec
-4. Claim the issue atomically as `software-engineer` (the agent role), not the human caller
-   - Example: `bd update <id> --claim --actor=software-engineer`
-   - If claim fails, exit: "Bead <id> already claimed by <assignee>. Cannot proceed."
-   - Do not make any file changes if claim fails
+4. Verify the bead is pre-claimed for `software-engineer`: `bd show <id>` and confirm `assignee=software-engineer` and `status=in_progress`
+   - If the assignee does not match, exit: "Bead <id> not pre-claimed for software-engineer. Assignee is <actual>. Cannot proceed."
+   - Do not make any file changes if verification fails
 
 ### Phase 2: Implement
 
