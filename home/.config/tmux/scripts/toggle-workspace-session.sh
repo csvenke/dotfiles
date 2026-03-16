@@ -46,7 +46,7 @@ tmux set-option -g '@workspace-return-session' "$current_session"
 
 if ! tmux has-session -t "$session_name" 2>/dev/null; then
   tmux new-session -d -s "$session_name" -c "$worktree_root" \
-    "opencode; tmux switch-client -t \"\$(tmux show-option -gqv '@workspace-return-session')\""
+    "bash; tmux switch-client -t \"\$(tmux show-option -gqv @workspace-return-session)\""
 fi
 
 tmux switch-client -t "$session_name"
