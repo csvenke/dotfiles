@@ -183,11 +183,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1772818088,
-        "narHash": "sha256-ykT4DuQIRN6ksS1YfTytVrjIHF+H0HAkbNOPSJQcJ5Y=",
+        "lastModified": 1773599733,
+        "narHash": "sha256-NhuVES/Fi/rnVJB4B/0x1hD2J6IghXBVOL/eerJCddE=",
         "owner": "csvenke",
         "repo": "llm-cli",
-        "rev": "489a725865b3c43ea3875a0bc479dfb669f1df65",
+        "rev": "aaf63496a23de3cd958e3e06fa677a6e0ee6c1fc",
         "type": "github"
       },
       "original": {
@@ -221,11 +221,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1773452961,
-        "narHash": "sha256-vl5/lcLNGVSgJjHhR8xqT4cfup4+zMhfqp5+mUZqUP4=",
+        "lastModified": 1773618866,
+        "narHash": "sha256-IRfqyUaWEYmtwBoD7doJ+SoUh64JJ1xU0WO8zz6QrnU=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "b11708868a2bac67095c2e9f0da423b7da619369",
+        "rev": "3d92c50c9fa7c66d246ef0a3bc7b8175018c4305",
         "type": "github"
       },
       "original": {
