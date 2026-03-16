@@ -57,7 +57,12 @@
               (import ./nix/overlays/beads)
             ];
           };
-          inherit (pkgs) lib callPackage buildEnv;
+          inherit (pkgs)
+            lib
+            callPackage
+            buildEnv
+            stdenv
+            ;
 
           tools = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
@@ -84,7 +89,6 @@
               git
               lazygit
               curl
-              xclip
               eza
               bat
               htop-vim
@@ -98,6 +102,10 @@
               opencode
               llm-cli
               dev-cli
+            ]
+            ++ lib.optionals stdenv.isLinux [
+              xclip
+              wl-clipboard
             ]
             ++ (lib.attrValues tools);
         in
