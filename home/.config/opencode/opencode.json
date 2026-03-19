@@ -4,6 +4,11 @@
   "permission": {
     "external_directory": "allow"
   },
+  "lsp": {
+    "csharp": {
+      "disabled": true
+    }
+  },
   "mcp": {
     "context7": {
       "enabled": true,
