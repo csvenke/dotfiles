@@ -73,7 +73,6 @@
             with pkgs;
             [
               bash-completion
-              nix
               stow
               findutils
               fd
