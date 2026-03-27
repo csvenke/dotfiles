@@ -108,7 +108,7 @@ Dependencies should reflect real ordering constraints only.
 - Default path: `software-engineer` -> `qa-engineer`
 - `codebase-analyst`: use by default for repo bootstrap, and later when task surface, overlap risk, or rework scope is unclear
 - `domain-architect`: use when hidden invariants, legacy constraints, or underspecified acceptance may matter; skip for mechanical or isolated technical changes
-- `ux-engineer`: use for user-facing UI, interaction, layout, accessibility, or visual behavior changes; skip for backend, infra, tests, docs, and non-user-facing config
+- `ux-designer`: use for user-facing UI, interaction, layout, accessibility, or visual behavior changes; skip for backend, infra, tests, docs, and non-user-facing config
 - `validation-specialist`: use when validation is heavy, noisy, flaky, server-starting, or likely to flood context; skip when cheap targeted checks are enough
 - `staff-engineer`: use only at epic closure
 
@@ -124,7 +124,7 @@ Repeat until all tasks are closed.
 - **Structured Context**: When including brief excerpts or bootstrap commands in downstream prompts, wrap them in clear XML tags like `<repo_bootstrap>` or `<domain_invariants>` so the subagent can easily parse them.
 - **High-Signal Audit Trail**: You must maintain a persistent history of critical architectural and UX decisions. Do NOT log routine state changes, implementation details, or test runs to `beads`. You MUST use `bd comments add <id> "<summary>"` to log:
   - The core invariants discovered by `domain-architect`.
-  - The core interaction/UI decisions made by `ux-engineer`.
+  - The core interaction/UI decisions made by `ux-designer`.
   - Any architectural pivots, fundamental design changes requested during rework, or explanations for why a task was permanently blocked.
 
 ### Step 0: Repo bootstrap (once per repo)
@@ -177,10 +177,10 @@ Skip this step unless a ready task is domain-heavy, legacy-sensitive, or undersp
 
 Skip if no UI tasks are ready. Skip fast-lane tasks.
 
-1. Launch ux-engineer subagents for one or more ready UI tasks:
-   - `ux-engineer "Design bead <id>: <title>"`
+1. Launch ux-designer subagents for one or more ready UI tasks:
+   - `ux-designer "Design bead <id>: <title>"`
    - Include the relevant `domain-architect` brief excerpts when present
-2. Wait for all ux-engineer subagents to complete
+2. Wait for all ux-designer subagents to complete
 3. For each response, check the `state` field:
    - `READY_FOR_IMPLEMENTATION`: hand off to `software-engineer` (release and pre-claim per Handoff Claims), log the design decisions using `bd comments add <id> "<compact summary of UX design>"`, and move issue to step 4
    - `NEEDS_REWORK` / `BLOCKED`: leave in_progress, do not release — escalate if needed (see Escalation)
@@ -192,7 +192,7 @@ Skip if no UI tasks are ready. Skip fast-lane tasks.
    - Include only the relevant repo bootstrap commands in the prompt
    - Include the relevant `domain-architect` brief excerpts when present
    - If the task will go through step 5, tell `software-engineer` to stop at local smoke proof and leave heavy validation to `validation-specialist`
-   - For UI tasks: include the UX design notes from the ux-engineer handoff in the prompt
+   - For UI tasks: include the UX design notes from the ux-designer handoff in the prompt
 2. Wait for all software-engineer subagents to complete
 3. For each response, check the `state` field:
    - `READY_FOR_QA`: hand off to the next worker — pre-claim for `validation-specialist` (step 5) or `qa-engineer` (step 6) per Handoff Claims. For `software-engineer`, this means implementation complete and may still pass through validation before QA.
@@ -231,7 +231,7 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
    - `CLOSED`: issue is done
    - `NEEDS_REWORK`: hand off based on `qa_or_handoff_notes` — pre-claim for the rework target per Handoff Claims:
      - Implementation defects → hand off to `software-engineer`
-      - UX/design defects → hand off to `ux-engineer`
+      - UX/design defects → hand off to `ux-designer`
      - When routing back for rework, ONLY log it if it represents a fundamental design flaw, invariant violation, or architectural pivot: `bd comments add <id> "Rework requested: <core reason>"`. Do NOT log minor defects or test failures. If you see a previous rework comment on the issue, escalate instead of redispatching.
    - `BLOCKED`: leave in_progress and escalate
 
@@ -248,7 +248,7 @@ Workflow handoffs use these formats:
 - `codebase-analyst`: compact repo cartography brief
 - `domain-architect`: compact domain brief
 - `staff-engineer`: review summary format
-- `ux-engineer`, `software-engineer`, `validation-specialist`, `qa-engineer`: base contract below
+- `ux-designer`, `software-engineer`, `validation-specialist`, `qa-engineer`: base contract below
 
 Base contract for workflow handoff roles:
 
@@ -260,7 +260,7 @@ Base contract for workflow handoff roles:
 
 Role-specific extensions:
 
-- `ux-engineer`: no extra required fields beyond the base contract
+- `ux-designer`: no extra required fields beyond the base contract
 - `software-engineer`: must also include `tests_added`, `tests_run_by_implementation`, `recommended_qa_commands`, `risk`, `test_expectation`, `areas_touched`, `risk_areas`, and `untested_or_not_run`
 - `validation-specialist`: must also include `commands_run`, `validation_summary`, and `failure_scope`
 - `qa-engineer`: must also include `tests_added`, `tests_run_by_implementation`, `tests_run_by_qa`, `risk`, `test_expectation`, `risk_areas`, and `defect_owner`

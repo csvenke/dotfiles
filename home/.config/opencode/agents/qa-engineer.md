@@ -79,7 +79,7 @@ Stay within the git worktree. Do not modify code or tests.
   - risk: <low|medium|high>
   - test_expectation: <none|targeted|regression|e2e>
   - risk_areas: <areas probed during QA, or none>
-  - defect_owner: <software-engineer|ux-engineer|none>
+  - defect_owner: <software-engineer|ux-designer|none>
   - qa_or_handoff_notes: <tests run, evidence, defect ownership, and recommended rework owner>
   - blockers: <none or blockers>
 ```
