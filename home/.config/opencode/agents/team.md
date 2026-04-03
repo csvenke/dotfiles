@@ -231,7 +231,7 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
    - `CLOSED`: issue is done
    - `NEEDS_REWORK`: hand off based on `qa_or_handoff_notes` — pre-claim for the rework target per Handoff Claims:
      - Implementation defects → hand off to `software-engineer`
-      - UX/design defects → hand off to `ux-designer`
+     - UX/design defects → hand off to `ux-designer`
      - When routing back for rework, ONLY log it if it represents a fundamental design flaw, invariant violation, or architectural pivot: `bd comments add <id> "Rework requested: <core reason>"`. Do NOT log minor defects or test failures. If you see a previous rework comment on the issue, escalate instead of redispatching.
    - `BLOCKED`: leave in_progress and escalate
 
