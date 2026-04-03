@@ -24,9 +24,9 @@ get_repo_name() {
 current_session="$(tmux display-message -p '#S')"
 pane_path="${1:-$PWD}"
 
-if [[ "$current_session" == workspace-* ]]; then
+if [[ $current_session == workspace-* ]]; then
   prev_session="$(tmux show-option -gqv '@workspace-return-session')"
-  if [[ -n "$prev_session" ]]; then
+  if [[ -n $prev_session ]]; then
     tmux switch-client -t "$prev_session"
   fi
   exit 0
@@ -46,7 +46,7 @@ tmux set-option -g '@workspace-return-session' "$current_session"
 
 if ! tmux has-session -t "$session_name" 2>/dev/null; then
   tmux new-session -d -s "$session_name" -c "$worktree_root" \
-    "bash; tmux switch-client -t \"\$(tmux show-option -gqv @workspace-return-session)\""
+    'bash; tmux switch-client -t "$(tmux show-option -gqv @workspace-return-session)"'
 fi
 
 tmux switch-client -t "$session_name"
