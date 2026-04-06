@@ -55,6 +55,8 @@ Stay within the git worktree. Do not modify files or tracker state.
    - `integration_test_command`
    - `e2e_command`
    - `build_command`
+   - `likely_test_files`
+   - `targeted_test_commands`
    - `playwright_available`
 5. If a command or boundary cannot be determined confidently, return `none` instead of guessing.
 6. Assess routing risk:
@@ -83,6 +85,8 @@ Return a compact brief that helps the next agent start quickly.
   - integration: <cmd|none>
   - e2e: <cmd|none>
   - build: <cmd|none>
+- likely_test_files: <paths or none>
+- targeted_test_commands: <commands or none>
 - playwright_available: <true|false>
 - areas_touched: <subsystems/files>
 - likely_start_files: <paths>

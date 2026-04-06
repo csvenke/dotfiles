@@ -47,16 +47,18 @@ Stay within the git worktree. Do not modify code or tests.
 
 1. Read files changed for the issue, the full implementation handoff, and the validation brief when present
 2. If metadata is omitted, assume the team defaults.
-3. Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
-4. Choose the minimum independent validation that can falsify the acceptance criteria:
+3. Treat issue metadata as a starting point, not a ceiling. If the observed change surface is riskier than planned, raise `risk` or `test_expectation` in your output and explain why.
+4. Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
+5. Choose the minimum independent validation that can falsify the acceptance criteria:
    - `risk=low` and `test_expectation=none|targeted`: inspect the change and run targeted checks
    - `risk=medium` or `test_expectation=regression`: run targeted regression coverage
    - `risk=high` or `test_expectation=e2e`: run heavier validation, including integration or E2E when required
    - `fast_lane=true`: keep validation lightweight unless the evidence suggests hidden risk
-5. Use validation-specialist evidence when present, and do not rerun the exact same broad commands unless that repetition is needed as independent evidence.
-6. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
-7. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
-8. Verify each acceptance criterion with evidence.
+6. If behavior or business logic changed and trusted test commands exist, run at least one executable check. If no reliable command exists, make the inspection-only evidence explicit.
+7. Use validation-runner evidence when present, and do not rerun the exact same broad commands unless that repetition is needed as independent evidence.
+8. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
+9. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
+10. Verify each acceptance criterion with evidence.
 
 ### Phase 3: Close or Return
 
