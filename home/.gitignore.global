@@ -23,3 +23,7 @@ mise.local.toml
 
 # beads
 .beads/
+
+# mempalace
+entities.json
+mempalace.yaml
