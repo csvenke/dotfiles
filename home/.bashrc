@@ -49,6 +49,10 @@ _git_worktree_base_path() {
   dirname "$(git rev-parse --path-format=absolute --git-common-dir)"
 }
 
+_git_worktree_base_name() {
+  basename "$(_git_worktree_base_path)"
+}
+
 _git_all_branches() {
   git fetch origin
   git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/ | sed "s@origin/@@" | grep -v "^origin"
@@ -374,6 +378,10 @@ _xclip_copy() {
   xclip -selection clipboard
 }
 
+_mempalace-init() {
+  printf "\n" | mempalace init --yes "$(pwd)" && mempalace mine "$(pwd)" --wing "$(_git_worktree_base_name)"
+}
+
 _bat_cat() {
   bat --style=plain "$@"
 }
@@ -529,6 +537,10 @@ fi
 
 if _has_cmd "opencode"; then
   alias oc='opencode'
+fi
+
+if _has_cmd "mempalace"; then
+  alias mem-init='_mempalace-init'
 fi
 
 _source_if_exists "$HOME/.machine/.bashrc"
