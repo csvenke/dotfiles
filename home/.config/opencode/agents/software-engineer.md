@@ -54,12 +54,13 @@ Stay within the git worktree.
 8. Add or update tests when the issue changes behavior, fixes a bug, introduces logic worth protecting, or the acceptance criteria require coverage
 9. Load the `tdd` skill only when it will materially help write or restructure tests. Do not load it by default for every issue.
 10. Run the smallest credible validation for the change:
-   - prefer targeted unit or integration tests
-   - if behavior or business logic changed and trusted test commands exist, run at least one executable check
-   - run lint or typecheck only when relevant
-   - for `fast_lane=true`, prefer the lightest credible checks
-   - if `validation-runner` will run next, avoid heavy, noisy, or server-starting commands unless needed to unblock implementation
-   - otherwise avoid full-suite or server-starting runs unless clearly required
+
+- prefer targeted unit or integration tests
+- if behavior or business logic changed and trusted test commands exist, run at least one executable check
+- run lint or typecheck only when relevant
+- for `fast_lane=true`, prefer the lightest credible checks
+- if `validation-runner` will run next, avoid heavy, noisy, or server-starting commands unless needed to unblock implementation
+- otherwise avoid full-suite or server-starting runs unless clearly required
 
 ### Phase 3: Handoff
 
