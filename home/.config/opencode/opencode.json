@@ -4,6 +4,7 @@
   "permission": {
     "external_directory": "allow"
   },
+  "autoupdate": false,
   "lsp": {
     "csharp": {
       "disabled": true
