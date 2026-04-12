@@ -20,11 +20,6 @@
       "enabled": true,
       "type": "local",
       "command": ["mempalace-mcp"]
-    },
-    "playwright": {
-      "enabled": true,
-      "type": "local",
-      "command": ["npx", "@playwright/mcp@latest"]
     }
   }
 }
