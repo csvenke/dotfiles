@@ -379,7 +379,7 @@ _xclip_copy() {
 }
 
 _mempalace-init() {
-  printf "\n" | mempalace init --yes "$(pwd)" && mempalace mine "$(pwd)" --wing "$(_git_worktree_base_name)"
+  mempalace init --yes "$(pwd)" && mempalace mine "$(pwd)" --wing "$(_git_worktree_base_name)"
 }
 
 _bat_cat() {

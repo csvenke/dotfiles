@@ -10,18 +10,20 @@
 let
   mempalace = python3Packages.buildPythonPackage rec {
     pname = "mempalace";
-    version = "3.0.0";
+    version = "3.1.0";
     format = "pyproject";
 
     src = fetchPypi {
       inherit pname version;
-      hash = "sha256-ZPfCLQ/FDibQzXdGMl4JHgQfiGMYLgnEe2iL3gcJJcY=";
+      hash = "sha256-E90NR/tNWz3BeZPh4uBYFEl5Rp3V69Xu80gIaB1t09I=";
     };
 
     nativeBuildInputs = with python3Packages; [
-      setuptools
-      wheel
+      pythonRelaxDepsHook
+      hatchling
     ];
+
+    pythonRelaxDeps = [ "chromadb" ];
 
     propagatedBuildInputs = with python3Packages; [
       chromadb
