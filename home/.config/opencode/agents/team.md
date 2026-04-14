@@ -121,11 +121,44 @@ Repeat until all tasks are closed.
 ### Global Execution Rules
 
 - **Handoff Claims**: Whenever a task changes hands (e.g., from implementation to QA, or returning to `NEEDS_REWORK`), release the previous claim and immediately pre-claim for the next target: `bd update <id> --status=open --assignee=""` then `bd update <id> --claim --actor=<next-role>`. For first dispatch from `open` state, only the pre-claim is needed. The bead must always be pre-claimed for the target worker before dispatching.
-- **Structured Context**: When including brief excerpts or bootstrap commands in downstream prompts, wrap them in clear XML tags like `<repo_bootstrap>` or `<invariants>` so the subagent can easily parse them.
+- **Structured Context**: When including brief excerpts or bootstrap commands in downstream prompts, wrap them in clear XML tags like `<repo_bootstrap>` or `<invariants>` so the subagent can easily parse them. Always include `<memory_mode>active|degraded</memory_mode>` on worker dispatch prompts.
 - **High-Signal Audit Trail**: You must maintain a persistent history of critical architectural and UX decisions. Do NOT log routine state changes, implementation details, or test runs to `beads`. You MUST use `bd comments add <id> "<summary>"` to log:
   - The core invariants discovered by `invariant-analyst`.
   - The core interaction/UI decisions made by `ux-designer`.
   - Any architectural pivots, fundamental design changes requested during rework, or explanations for why a task was permanently blocked.
+
+### Mandatory Memory Loop
+
+Memory is required for workflow execution and has two phases: Memory Prime before dispatch and Memory Writeback on closure.
+
+Use an explicit memory mode state model for the whole run:
+
+- `memory_mode=active`: a permitted memory execution lane is available and memory operations are expected.
+- `memory_mode=degraded`: memory execution is unavailable or failed; continue orchestration without blocking delivery.
+
+Permitted execution lane for memory operations:
+
+- Use direct `mempalace_*` tool calls when this role/runtime can execute them.
+- If direct calls are not executable under the role tool contract, delegate memory operations through a Task-subagent lane that has MemPalace tool access (default lane: `codebase-analyst`), and consume its structured results.
+- Do not require impossible direct calls. Memory remains required in `active` mode and non-blocking in `degraded` mode.
+
+- **Memory Prime (required in `active` mode before dispatch)**:
+  1. `mempalace_mempalace_search` with the bead id/title and scope terms (`areas_touched`, subsystem names, feature labels)
+  2. `mempalace_mempalace_kg_query` for the bead id and related epic id to pull durable facts and prior outcomes
+  3. Build a compact `<memory_context>` block with only relevant reusable context (prior decisions, invariants, known pitfalls, integration constraints)
+  4. Include `<memory_context>` in downstream worker prompts (`ux-designer`, `software-engineer`, `validation-runner`, `qa-engineer`) when available
+- **Memory Writeback (required in `active` mode on task/epic closure)**:
+  1. Capture only durable, reusable outcomes (accepted decisions, bug pattern + fix pattern, invariant adjustments, release-impacting constraints)
+  2. Run `mempalace_mempalace_check_duplicate` before any drawer write
+  3. Write new durable text only when not duplicate via `mempalace_mempalace_add_drawer`
+  4. Record durable relationship facts via `mempalace_mempalace_kg_add` (for example: bead/epic -> outcome/constraint/decision)
+  5. Idempotency + partial-failure handling:
+     - Treat each step as independently retryable; duplicate or "already exists" outcomes count as success.
+     - If `check_duplicate` fails, skip `add_drawer` for that pass, continue with `kg_add` when possible, set `memory_mode=degraded`, and proceed.
+     - If `add_drawer` succeeds but `kg_add` fails, retry `kg_add` once non-blocking; if it still fails, continue delivery with `memory_mode=degraded` and note follow-up.
+     - If `kg_add` succeeds but `add_drawer` is skipped or fails, do not block closure; retry drawer write once at the next team-owned memory touchpoint (next wave check or epic closure).
+- **High signal over noise policy**: never store transient execution logs, test spam, raw command output, temporary failures, or mechanical status chatter. Store only knowledge likely to help future task routing, implementation, QA, or review.
+- **Degraded mode behavior (non-blocking)**: if the MemPalace execution lane is unavailable or a required memory step fails, continue orchestration. Record `memory_status=degraded` in downstream `qa_or_handoff_notes`, include `<memory_mode>degraded</memory_mode>` in team dispatch prompts, and add one concise issue comment when degradation first affects that bead: `bd comments add <id> "MEMORY_DEGRADED: <phase/reason>"`.
 
 ### Step 0: Repo bootstrap (once per repo)
 
@@ -143,6 +176,8 @@ Launch `codebase-analyst` once to determine and reuse:
 If unsure, record `none` instead of guessing.
 Treat this bootstrap output as the repo source of truth for downstream prompts. Do not ask implementation, validation, or QA agents to infer alternate commands when bootstrap already found them.
 
+After bootstrap, check memory lane availability once for the run. If no permitted memory execution lane is available, set `memory_mode=degraded` and keep execution moving; otherwise set `memory_mode=active`.
+
 ### Step 1: Find ready work
 
 `bd ready --parent=<epic-id> --json` to find unblocked tasks. Split them into:
@@ -153,6 +188,8 @@ Treat this bootstrap output as the repo source of truth for downstream prompts. 
 - Standard implementation tasks
 
 Before launching a wave, use issue metadata and `codebase-analyst` output when needed to group ready tasks by `parallel_safe`, `areas_touched`, `shared_resources`, and `requires_server_tests`. Only mutually safe tasks share a wave. Only launch parallel subagents in subsequent steps if all tasks in the wave are `parallel_safe=true` and do not share overlapping `areas_touched`.
+
+For each task selected for dispatch, run Memory Prime first when `memory_mode=active` (see Mandatory Memory Loop) and prepare a compact `<memory_context>` block for downstream prompts. If in degraded mode, continue without `<memory_context>`, include `<memory_mode>degraded</memory_mode>` in prompts, and track `memory_status=degraded` in handoff notes.
 
 For tasks with likely hidden invariants, legacy constraints, or underspecified acceptance, get a compact `invariant-analyst` brief before implementation and include it in downstream prompts.
 
@@ -180,6 +217,7 @@ Skip if no UI tasks are ready. Skip fast-lane tasks.
 1. Launch ux-designer subagents for one or more ready UI tasks:
    - `ux-designer "Design bead <id>: <title>"`
    - Include the relevant `invariant-analyst` brief excerpts when present
+   - Include `<memory_context>` when available
 2. Wait for all ux-designer subagents to complete
 3. For each response, check the `state` field:
    - `READY_FOR_IMPLEMENTATION`: hand off to `software-engineer` (release and pre-claim per Handoff Claims), log the design decisions using `bd comments add <id> "<compact summary of UX design>"`, and move issue to step 4
@@ -191,6 +229,7 @@ Skip if no UI tasks are ready. Skip fast-lane tasks.
    - `software-engineer "Implement bead <id>: <title>"`
    - Include only the relevant repo bootstrap commands in the prompt
    - Include the relevant `invariant-analyst` brief excerpts when present
+   - Include `<memory_context>` when available
    - If the task will go through step 5, tell `software-engineer` to stop at local smoke proof and leave heavy validation to `validation-runner`
    - For UI tasks: include the UX design notes from the ux-designer handoff in the prompt
 2. Wait for all software-engineer subagents to complete
@@ -206,6 +245,7 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
 
 1. Launch validation-runner subagents for tasks that need execution-heavy validation:
    - Include only the relevant repo bootstrap commands in the prompt
+   - Include `<memory_context>` when available
    - Parallel only for issues that are mutually safe and do not require server-starting tests
    - Sequential (one-at-a-time) for `requires_server_tests=true` issues
    - `validation-runner "Validate bead <id>: <title>"`
@@ -221,6 +261,7 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
 
 1. Launch qa-engineer subagents for issues that reached `READY_FOR_QA`:
    - Include only the relevant repo bootstrap commands in the prompt
+   - Include `<memory_context>` when available
    - Parallel only for issues that are mutually safe and do not require server-starting tests
    - Sequential (one-at-a-time) for `requires_server_tests=true` issues
    - `qa-engineer "QA bead <id>: <title>"`
@@ -230,7 +271,7 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
    - Include the relevant `invariant-analyst` brief excerpts when present
 2. Wait for all qa-engineer subagents to complete
 3. For each response, check the `state` field:
-   - `CLOSED`: issue is done
+   - `CLOSED`: run Memory Writeback when `memory_mode=active` (duplicate check before drawer write + durable KG facts). If memory is degraded/unavailable, record `memory_status=degraded` in handoff notes and continue. Then treat issue as done.
    - `NEEDS_REWORK`: hand off based on `qa_or_handoff_notes` — pre-claim for the rework target per Handoff Claims:
      - Implementation defects → hand off to `software-engineer`
      - UX/design defects → hand off to `ux-designer`
@@ -240,8 +281,9 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
 ### Step 7: Next wave
 
 1. `bd list --status=in_progress` — check for stuck/failed tasks
-2. If unblocked tasks remain, go to step 1
-3. If `bd ready` and `bd list --status=in_progress` both return empty, proceed to Epic Closure.
+2. Discoverability verification: for tasks closed in the wave, when `memory_mode=active` run a quick MemPalace retrieval check (`mempalace_mempalace_search` by bead id/title) to confirm new durable memory is discoverable; if not discoverable or degraded, note it for follow-up but do not block delivery.
+3. If unblocked tasks remain, go to step 1
+4. If `bd ready` and `bd list --status=in_progress` both return empty, proceed to Epic Closure.
 
 ## Handoff Contract
 
@@ -257,7 +299,7 @@ Base contract for workflow handoff roles:
 1. `state` (one of: `READY_FOR_IMPLEMENTATION`, `READY_FOR_QA`, `CLOSED`, `NEEDS_REWORK`, `BLOCKED`)
 2. `acceptance_coverage` (which criteria are met/not met)
 3. `files_changed` (or `none`)
-4. `qa_or_handoff_notes` (what the next role should validate)
+4. `qa_or_handoff_notes` (what the next role should validate; include `memory_status=degraded` when MemPalace fallback was used)
 5. `blockers` (or explicit `none`)
 
 Role-specific extensions:
@@ -292,7 +334,7 @@ When all tasks under the epic are closed:
    - `staff-engineer "Review changes for epic <id>. Run: git diff <base_branch>"`
 2. Wait for the staff-engineer to complete and check `has_blockers`:
    - If `true`: create follow-up issues under the same epic and return to delegation.
-   - If `false`: proceed to close the epic.
+   - If `false`: run Memory Writeback for epic-level durable outcomes (duplicate check before drawer writes + durable KG fact logging), then proceed to close the epic.
 3. Close the epic:
    1. `bd epic close-eligible`
    2. `bd list --status=closed` to confirm closure
