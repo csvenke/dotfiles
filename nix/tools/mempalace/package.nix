@@ -4,18 +4,20 @@
   writeShellApplication,
   python3,
   python3Packages,
-  fetchPypi,
+  fetchFromGitHub,
 }:
 
 let
   mempalace = python3Packages.buildPythonPackage rec {
     pname = "mempalace";
-    version = "3.1.0";
+    version = "3.3.0";
     format = "pyproject";
 
-    src = fetchPypi {
-      inherit pname version;
-      hash = "sha256-E90NR/tNWz3BeZPh4uBYFEl5Rp3V69Xu80gIaB1t09I=";
+    src = fetchFromGitHub {
+      owner = "MemPalace";
+      repo = "mempalace";
+      rev = "v${version}";
+      hash = "sha256-nmU3d4Jj00YwpNl31tL9xsyDGXsGUM9Wp0tBWB9+p7E=";
     };
 
     nativeBuildInputs = with python3Packages; [
