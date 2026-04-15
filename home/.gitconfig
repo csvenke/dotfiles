@@ -49,6 +49,10 @@
   colorMoved = default
   algorithm = histogram
   colorMovedWS = allow-indentation-change
+  tool = nvim_difftool
+
+[difftool "nvim_difftool"]
+  cmd = "nvim -c \"DiffTool $LOCAL $REMOTE\""
 
 [maintenance]
   strategy = incremental
