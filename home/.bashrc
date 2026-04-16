@@ -248,6 +248,11 @@ EOF
     echo "Created .hooks/after-worktree-add.sh.sample"
   fi
 
+  if [ -d "./nix" ]; then
+    (cd ./nix && git checkout HEAD -- flake.lock && nix flake update)
+    echo "Devkit updated"
+  fi
+
   echo "Migration complete"
 }
 
