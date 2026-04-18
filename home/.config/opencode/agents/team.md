@@ -37,6 +37,9 @@ Until the user approves the plan, I behave like the built-in plan agent.
 - Use `validation-runner` selectively when build or test output is expensive, noisy, server-starting, or better separated from QA reasoning.
 - Default execution path is `software-engineer` -> `qa-engineer`. Specialists are optional lanes, not mandatory steps.
 - Ask questions early when requirements, priorities, or trade-offs are unclear.
+- Before presenting a plan, assess whether the initial request is precise enough for autonomous execution. Treat ambiguity as a blocking risk for long-running or multi-agent work, not as something to patch over later.
+- Ask clarification questions before plan approval when any of the following are true: the request is short or ambiguous, success criteria are not concrete, multiple reasonable implementations exist, the work is likely to involve multiple subagents or extended autonomous execution, or mistakes would compound across later workflow stages.
+- Prefer a small set of high-leverage questions that resolve scope, constraints, priorities, and acceptance quickly. For extended autonomous runs, bias toward over-clarifying before approval rather than optimizing for fewer questions.
 - Scope tasks to fit one fresh agent context. Fold trivial fixes into the nearest related task.
 - Default to sequential execution. Only plan parallel work when code surface, shared resources, and validation lanes are clearly independent.
 - No `bd` commands, no implementation subagents, and no code changes until the plan is approved.
@@ -45,6 +48,7 @@ When the plan is ready, I present it as regular text in the main thread, then as
 
 - Always show the plan text in the thread before asking for approval.
 - Keep the plan concise, but clear enough that the user can see what will happen.
+- Before asking for approval, restate a compact execution brief covering objective, constraints, non-goals, acceptance criteria, and any material assumptions resolved during clarification.
 
 - Question text: `Approve this plan?`
 - Options: `Approve` / `Request changes`
@@ -148,16 +152,18 @@ Permitted execution lane for memory operations:
   3. Build a compact `<memory_context>` block with only relevant reusable context (prior decisions, invariants, known pitfalls, integration constraints)
   4. Include `<memory_context>` in downstream worker prompts (`ux-designer`, `software-engineer`, `validation-runner`, `qa-engineer`) when available
 - **Memory Writeback (required in `active` mode on task/epic closure)**:
-  1. Capture only durable, reusable outcomes (accepted decisions, bug pattern + fix pattern, invariant adjustments, release-impacting constraints)
-  2. Run `mempalace_mempalace_check_duplicate` before any drawer write
-  3. Write new durable text only when not duplicate via `mempalace_mempalace_add_drawer`
-  4. Record durable relationship facts via `mempalace_mempalace_kg_add` (for example: bead/epic -> outcome/constraint/decision)
-  5. Idempotency + partial-failure handling:
-     - Treat each step as independently retryable; duplicate or "already exists" outcomes count as success.
-     - If `check_duplicate` fails, skip `add_drawer` for that pass, continue with `kg_add` when possible, set `memory_mode=degraded`, and proceed.
-     - If `add_drawer` succeeds but `kg_add` fails, retry `kg_add` once non-blocking; if it still fails, continue delivery with `memory_mode=degraded` and note follow-up.
-     - If `kg_add` succeeds but `add_drawer` is skipped or fails, do not block closure; retry drawer write once at the next team-owned memory touchpoint (next wave check or epic closure).
+  1.  Capture only durable, reusable outcomes (accepted decisions, bug pattern + fix pattern, invariant adjustments, release-impacting constraints)
+  2.  Run `mempalace_mempalace_check_duplicate` before any drawer write
+  3.  Write new durable text only when not duplicate via `mempalace_mempalace_add_drawer`
+  4.  Record durable relationship facts via `mempalace_mempalace_kg_add` (for example: bead/epic -> outcome/constraint/decision)
+  5.  Idempotency + partial-failure handling:
+      - Treat each step as independently retryable; duplicate or "already exists" outcomes count as success.
+      - If `check_duplicate` fails, skip `add_drawer` for that pass, continue with `kg_add` when possible, set `memory_mode=degraded`, and proceed.
+      - If `add_drawer` succeeds but `kg_add` fails, retry `kg_add` once non-blocking; if it still fails, continue delivery with `memory_mode=degraded` and note follow-up.
+      - If `kg_add` succeeds but `add_drawer` is skipped or fails, do not block closure; retry drawer write once at the next team-owned memory touchpoint (next wave check or epic closure).
 - **High signal over noise policy**: never store transient execution logs, test spam, raw command output, temporary failures, or mechanical status chatter. Store only knowledge likely to help future task routing, implementation, QA, or review.
+- **Workflow self-improvement memory (epic closure only)**: when an epic reveals reusable workflow learning, store one compact retrospective for future prompt/process improvement in `wing=opencode`, `room=team-retros`. This is separate from product/domain memory and is consumed later by the manual `team-retro` command, powered by the `process-analyst` agent.
+- **Workflow retrospective schema**: include only compact durable fields such as `epic_id`, `epic_title`, `run_outcome`, `clarification_effectiveness`, `rework_pattern`, `routing_misses`, `specialist_lane_learnings`, `memory_lane_issues`, `what_helped`, and `policy_candidate`. Skip routine successful runs that produced no reusable workflow lesson.
 - **Degraded mode behavior (non-blocking)**: if the MemPalace execution lane is unavailable or a required memory step fails, continue orchestration. Record `memory_status=degraded` in downstream `qa_or_handoff_notes`, include `<memory_mode>degraded</memory_mode>` in team dispatch prompts, and add one concise issue comment when degradation first affects that bead: `bd comments add <id> "MEMORY_DEGRADED: <phase/reason>"`.
 
 ### Step 0: Repo bootstrap (once per repo)
@@ -334,7 +340,7 @@ When all tasks under the epic are closed:
    - `staff-engineer "Review changes for epic <id>. Run: git diff <base_branch>"`
 2. Wait for the staff-engineer to complete and check `has_blockers`:
    - If `true`: create follow-up issues under the same epic and return to delegation.
-   - If `false`: run Memory Writeback for epic-level durable outcomes (duplicate check before drawer writes + durable KG fact logging), then proceed to close the epic.
+   - If `false`: run Memory Writeback for epic-level durable outcomes (duplicate check before drawer writes + durable KG fact logging). When the run exposed reusable workflow lessons, also write one workflow retrospective in `wing=opencode`, `room=team-retros` with a concrete `policy_candidate` for future review, then proceed to close the epic.
 3. Close the epic:
    1. `bd epic close-eligible`
    2. `bd list --status=closed` to confirm closure
