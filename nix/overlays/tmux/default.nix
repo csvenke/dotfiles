@@ -15,12 +15,12 @@ let
     (tmuxPlugins.mkTmuxPlugin rec {
       pluginName = "smart-splits";
       rtpFilePath = "smart-splits.tmux";
-      version = "v2.0.5";
+      version = "v2.1.0";
       src = fetchFromGitHub {
         owner = "mrjones2014";
         repo = "smart-splits.nvim";
         rev = version;
-        sha256 = "sha256-EqnSGTyADvIpHxN3jZxwetENdqv/XUossUzrEvLHHMk=";
+        sha256 = "sha256-IuJNQT0bN68K5lnw0ixyU/heG8V1+zUwlvm0mNvvHOw=";
       };
     })
   ];
