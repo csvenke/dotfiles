@@ -243,7 +243,7 @@ Skip if no UI tasks are ready. Skip fast-lane tasks.
    - `READY_FOR_QA`: for high-risk, broad cross-cutting, or second-pass rework tasks, optionally run `staff-engineer` on the task diff before handoff to the next worker; otherwise hand off directly to the next worker — pre-claim for `validation-runner` (step 5) or `qa-engineer` (step 6) per Handoff Claims. For `software-engineer`, this means implementation complete and may still pass through validation before QA.
    - `NEEDS_REWORK` / `BLOCKED`: leave in_progress, do not release — escalate if needed (see Escalation)
 
-When using the selective `staff-engineer` lane on a task, give it a narrow diff command based on the task surface, such as `git diff <base_branch> -- <areas_touched>`, and treat blocking findings as implementation rework before validation or QA.
+When using the selective `staff-engineer` lane on a task, give it a narrow diff command based on the task surface, such as `git diff <base_branch> -- <areas_touched>`. If the worktree also contains unrelated or multi-epic changes, prefer the user-approved staged/unstaged file surface or another explicitly scoped diff over a repo-wide diff-to-`<base_branch>`. Treat blocking findings as implementation rework before validation or QA.
 
 ### Step 5: Validation (selective)
 
@@ -336,12 +336,15 @@ If a subagent response is missing required fields for its role, or hits its step
 
 When all tasks under the epic are closed:
 
-1. Launch a staff-engineer subagent to review the epic's changes:
-   - `staff-engineer "Review changes for epic <id>. Run: git diff <base_branch>"`
-2. Wait for the staff-engineer to complete and check `has_blockers`:
+1. Determine the review surface for the epic before launching `staff-engineer`:
+   - If the worktree contains unrelated or multi-epic changes, use the user-approved staged/unstaged file surface or another explicitly scoped diff command for this epic.
+   - Otherwise use `git diff <base_branch>` or a narrower epic-scoped diff when cheaper.
+2. Launch a staff-engineer subagent to review the epic's changes:
+   - `staff-engineer "Review changes for epic <id>. Run: <review-surface-command>"`
+3. Wait for the staff-engineer to complete and check `has_blockers`:
    - If `true`: create follow-up issues under the same epic and return to delegation.
    - If `false`: run Memory Writeback for epic-level durable outcomes (duplicate check before drawer writes + durable KG fact logging). When the run exposed reusable workflow lessons, also write one workflow retrospective in `wing=opencode`, `room=team-retros` with a concrete `policy_candidate` for future review, then proceed to close the epic.
-3. Close the epic:
+4. Close the epic:
    1. `bd epic close-eligible`
    2. `bd list --status=closed` to confirm closure
    3. Report final status to the user and hand off for human review
