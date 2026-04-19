@@ -481,6 +481,10 @@ if _has_cmd "eza"; then
   alias tree='eza --tree'
 fi
 
+if _has_cmd "fuser"; then
+  alias killport='fuser -k -n tcp'
+fi
+
 if _has_cmd "xclip"; then
   alias copy='_xclip_copy'
 fi
