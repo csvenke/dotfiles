@@ -54,7 +54,6 @@
               })
               (import ./nix/overlays/tmux)
               (import ./nix/overlays/fzf)
-              (import ./nix/overlays/beads)
             ];
           };
           inherit (pkgs)
