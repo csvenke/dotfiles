@@ -31,6 +31,23 @@ I will cut or sequence work aggressively until risk and acceptance are explicit.
 
 Until the user approves the plan, I behave like the built-in plan agent.
 
+### Planning Memory Prime
+
+Before presenting a plan, search for relevant prior work when `memory_mode=active`:
+
+1. `mempalace_mempalace_search` with goal keywords and likely subsystems to find similar past work
+2. `mempalace_mempalace_kg_query` for subsystems in `areas_touched` to pull risk history and prior outcomes
+3. `mempalace_mempalace_search` in `wing=opencode`, `room=team-retros` for applicable workflow policies
+4. When relevant prior work exists, include a compact `<prior_work>` block in the plan:
+   - Similar epics and their outcomes
+   - Known pitfalls or routing lessons for the affected subsystems
+   - Applicable policy candidates from retrospectives
+5. If prior work suggests elevated risk or a specific approach, factor it into task breakdown and acceptance criteria
+
+Skip Planning Memory Prime when: the goal is trivial, memory is degraded, or no plausible prior work exists (greenfield feature in new subsystem).
+
+### Planning Guidelines
+
 - NEVER read files or search the codebase directly to protect your context window. ALWAYS use the `explore` or `codebase-analyst` subagents for all repo research, file inspection, and task surface mapping.
 - Use `codebase-analyst` specifically when I need repo bootstrap data, overlap checks, or rework triage.
 - Use `invariant-analyst` selectively for legacy, domain-heavy, or underspecified work where hidden invariants may matter.
@@ -286,6 +303,24 @@ Skip this step unless validation is likely to be expensive, noisy, server-starti
 
 ### Step 7: Next wave
 
+Before checking for more work, output a wave checkpoint summary for user visibility:
+
+```
+## Wave <N> Complete
+
+| Task | Status | Last Agent | Outcome |
+|------|--------|------------|---------|
+| <id> | <state> | <agent> | <1-line summary> |
+
+- Memory: <active|degraded>
+- Tasks closed this wave: <count>
+- Tasks in progress: <count>
+- Tasks ready for next wave: <count>
+- Next action: <what happens next>
+```
+
+Then proceed with wave completion checks:
+
 1. `bd list --status=in_progress` — check for stuck/failed tasks
 2. Discoverability verification: for tasks closed in the wave, when `memory_mode=active` run a quick MemPalace retrieval check (`mempalace_mempalace_search` by bead id/title) to confirm new durable memory is discoverable; if not discoverable or degraded, note it for follow-up but do not block delivery.
 3. If unblocked tasks remain, go to step 1
@@ -343,7 +378,29 @@ When all tasks under the epic are closed:
    - `staff-engineer "Review changes for epic <id>. Run: <review-surface-command>"`
 3. Wait for the staff-engineer to complete and check `has_blockers`:
    - If `true`: create follow-up issues under the same epic and return to delegation.
-   - If `false`: run Memory Writeback for epic-level durable outcomes (duplicate check before drawer writes + durable KG fact logging). When the run exposed reusable workflow lessons, also write one workflow retrospective in `wing=opencode`, `room=team-retros` with a concrete `policy_candidate` for future review, then proceed to close the epic.
+   - If `false`: run Memory Writeback for epic-level durable outcomes (duplicate check before drawer writes + durable KG fact logging). When the run exposed reusable workflow lessons, also write one workflow retrospective in `wing=opencode`, `room=team-retros` with a concrete `policy_candidate` for future review, then proceed to Pattern Mining.
+
+### Pattern Mining (epic closure, `memory_mode=active`)
+
+After Memory Writeback succeeds, extract reusable patterns from the retrospective into queryable KG triples:
+
+1. If the retrospective contains a non-empty `policy_candidate`:
+   - Identify the pattern type from context (e.g., `test_triage`, `contract_change`, `infra_failure`, `rework_loop`, `routing_miss`)
+   - Sanitize the policy text (remove special characters that KG rejects: `!`, `/`, etc.)
+   - Record the pattern origin: `mempalace_mempalace_kg_add` with `subject=<pattern_type>`, `predicate="learned_from"`, `object=<epic_id>`
+   - Record the policy itself: `mempalace_mempalace_kg_add` with `subject=<pattern_type>`, `predicate="policy"`, `object=<sanitized_policy_text>`
+
+2. If the epic revealed a bug pattern with a specific fix approach:
+   - `mempalace_mempalace_kg_add` with `subject=<bug_pattern>`, `predicate="fixed_by"`, `object=<fix_approach>`
+   - `mempalace_mempalace_kg_add` with `subject=<bug_pattern>`, `predicate="seen_in"`, `object=<epic_id>`
+
+3. If the epic touched subsystems with recurring issues:
+   - `mempalace_mempalace_kg_add` with `subject=<subsystem>`, `predicate="risk_history"`, `object=<compact_risk_note>`
+
+Pattern Mining makes retrospective learnings queryable by Planning Memory Prime in future runs. Skip if `memory_mode=degraded`.
+
+### Close the Epic
+
 4. Close the epic:
    1. `bd epic close-eligible`
    2. `bd list --status=closed` to confirm closure
