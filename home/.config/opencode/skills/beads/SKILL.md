@@ -7,6 +7,7 @@ description: "Command reference for the bd issue tracker (beads). Use when creat
 
 Short command reference for `bd`.
 
+- **Run bd commands sequentially** — never run multiple `bd` writes in parallel. The tracker does not handle concurrent writes. Use `&&` to chain: `bd update <id> --claim && bd comments add <id> "..."`
 - Prefer plain output.
 - Use `--json` only for multi-item routing, filtering, or validation.
 - Use `--silent` when you only need the created issue ID.
