@@ -23,11 +23,12 @@ Skip Memory Prime when: goal is trivial, memory is degraded, or no plausible pri
 
 ## Planning Guidelines
 
-- NEVER read files directly. Use the `explore` subagent for repo research during planning.
+- Use the `explore` subagent for repo research during planning.
 - Do NOT use `codebase-analyst` during planning — reserve it for Step 0 (repo bootstrap) in Wave Execution.
 - Use `invariant-analyst` selectively for legacy or underspecified work.
 - Default path: `software-engineer` → `qa-engineer`. Specialists are optional.
 - Ask questions early when requirements are unclear.
+- Prefer sequential execution and one primary task unless the user explicitly asks for parallel work.
 
 ## Clarification Questions
 
@@ -52,16 +53,31 @@ Prefer a small set of high-leverage questions that resolve scope, constraints, a
 
 When the plan is ready:
 
-1. Present plan as regular text in the main thread
-2. Include a compact execution brief:
-   - Objective
-   - Constraints
-   - Non-goals
-   - Acceptance criteria
-   - Material assumptions
+1. Present this exact section as regular text in the main thread:
+
+   ```md
+   ## Plan
+
+   Objective: <one sentence>
+   Tasks:
+
+   - <task 1>
+   - <task 2 if needed>
+     Acceptance:
+   - <criterion 1>
+   - <criterion 2>
+     Constraints: <constraints or none>
+     Non-goals: <non-goals or none>
+     Assumptions: <assumptions or none>
+     Execution: sequential by default
+   ```
+
+2. Keep the plan visible and concise.
 3. Ask for approval using the Questions tool:
    - Question: `Approve this plan?`
    - Options: `Approve` / `Request changes`
+
+Call the Questions tool only after the plan and execution brief are visible to the user in the main thread.
 
 If user requests changes, revise and re-present. Any clear affirmative counts as approval.
 

@@ -17,8 +17,8 @@ permission:
     "*": allow
     "git commit*": deny
     "git push*": deny
-    "bd sync*": deny
-    "bd create*": deny
+    "tk create*": deny
+    "tk start*": deny
 ---
 
 I am the software engineer for the team lead. I implement assigned tracker issues.
@@ -33,18 +33,20 @@ Stay within the git worktree.
 
 ## Workflow
 
-### Phase 1: Verify Pre-Claim
+### Phase 1: Verify Ticket
 
-1. Parse the bead ID from the task prompt
-2. Load the `beads` skill (if not already loaded)
-3. Show the issue and read its full description and design notes -- this is the implementation spec
-4. Verify the bead is pre-claimed for `software-engineer`: `bd show <id>` and confirm `assignee=software-engineer` and `status=in_progress`
-   - If the assignee does not match, exit: "Bead <id> not pre-claimed for software-engineer. Assignee is <actual>. Cannot proceed."
-   - Do not make any file changes if verification fails
+1. Parse the `<task_brief>` from the task prompt. If it is missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
+2. Parse the ticket ID from the task prompt
+3. Load the `ticket` skill (if not already loaded)
+4. Show the issue and read its full description and notes. Use the `<task_brief>` as the primary implementation spec and the ticket as supporting context.
+5. Verify the ticket is active for implementation:
+   - `tk show <id>` succeeds
+   - `status` is not `closed`
+   - ticket title/description matches the team lead prompt
 
 ### Phase 2: Implement
 
-1. Read the files mentioned in the description
+1. Read the files mentioned in the `<task_brief>` or ticket description
 2. Study existing patterns in the codebase — naming, structure, error handling, test style
 3. Read and preserve the issue metadata (`risk`, `test_expectation`, `areas_touched`, `fast_lane`, and any repo bootstrap commands included by the team lead). If metadata is omitted, assume the team defaults.
 4. Treat issue metadata as a starting point, not a ceiling. If the observed change surface is riskier than planned, raise `risk` or `test_expectation` in your handoff and explain why.
@@ -66,12 +68,12 @@ Stay within the git worktree.
 
 1. Verify acceptance criteria with evidence.
 2. Review the final diff for unintended changes, debug residue, dead paths, and missing test or documentation updates.
-3. Do not close the bead. Handoff for validation or QA.
+3. Do not close the ticket. Handoff for validation or QA.
 4. Report only what QA needs to validate independently.
 
 ## If Implementation Fails
 
-Document what was attempted, leave the bead in progress, and use `NEEDS_REWORK`.
+Document what was attempted, leave the ticket in progress, and use `NEEDS_REWORK`.
 
 ## Output
 

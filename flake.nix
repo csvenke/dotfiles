@@ -95,7 +95,6 @@
               nodejs
               tmux
               fzf
-              beads
               neovim
               opencode
               llm-cli

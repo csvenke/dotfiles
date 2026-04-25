@@ -9,21 +9,21 @@ Repeat until staff review passes. Load `team-workflow-contracts` for handoff for
 
 ## Global Rules
 
-- **Tracker Writes are Sequential**: All `bd` commands (update, comments, close) must run one at a time. Never run multiple `bd` writes in parallel — the tracker does not handle concurrent writes.
-- **Handoff Claims**: Release previous claim, pre-claim for next target before dispatch
-  - Release: `bd update <id> --status=open --assignee=""`
-  - Pre-claim: `bd update <id> --claim --actor=<target-role>`
-  - Run claim BEFORE comment: `bd update ... && bd comments add ...`
+- **Tracker Writes are Sequential**: Run `tk` writes (`start`, `status`, `close`, `add-note`) one at a time.
+- **Ticket Status**: The team lead runs `tk start <id>` once before first dispatching active work.
+- **Role Routing**: The team lead prompt determines the current worker role.
+- **Sequential Default**: Process one ready task at a time unless the user explicitly requests parallel work or the tasks are obviously independent.
+- **Self-Contained Dispatch**: Every worker prompt must include the ticket id, objective, files/areas, acceptance criteria, constraints, and expected validation.
 - **Structured Context**: Wrap briefs in XML tags (`<repo_bootstrap>`, `<invariants>`, `<memory_context>`)
 - **High-Signal Audit Trail**: Log only architectural decisions, not routine changes
-  - `bd comments add <id> "<summary>"` for invariants, UX decisions, architectural pivots
+  - `tk add-note <id> "<summary>"` for invariants, UX decisions, architectural pivots, handoffs with durable validation guidance, and blockers
 
 ## Memory Loop
 
 ### Memory Prime (before dispatch, `memory_mode=active`)
 
-1. `mempalace_mempalace_search` with bead id/title and scope terms
-2. `mempalace_mempalace_kg_query` for bead id and epic id
+1. `mempalace_mempalace_search` with ticket id/title and scope terms
+2. `mempalace_mempalace_kg_query` for ticket id and epic id
 3. Build compact `<memory_context>` block
 4. Include in downstream worker prompts
 
@@ -38,7 +38,7 @@ Skip memory operations in `degraded` mode. Note `memory_status=degraded` in hand
 
 ## Step 0: Repo Bootstrap (once per run)
 
-**This is the ONLY step where `codebase-analyst` should be used.** Do not use it anywhere else in the workflow — use `explore` for ad-hoc codebase research.
+Use `codebase-analyst` here for bootstrap. Use `explore` for ad-hoc codebase research elsewhere.
 
 Launch `codebase-analyst` to determine:
 
@@ -52,56 +52,75 @@ Update todos: mark "Find ready work (wave 1)" as in_progress.
 
 ## Step 1: Find Ready Work
 
-`bd ready --parent=<epic-id> --json` → split into:
+`tk ready -T team-task` → split into:
 
 - UI tasks (need UX)
 - Fast-lane tasks
 - Domain-heavy tasks (need invariant-analyst)
 - Standard tasks
 
-Group by `parallel_safe`, `areas_touched`, `shared_resources`. Only mutually safe tasks share a wave.
+Default to the first ready task by priority. Group multiple tasks into the same wave only when `parallel_safe=true`, `areas_touched` do not overlap, and the coordination is obviously simple.
 
 Create wave step todos for steps that will execute this wave.
+
+Before dispatching a worker, build this brief and paste it into the worker prompt:
+
+```xml
+<task_brief>
+ticket_id: <id>
+title: <title>
+role: <software-engineer|qa-engineer|validation-runner|ux-designer>
+objective: <one sentence>
+files_or_areas: <paths or subsystems>
+acceptance:
+- <criterion 1>
+- <criterion 2>
+constraints:
+- <smallest safe change, preserve existing behavior, etc.>
+validation: <known commands or none>
+notes: <repo bootstrap, invariants, UX notes, memory context, or none>
+</task_brief>
+```
 
 ## Step 2: Domain Brief (selective)
 
 Skip unless task is domain-heavy or underspecified.
 
-1. `invariant-analyst "Review invariants for bead <id>: <title>"`
+1. `invariant-analyst "Review invariants for ticket <id>: <title>"`
 2. Include brief excerpts in downstream prompts
-3. Log core invariants: `bd comments add <id> "<summary>"`
+3. Log only durable core invariants: `tk add-note <id> "INVARIANTS: <summary>"`
 
 ## Step 3: UX Design (UI tasks only)
 
 Skip if no UI tasks or fast-lane.
 
-1. `ux-designer "Design bead <id>: <title>"`
+1. `ux-designer "Design ticket <id>: <title>"` with a complete `<task_brief>`
 2. Check `state` field:
-   - `READY_FOR_IMPLEMENTATION` → pre-claim for software-engineer, log design
+   - `READY_FOR_IMPLEMENTATION` → dispatch software-engineer, log durable design guidance when useful
    - `NEEDS_REWORK` / `BLOCKED` → escalate
 
 ## Step 4: Implementation
 
-1. `software-engineer "Implement bead <id>: <title>"`
-   - Include repo bootstrap, invariant brief, memory context, UX notes
+1. `software-engineer "Implement ticket <id>: <title>"` with a complete `<task_brief>`
+   - Include repo bootstrap, invariant brief, memory context, UX notes when present
 2. Check `state` field:
-   - `READY_FOR_QA` → pre-claim for next step
+   - `READY_FOR_QA` → dispatch validation-runner or qa-engineer as appropriate; add a handoff note only for durable validation guidance
    - `NEEDS_REWORK` / `BLOCKED` → escalate
 
 ## Step 5: Validation (selective)
 
 Skip unless validation is expensive, noisy, or server-starting.
 
-1. `validation-runner "Validate bead <id>: <title>"`
+1. `validation-runner "Validate ticket <id>: <title>"` with a complete `<task_brief>`
    - Sequential for `requires_server_tests=true`
 2. Check `state` field:
-   - `READY_FOR_QA` → pre-claim for qa-engineer
-   - `NEEDS_REWORK` → pre-claim for software-engineer
+   - `READY_FOR_QA` → dispatch qa-engineer
+   - `NEEDS_REWORK` → dispatch software-engineer with validation evidence
    - `BLOCKED` → escalate
 
 ## Step 6: QA
 
-1. `qa-engineer "QA bead <id>: <title>"`
+1. `qa-engineer "QA ticket <id>: <title>"` with a complete `<task_brief>`
    - Lightweight for fast-lane tasks
 2. Check `state` field:
    - `CLOSED` → Memory Writeback, task done
@@ -110,13 +129,13 @@ Skip unless validation is expensive, noisy, or server-starting.
 
 ## Step 7: Wave Summary
 
-Output the wave status summary (see `team-workflow-state`), then **immediately continue to the next step in the same turn.** Do not ask the user to continue.
+Output the wave status summary (see `team-workflow-state`), then immediately continue to the next step in the same turn.
 
-1. `bd list --status=in_progress` — check for stuck tasks
+1. `tk ls --status=in_progress -T team-task` — check for stuck tasks
 2. Discoverability verification for closed tasks
 3. Mark wave step todos as completed
 4. If unblocked tasks remain → Step 1 (new wave)
-5. If `bd ready` and `bd list --status=in_progress` both empty → Step 8 (Staff Review)
+5. If `tk ls --status=open -T team-task` and `tk ls --status=in_progress -T team-task` both empty → Step 8 (Staff Review)
 
 ## Step 8: Staff Review
 

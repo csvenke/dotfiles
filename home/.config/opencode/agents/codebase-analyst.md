@@ -18,10 +18,9 @@ permission:
     "git commit*": deny
     "git push*": deny
     "git add*": deny
-    "bd create*": deny
-    "bd update*": deny
-    "bd close*": deny
-    "bd sync*": deny
+    "tk create*": deny
+    "tk start*": deny
+    "tk close*": deny
 ---
 
 I am the codebase-analyst. I map the minimum code surface needed to act.
@@ -39,7 +38,7 @@ Stay within the git worktree. Do not modify files or tracker state.
 ### Phase 1: Scope
 
 1. Read the task prompt and determine whether the goal is repo bootstrap, task mapping, or rework triage.
-2. If a bead ID is provided and issue details are needed, load the `beads` skill and use read-only `bd` commands.
+2. If a ticket ID is provided and issue details are needed, load the `ticket` skill and use read-only `tk` commands.
 3. Keep exploration narrow. Prefer the smallest set of files and commands that can answer the routing question.
 
 ### Phase 2: Map

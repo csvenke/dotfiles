@@ -5,6 +5,29 @@ description: "Handoff contracts and escalation rules for team workflow. Load whe
 
 # Handoff Contracts
 
+## Dispatch Contract
+
+Every worker prompt from the team lead must include a self-contained brief. Workers may read the ticket, but the prompt must be sufficient to start safely.
+
+```xml
+<task_brief>
+ticket_id: <id>
+title: <title>
+role: <software-engineer|qa-engineer|validation-runner|ux-designer>
+objective: <one sentence>
+files_or_areas: <paths or subsystems>
+acceptance:
+- <criterion 1>
+- <criterion 2>
+constraints:
+- <smallest safe change, preserve existing behavior, etc.>
+validation: <known commands or none>
+notes: <repo bootstrap, invariants, UX notes, memory context, or none>
+</task_brief>
+```
+
+If the brief is missing ticket id, objective, or acceptance criteria, the worker should report `BLOCKED` instead of guessing.
+
 ## Base Contract (all workflow roles)
 
 Every handoff must include:
@@ -80,7 +103,7 @@ If a subagent response:
 - Missing required fields for its role
 - Hits step limit and returns unstructured summary
 
-Then: treat as `NEEDS_REWORK`, release pre-claim, escalate.
+Then: treat as `NEEDS_REWORK` and escalate.
 
 ---
 
@@ -93,27 +116,26 @@ Then: treat as `NEEDS_REWORK`, release pre-claim, escalate.
 - Task permanently blocked or requires user intervention
 - Issue remains `NEEDS_REWORK` after one full rework cycle
 - Requirements unclear or conflicting
-- Worker reports pre-claim missing or held by wrong assignee
+- Ticket is missing, already closed unexpectedly, or does not match the worker prompt
 
 ## How to Escalate
 
-1. Release any pre-claim
-2. Log blocker to issue: `bd comments add <id> "BLOCKED: <reason>"`
-3. Ask the user only when autonomous continuation is blocked by a real decision, missing requirement, or unsafe state
-4. Do not auto-close ambiguous issues
+1. Log blocker to issue: `tk add-note <id> "BLOCKED: <reason>"`
+2. Ask the user only when autonomous continuation is blocked by a real decision, missing requirement, or unsafe state
+3. Leave ambiguous issues open
 
 ## Special Cases
 
-| Situation                       | Action                                                       |
-| ------------------------------- | ------------------------------------------------------------ |
-| `EADDRINUSE` / port collision   | Requeue once in sequential server-test lane                  |
-| Rework scope unclear            | Use `explore` agent to understand fix surface, then ask user |
-| Pre-claim orchestration failure | Release, re-pre-claim once, retry once, then escalate        |
-| Previous rework comment exists  | Escalate instead of redispatching                            |
+| Situation                      | Action                                                       |
+| ------------------------------ | ------------------------------------------------------------ |
+| `EADDRINUSE` / port collision  | Requeue once in sequential server-test lane                  |
+| Rework scope unclear           | Use `explore` agent to understand fix surface, then ask user |
+| Ticket/prompt mismatch         | Re-check the ticket ID once, then escalate                   |
+| Previous rework comment exists | Escalate instead of redispatching                            |
 
 ## Logging Rules
 
-Only log to beads when it represents:
+Only log to the tracker when it represents:
 
 - Core invariants discovered
 - Core UX/interaction decisions

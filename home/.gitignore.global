@@ -24,6 +24,9 @@ mise.local.toml
 # beads
 .beads/
 
+# ticket
+.tickets/
+
 # mempalace
 entities.json
 mempalace.yaml

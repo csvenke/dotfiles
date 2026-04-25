@@ -69,8 +69,8 @@ Skip if `memory_mode=degraded`.
 ## Step 4: Close Epic
 
 ```bash
-bd epic close-eligible
-bd list --status=closed  # confirm closure
+tk ls --status=closed -T team-task  # confirm all workflow tasks closed
+tk close <epic-id>
 ```
 
 Update todos: mark "Epic Closure" as completed.

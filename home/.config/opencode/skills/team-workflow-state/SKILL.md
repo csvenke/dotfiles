@@ -23,10 +23,10 @@ Run these checks in order to determine current phase:
 1. **Has user approved a plan?**
    - No → `PLANNING`
 2. **Does epic exist with tasks?**
-   - Run: `bd list --type=epic --json` and `bd list --parent=<epic-id> --json`
+   - Run: `tk query 'select(.type == "epic")'` and `tk query 'select(.type == "task" and (.tags // [] | index("team-task")))'`
    - No epic or no tasks → `ISSUE_CREATION`
 3. **Are all tasks closed AND staff review passed?**
-   - Run: `bd ready --parent=<epic-id>` and `bd list --status=in_progress --parent=<epic-id>`
+   - Run: `tk ls --status=open -T team-task` and `tk ls --status=in_progress -T team-task`
    - Both empty AND last staff review had `has_blockers=false` → `EPIC_CLOSURE`
    - Otherwise → `WAVE_EXECUTION`
 
@@ -34,14 +34,14 @@ Run these checks in order to determine current phase:
 
 Before entering a new phase, validate the transition:
 
-| Transition                      | Validation                                           | Expected          |
-| ------------------------------- | ---------------------------------------------------- | ----------------- |
-| PLANNING → ISSUE_CREATION       | User said "approve", "yes", "lgtm", or similar       | Explicit approval |
-| ISSUE_CREATION → WAVE_EXECUTION | `bd ready --parent=<epic-id>`                        | At least 1 task   |
-| WAVE_EXECUTION → EPIC_CLOSURE   | All tasks closed + staff review `has_blockers=false` | Review passed     |
-| EPIC_CLOSURE → COMPLETE         | `bd show <epic-id>`                                  | status=closed     |
+| Transition                      | Validation                                           | Expected               |
+| ------------------------------- | ---------------------------------------------------- | ---------------------- | --------------- |
+| PLANNING → ISSUE_CREATION       | User said "approve", "yes", "lgtm", or similar       | Explicit approval      |
+| ISSUE_CREATION → WAVE_EXECUTION | `tk query 'select(.type == "task" and (.tags // []   | index("team-task")))'` | At least 1 task |
+| WAVE_EXECUTION → EPIC_CLOSURE   | All tasks closed + staff review `has_blockers=false` | Review passed          |
+| EPIC_CLOSURE → COMPLETE         | `tk show <epic-id>`                                  | status=closed          |
 
-**These validations are internal.** If validation succeeds, continue automatically in the same turn. Do not ask the user to continue.
+**These validations are internal.** If validation succeeds, continue automatically in the same turn.
 
 If validation fails: stop only when the state is unsafe or requires a user decision. Otherwise recover and continue.
 
@@ -147,7 +147,7 @@ Before starting a new wave, mark previous wave's step todos as `completed` (or `
 
 ## Status Output Format
 
-After each wave, output a status summary. **This is informative only — continue automatically after outputting it.** Do not ask the user to continue.
+After each wave, output a status summary. **This is informative only — continue automatically after outputting it.**
 
 ```
 ## Wave <N> Complete
