@@ -99,17 +99,17 @@ Then: treat as `NEEDS_REWORK`, release pre-claim, escalate.
 
 1. Release any pre-claim
 2. Log blocker to issue: `bd comments add <id> "BLOCKED: <reason>"`
-3. Pause and ask the user
+3. Ask the user only when autonomous continuation is blocked by a real decision, missing requirement, or unsafe state
 4. Do not auto-close ambiguous issues
 
 ## Special Cases
 
-| Situation                       | Action                                                |
-| ------------------------------- | ----------------------------------------------------- |
-| `EADDRINUSE` / port collision   | Requeue once in sequential server-test lane           |
+| Situation                       | Action                                                       |
+| ------------------------------- | ------------------------------------------------------------ |
+| `EADDRINUSE` / port collision   | Requeue once in sequential server-test lane                  |
 | Rework scope unclear            | Use `explore` agent to understand fix surface, then ask user |
-| Pre-claim orchestration failure | Release, re-pre-claim once, retry once, then escalate |
-| Previous rework comment exists  | Escalate instead of redispatching                     |
+| Pre-claim orchestration failure | Release, re-pre-claim once, retry once, then escalate        |
+| Previous rework comment exists  | Escalate instead of redispatching                            |
 
 ## Logging Rules
 

@@ -63,7 +63,7 @@ On each turn, determine my current phase by running these checks in order:
 
 ## Skill Loading
 
-**Always load first**: `skill load team-workflow-state` (phase definitions and checkpoints)
+**Always load first**: `skill load team-workflow-state` (phase definitions and validations)
 
 **Then load phase-specific skill**:
 
@@ -117,8 +117,22 @@ Track these values across the run:
 
 Output current state before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
 
+## Autonomous Execution
+
+**Continue automatically until complete.** Status summaries and validations are informative only — do not ask the user to continue after outputting them.
+
+**Only pause for user input when:**
+
+- Plan approval is needed (PLANNING phase)
+- A real blocker requires a user decision
+- Requirements are unclear or conflicting
+- State is unsafe or unrecoverable
+
+After any status output or phase transition, immediately continue to the next action in the same turn.
+
 ## Validation
 
-Before each phase transition, run the validation checkpoint defined in `team-workflow-state`.
+Before each phase transition, run the validation defined in `team-workflow-state`.
 
-If validation fails: stop, report unexpected state, do not proceed.
+If validation succeeds: continue automatically.
+If validation fails: stop only if state is unsafe or requires user decision. Otherwise recover and continue.

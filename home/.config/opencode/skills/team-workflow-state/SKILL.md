@@ -30,7 +30,7 @@ Run these checks in order to determine current phase:
    - Both empty AND last staff review had `has_blockers=false` → `EPIC_CLOSURE`
    - Otherwise → `WAVE_EXECUTION`
 
-## Transition Checkpoints
+## Transition Validations
 
 Before entering a new phase, validate the transition:
 
@@ -41,7 +41,9 @@ Before entering a new phase, validate the transition:
 | WAVE_EXECUTION → EPIC_CLOSURE   | All tasks closed + staff review `has_blockers=false` | Review passed     |
 | EPIC_CLOSURE → COMPLETE         | `bd show <epic-id>`                                  | status=closed     |
 
-**If validation fails**: Stop and report the unexpected state. Do not proceed.
+**These validations are internal.** If validation succeeds, continue automatically in the same turn. Do not ask the user to continue.
+
+If validation fails: stop only when the state is unsafe or requires a user decision. Otherwise recover and continue.
 
 ## Wave Step Tracking
 
@@ -56,7 +58,7 @@ Within `WAVE_EXECUTION`, track current step (0-8):
 | 4    | Implementation  | Tasks ready for implementation               |
 | 5    | Validation      | Tasks need heavy validation                  |
 | 6    | QA              | Tasks reached READY_FOR_QA                   |
-| 7    | Wave checkpoint | Wave actions complete                        |
+| 7    | Wave summary    | Wave actions complete                        |
 | 8    | Staff review    | All tasks closed, review before epic closure |
 
 Output current step before each action: `"[Step 4: Implementation]"`
@@ -107,7 +109,7 @@ At the start of each wave, create todos only for steps that will execute:
 - "Implementation (wave N)" — if tasks ready
 - "Validation (wave N)" — if heavy validation needed
 - "QA (wave N)" — if tasks ready for QA
-- "Wave N checkpoint" — always
+- "Wave N summary" — always
 - "Staff review" — only when all tasks closed (final step before closure)
 
 Mark each step `in_progress` when entering, `completed` when done.
@@ -125,7 +127,7 @@ Before starting a new wave, mark previous wave's step todos as `completed` (or `
     [✓] Find ready work (wave 1)
     [●] Implementation (wave 1)
     [ ] QA (wave 1)
-    [ ] Wave 1 checkpoint
+    [ ] Wave 1 summary
 [ ] Epic Closure - memory writeback and close
 ```
 
@@ -135,7 +137,7 @@ Before starting a new wave, mark previous wave's step todos as `completed` (or `
 [✓] Planning - gather requirements and draft plan
 [✓] Issue Creation - create epic and tasks
 [●] Wave Execution - implement, validate, and review
-    [✓] Wave 1 checkpoint
+    [✓] Wave 1 summary
     [✓] Staff review - blockers found, created follow-ups
     [●] Find ready work (wave 2)
     [ ] Implementation (wave 2)
@@ -143,9 +145,9 @@ Before starting a new wave, mark previous wave's step todos as `completed` (or `
 [ ] Epic Closure - memory writeback and close
 ```
 
-## Checkpoint Output Format
+## Status Output Format
 
-After each wave, output:
+After each wave, output a status summary. **This is informative only — continue automatically after outputting it.** Do not ask the user to continue.
 
 ```
 ## Wave <N> Complete

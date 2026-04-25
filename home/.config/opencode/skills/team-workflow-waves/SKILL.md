@@ -108,9 +108,9 @@ Skip unless validation is expensive, noisy, or server-starting.
    - `NEEDS_REWORK` → route to software-engineer or ux-designer
    - `BLOCKED` → escalate
 
-## Step 7: Wave Checkpoint
+## Step 7: Wave Summary
 
-Output wave checkpoint (see `team-workflow-state`), then:
+Output the wave status summary (see `team-workflow-state`), then **immediately continue to the next step in the same turn.** Do not ask the user to continue.
 
 1. `bd list --status=in_progress` — check for stuck tasks
 2. Discoverability verification for closed tasks
@@ -144,19 +144,19 @@ staff-engineer "Review changes for epic <id>. Run: <review-surface-command>"
 ### Todo Updates for Staff Review
 
 - When starting: create "Staff review" todo as in_progress
-- If passed: mark "Staff review" as completed
-- If blockers: mark "Staff review" as completed, add note about follow-ups
+- If passed: mark "Staff review" as completed, continue to Epic Closure automatically
+- If blockers: mark "Staff review" as completed, add note about follow-ups, continue to Step 1 automatically
 
 ## Dispatch Matrix
 
-| Agent               | When to Use                                   |
-| ------------------- | --------------------------------------------- |
+| Agent               | When to Use                                      |
+| ------------------- | ------------------------------------------------ |
 | `codebase-analyst`  | Step 0 repo bootstrap ONLY — never use elsewhere |
-| `explore`           | Quick codebase research during execution      |
-| `invariant-analyst` | Hidden invariants, legacy constraints         |
-| `ux-designer`       | User-facing UI changes                        |
-| `validation-runner` | Heavy, noisy, server-starting validation      |
-| `staff-engineer`    | Step 8 review, high-risk task review          |
+| `explore`           | Quick codebase research during execution         |
+| `invariant-analyst` | Hidden invariants, legacy constraints            |
+| `ux-designer`       | User-facing UI changes                           |
+| `validation-runner` | Heavy, noisy, server-starting validation         |
+| `staff-engineer`    | Step 8 review, high-risk task review             |
 
 If you cannot explain in one sentence why a specialist is needed, skip it.
 
