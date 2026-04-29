@@ -77,8 +77,12 @@ acceptance:
 - <criterion 2>
 constraints:
 - <smallest safe change, preserve existing behavior, etc.>
+norms:
+- <coding standards, patterns to follow — from codebase-analyst or prior work>
+safeguards:
+- <invariants that must not break — from invariant-analyst or domain knowledge>
 validation: <known commands or none>
-notes: <repo bootstrap, invariants, UX notes, memory context, or none>
+notes: <repo bootstrap, UX notes, memory context, or none>
 </task_brief>
 ```
 

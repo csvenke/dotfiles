@@ -21,6 +21,22 @@ Before presenting a plan, search for relevant prior work when `memory_mode=activ
 
 Skip Memory Prime when: goal is trivial, memory is degraded, or no plausible prior work exists.
 
+## Structured Analysis
+
+After Memory Prime and before drafting the plan, run a structured analysis to surface risks and sharpen scope. Skip for trivial or single-file changes.
+
+1. Extract domain keywords from the user's request (entities, operations, subsystems).
+2. Use `explore` agent to scan relevant code areas for those keywords — identify existing concepts and boundaries.
+3. Produce a compact `<analysis>` block covering:
+   - **Existing concepts**: what the codebase already has that relates to this work
+   - **New concepts**: what needs to be introduced
+   - **Key rules**: business rules, invariants, or constraints the change must respect
+   - **Risks and edge cases**: technical risks, ambiguities, boundary conditions
+   - **Scope boundaries**: what is explicitly in vs. out
+4. Include the `<analysis>` block in the plan presentation so the user can validate the understanding before approving.
+
+The analysis is lightweight — a few bullet points per section, not a document. Its purpose is to catch misunderstandings and missing edge cases before they become tasks.
+
 ## Planning Guidelines
 
 - Use the `explore` subagent for repo research during planning.
@@ -66,8 +82,9 @@ When the plan is ready:
      Acceptance:
    - <criterion 1>
    - <criterion 2>
+     Scope out: <what we explicitly will NOT do>
+     Definition of done: <concrete verification — tests, commands, or checks that prove completion>
      Constraints: <constraints or none>
-     Non-goals: <non-goals or none>
      Assumptions: <assumptions or none>
      Execution: sequential by default
    ```

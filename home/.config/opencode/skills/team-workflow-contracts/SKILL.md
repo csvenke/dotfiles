@@ -21,10 +21,17 @@ acceptance:
 - <criterion 2>
 constraints:
 - <smallest safe change, preserve existing behavior, etc.>
+norms:
+- <coding standards, patterns to follow, naming conventions — from codebase-analyst or prior work>
+safeguards:
+- <invariants that must not break, non-negotiable boundaries — from invariant-analyst or domain knowledge>
 validation: <known commands or none>
-notes: <repo bootstrap, invariants, UX notes, memory context, or none>
+notes: <repo bootstrap, UX notes, memory context, or none>
 </task_brief>
 ```
+
+- `norms` = "how to write the code" — engineering standards the worker should follow (patterns, conventions, style). Omit or use `none` when the codebase has no strong conventions.
+- `safeguards` = "what must never break" — hard constraints, invariants, security rules. Omit or use `none` when no known invariants apply.
 
 If the brief is missing ticket id, objective, or acceptance criteria, the worker should report `BLOCKED` instead of guessing.
 
