@@ -1,11 +1,11 @@
 ---
-description: Abort a team workflow run, close open tickets, and capture learnings
+description: Close a team workflow run, clean up open tickets, and capture learnings
 agent: general
 ---
 
-Abort the current team workflow run. Clean up all open tickets and capture a retrospective so the learning is not lost.
+Close the current team workflow run. Clean up all open tickets and capture a retrospective so the learning is not lost.
 
-Abort reason (optional): $ARGUMENTS
+Close reason (optional): $ARGUMENTS
 
 ## Instructions
 
@@ -21,7 +21,7 @@ tk query 'select(.type == "epic" and (.tags // [] | index("team-epic")) and .sta
 
 - If **no open epics** exist, report "No open workflow epics found" and stop.
 - If **exactly one** open epic exists, select it automatically.
-- If **multiple** open epics exist, present them to the user with the `question` tool and ask which epic to abort.
+- If **multiple** open epics exist, present them to the user with the `question` tool and ask which epic to close.
 
 Record the selected `epic_id`.
 
@@ -33,21 +33,21 @@ Find all tasks that are children of the selected epic:
 tk query 'select(.type == "task" and .parent == "<epic_id>")'
 ```
 
-This scopes the abort to only the tasks belonging to the selected epic. Unrelated tickets are left untouched.
+This scopes the close to only the tasks belonging to the selected epic. Unrelated tickets are left untouched.
 
 ### Step 3: Annotate and close tickets
 
 For each task from Step 2 that is not already closed:
 
 ```bash
-tk add-note <id> "ABORTED: Human aborted the workflow run. Reason: <abort reason or 'no reason given'>"
+tk add-note <id> "CLOSED: Workflow run closed by user. Reason: <close reason or 'no reason given'>"
 tk close <id>
 ```
 
 Then close the epic itself:
 
 ```bash
-tk add-note <epic_id> "ABORTED: Human aborted the workflow run. Reason: <abort reason or 'no reason given'>"
+tk add-note <epic_id> "CLOSED: Workflow run closed by user. Reason: <close reason or 'no reason given'>"
 tk close <epic_id>
 ```
 
@@ -57,10 +57,10 @@ Load `skill team-workflow-closure` and execute its **Step 2 (Workflow Retrospect
 
 Use these values:
 
-- `run_outcome: aborted`
-- `abort_reason`: the user-provided reason, or "not specified"
-- `tasks_completed`: tasks from Step 2 that were already closed before this abort
-- `tasks_abandoned`: tasks from Step 2 that were open/in-progress at abort time
+- `run_outcome: closed`
+- `close_reason`: the user-provided reason, or "not specified"
+- `tasks_completed`: tasks from Step 2 that were already closed before this close
+- `tasks_abandoned`: tasks from Step 2 that were open/in-progress at close time
 
 ### Step 5: Report
 
