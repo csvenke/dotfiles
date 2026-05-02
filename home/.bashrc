@@ -107,7 +107,7 @@ _git_sync_main_branch() {
   main_worktree_path="$(_git_worktree_main_path)"
 
   if [[ -d "$main_worktree_path" && "$main_worktree_path" != "$(pwd)" ]]; then
-    git -C "$main_worktree_path" reset --hard "origin/${main_branch}"
+    git -C "$main_worktree_path" reset --soft "origin/${main_branch}"
   fi
 
   git rebase "origin/${main_branch}"
