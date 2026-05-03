@@ -5,8 +5,6 @@ description: "Phase definitions, transition validations, and checkpoints for the
 
 # Workflow State Machine
 
-This skill defines the team workflow phases and validates transitions.
-
 ## Phases
 
 | Phase            | Description                                                      |
@@ -18,21 +16,18 @@ This skill defines the team workflow phases and validates transitions.
 
 ## Phase Detection
 
-Run these checks in order to determine current phase:
+Run checks in order:
 
-1. **Has user approved a plan?**
-   - No → `PLANNING`
-2. **Does epic exist with tasks?**
-   - Run: `tk query 'select(.type == "epic")'` and `tk query 'select(.type == "task" and (.tags // [] | index("team-task")))'`
-   - No epic or no tasks → `ISSUE_CREATION`
-3. **Are all tasks closed AND staff review passed?**
-   - Run: `tk ls --status=open -T team-task` and `tk ls --status=in_progress -T team-task`
-   - Both empty AND last staff review had `has_blockers=false` → `EPIC_CLOSURE`
-   - Otherwise → `WAVE_EXECUTION`
+1. **User approved plan?** No → `PLANNING`
+2. **Epic exists with tasks?** `tk query 'select(.type == "epic")'` and `tk query 'select(.type == "task" and (.tags // [] | index("team-task")))'` — No → `ISSUE_CREATION`
+3. **All tasks closed AND staff review passed?** `tk ls --status=open -T team-task` and `tk ls --status=in_progress -T team-task` — Both empty AND last staff review `has_blockers=false` → `EPIC_CLOSURE`
+4. Otherwise → `WAVE_EXECUTION`
+
+!!CRITICAL!! Post-closure change request: if previous run reached COMPLETE and user asks for changes/fixes/follow-up, clear approval state and restart at PLANNING.
 
 ## Transition Validations
 
-Before entering a new phase, validate the transition:
+Before entering a new phase, validate the transition. If validation succeeds, continue automatically. If validation fails, stop only when state is unsafe or requires user decision; otherwise recover and continue.
 
 | Transition                      | Validation                                           | Expected               |
 | ------------------------------- | ---------------------------------------------------- | ---------------------- | --------------- |
@@ -40,10 +35,6 @@ Before entering a new phase, validate the transition:
 | ISSUE_CREATION → WAVE_EXECUTION | `tk query 'select(.type == "task" and (.tags // []   | index("team-task")))'` | At least 1 task |
 | WAVE_EXECUTION → EPIC_CLOSURE   | All tasks closed + staff review `has_blockers=false` | Review passed          |
 | EPIC_CLOSURE → COMPLETE         | `tk show <epic-id>`                                  | status=closed          |
-
-**These validations are internal.** If validation succeeds, continue automatically in the same turn.
-
-If validation fails: stop only when the state is unsafe or requires a user decision. Otherwise recover and continue.
 
 ## Wave Step Tracking
 
@@ -74,11 +65,7 @@ Set once after Step 0 (bootstrap). Include in all downstream prompts.
 
 ## Todo Progress Tracking
 
-Use TodoWrite to show visual progress in the UI.
-
-### Phase Todos (create on first turn)
-
-Create these todos at the start of a new workflow run:
+Create phase todos on first turn:
 
 ```
 TodoWrite([
@@ -89,7 +76,7 @@ TodoWrite([
 ])
 ```
 
-### Phase Transition Updates
+Update on phase transitions:
 
 | Transition       | Todo Update                                                  |
 | ---------------- | ------------------------------------------------------------ |
@@ -99,9 +86,7 @@ TodoWrite([
 | → EPIC_CLOSURE   | "Wave Execution" = completed, "Epic Closure" = in_progress   |
 | → COMPLETE       | "Epic Closure" = completed                                   |
 
-### Wave Step Todos
-
-At the start of each wave, create todos only for steps that will execute:
+Wave step todos (create at start of each wave for steps that will execute):
 
 - "Find ready work (wave N)" — always
 - "Domain brief (wave N)" — if invariant-analyst needed
@@ -110,40 +95,9 @@ At the start of each wave, create todos only for steps that will execute:
 - "Validation (wave N)" — if heavy validation needed
 - "QA (wave N)" — if tasks ready for QA
 - "Wave N summary" — always
-- "Staff review" — only when all tasks closed (final step before closure)
+- "Staff review" — only when all tasks closed
 
-Mark each step `in_progress` when entering, `completed` when done.
-
-Before starting a new wave, mark previous wave's step todos as `completed` (or `cancelled` if skipped).
-
-### Example Todo States
-
-**During wave 1:**
-
-```
-[✓] Planning - gather requirements and draft plan
-[✓] Issue Creation - create epic and tasks
-[●] Wave Execution - implement, validate, and review
-    [✓] Find ready work (wave 1)
-    [●] Implementation (wave 1)
-    [ ] QA (wave 1)
-    [ ] Wave 1 summary
-[ ] Epic Closure - memory writeback and close
-```
-
-**Staff review with follow-ups:**
-
-```
-[✓] Planning - gather requirements and draft plan
-[✓] Issue Creation - create epic and tasks
-[●] Wave Execution - implement, validate, and review
-    [✓] Wave 1 summary
-    [✓] Staff review - blockers found, created follow-ups
-    [●] Find ready work (wave 2)
-    [ ] Implementation (wave 2)
-    [ ] QA (wave 2)
-[ ] Epic Closure - memory writeback and close
-```
+Mark each step `in_progress` when entering, `completed` when done. Before starting a new wave, mark previous wave's step todos as `completed` (or `cancelled` if skipped).
 
 ## Status Output Format
 

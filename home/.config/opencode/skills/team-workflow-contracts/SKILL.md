@@ -7,9 +7,16 @@ description: "Handoff contracts and escalation rules for team workflow. Load whe
 
 ## Dispatch Contract
 
-Every worker prompt from the team lead must include a self-contained brief. Workers may read the ticket, but the prompt must be sufficient to start safely.
+Every worker prompt from the team lead must include `<global_rules>` followed by a self-contained `<task_brief>`. Workers may read the ticket, but the prompt must be sufficient to start safely.
 
 ```xml
+<global_rules>
+- Treat issue metadata as a starting point, not a ceiling. If observed surface exceeds plan, raise risk or test_expectation and explain why.
+- Treat repo bootstrap commands as source of truth. Report missing commands as not run.
+- Load the tdd skill only when it materially helps. Do not load by default.
+- Reserve at least 15 steps for handoff formatting.
+</global_rules>
+
 <task_brief>
 ticket_id: <id>
 title: <title>
@@ -33,7 +40,7 @@ notes: <repo bootstrap, UX notes, memory context, or none>
 - `norms` = "how to write the code" — engineering standards the worker should follow (patterns, conventions, style). Omit or use `none` when the codebase has no strong conventions.
 - `safeguards` = "what must never break" — hard constraints, invariants, security rules. Omit or use `none` when no known invariants apply.
 
-If the brief is missing ticket id, objective, or acceptance criteria, the worker should report `BLOCKED` instead of guessing.
+!!CRITICAL!! If the brief is missing ticket id, objective, or acceptance criteria, the worker must report `BLOCKED` instead of guessing.
 
 ## Base Contract (all workflow roles)
 
@@ -44,6 +51,15 @@ Every handoff must include:
 3. `files_changed`: comma-separated paths or `none`
 4. `qa_or_handoff_notes`: what next role should validate
 5. `blockers`: explicit `none` or blocker description
+
+## Global Worker Rules
+
+All workers must follow these rules regardless of role:
+
+- Treat issue metadata (`risk`, `test_expectation`, `areas_touched`, `fast_lane`, repo bootstrap commands) as a starting point, not a ceiling. If the observed change surface is riskier than planned, raise `risk` or `test_expectation` in your handoff and explain why.
+- Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
+- Load the `tdd` skill only when it will materially help write or restructure tests. Do not load it by default.
+- Reserve at least 15 steps for handoff formatting.
 
 ## Role-Specific Extensions
 
@@ -105,12 +121,7 @@ Review summary format:
 
 ## Incomplete Responses
 
-If a subagent response:
-
-- Missing required fields for its role
-- Hits step limit and returns unstructured summary
-
-Then: treat as `NEEDS_REWORK` and escalate.
+!!CRITICAL!! If a subagent response is missing required fields for its role or hits step limit and returns unstructured summary, treat as `NEEDS_REWORK` and escalate.
 
 ---
 
@@ -128,7 +139,7 @@ Then: treat as `NEEDS_REWORK` and escalate.
 ## How to Escalate
 
 1. Log blocker to issue: `tk add-note <id> "BLOCKED: <reason>"`
-2. Ask the user only when autonomous continuation is blocked by a real decision, missing requirement, or unsafe state
+2. !!CRITICAL!! Ask the user only when autonomous continuation is blocked by a real decision, missing requirement, or unsafe state
 3. Leave ambiguous issues open
 
 ## Special Cases

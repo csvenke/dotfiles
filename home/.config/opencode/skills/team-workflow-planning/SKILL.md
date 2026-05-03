@@ -5,42 +5,31 @@ description: "Planning phase for team workflow. Memory Prime, clarification guid
 
 # Planning Phase
 
-Until the user approves the plan, behave like the built-in plan agent.
+Until user approves the plan, behave like the built-in plan agent.
 
-## Planning Memory Prime
+## Memory Prime (`memory_mode=active`)
 
-Before presenting a plan, search for relevant prior work when `memory_mode=active`:
+Before presenting a plan, search for relevant prior work:
 
 1. `mempalace_mempalace_search` with goal keywords and likely subsystems
 2. `mempalace_mempalace_kg_query` for subsystems to pull risk history
 3. `mempalace_mempalace_search` in `wing=opencode`, `room=team-retros` for applicable policies
-4. When relevant prior work exists, include a compact `<prior_work>` block:
-   - Similar epics and outcomes
-   - Known pitfalls for affected subsystems
-   - Applicable policy candidates
+4. When relevant prior work exists, include a compact `<prior_work>` block: similar epics, known pitfalls, applicable policy candidates
 
 Skip Memory Prime when: goal is trivial, memory is degraded, or no plausible prior work exists.
 
 ## Structured Analysis
 
-After Memory Prime and before drafting the plan, run a structured analysis to surface risks and sharpen scope. Skip for trivial or single-file changes.
+After Memory Prime, run a lightweight analysis to surface risks. Skip for trivial or single-file changes.
 
-1. Extract domain keywords from the user's request (entities, operations, subsystems).
-2. Use `explore` agent to scan relevant code areas for those keywords — identify existing concepts and boundaries.
-3. Produce a compact `<analysis>` block covering:
-   - **Existing concepts**: what the codebase already has that relates to this work
-   - **New concepts**: what needs to be introduced
-   - **Key rules**: business rules, invariants, or constraints the change must respect
-   - **Risks and edge cases**: technical risks, ambiguities, boundary conditions
-   - **Scope boundaries**: what is explicitly in vs. out
-4. Include the `<analysis>` block in the plan presentation so the user can validate the understanding before approving.
-
-The analysis is lightweight — a few bullet points per section, not a document. Its purpose is to catch misunderstandings and missing edge cases before they become tasks.
+1. Extract domain keywords from the user's request.
+2. Use `explore` agent to scan relevant code areas — identify existing concepts and boundaries.
+3. Produce a compact `<analysis>` block: existing concepts, new concepts, key rules, risks and edge cases, scope boundaries (in vs out).
+4. Include `<analysis>` in the plan presentation so the user can validate understanding before approving.
 
 ## Planning Guidelines
 
-- Use the `explore` subagent for repo research during planning.
-- Do NOT use `codebase-analyst` during planning — reserve it for Step 0 (repo bootstrap) in Wave Execution.
+- Use `explore` for repo research during planning. Do NOT use `codebase-analyst` during planning — reserve for Step 0 (repo bootstrap).
 - Use `invariant-analyst` selectively for legacy or underspecified work.
 - Default path: `software-engineer` → `qa-engineer`. Specialists are optional.
 - Ask questions early when requirements are unclear.
@@ -48,13 +37,7 @@ The analysis is lightweight — a few bullet points per section, not a document.
 
 ## Clarification Questions
 
-Ask before plan approval when:
-
-- Request is short or ambiguous
-- Success criteria are not concrete
-- Multiple reasonable implementations exist
-- Work involves multiple subagents or extended execution
-- Mistakes would compound across later stages
+Ask before plan approval when: request is short/ambiguous, success criteria are not concrete, multiple reasonable implementations exist, work involves multiple subagents or extended execution, mistakes would compound across later stages.
 
 Prefer a small set of high-leverage questions that resolve scope, constraints, and acceptance quickly.
 
@@ -90,11 +73,9 @@ When the plan is ready:
    ```
 
 2. Keep the plan visible and concise.
-3. Ask for approval using the Questions tool:
-   - Question: `Approve this plan?`
-   - Options: `Approve` / `Request changes`
+3. Ask for approval using the Questions tool: `Approve this plan?` — Options: `Approve` / `Request changes`
 
-Call the Questions tool only after the plan and execution brief are visible to the user in the main thread.
+Call the Questions tool only after the plan and execution brief are visible to the user.
 
 If user requests changes, revise and re-present. Any clear affirmative counts as approval.
 

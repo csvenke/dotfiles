@@ -5,7 +5,7 @@ description: "Epic closure phase for team workflow. Memory writeback, pattern mi
 
 # Epic Closure Phase
 
-Enter this phase after staff review passes (`has_blockers=false`). Staff review is Step 8 of Wave Execution.
+Enter after staff review passes (`has_blockers=false`). Staff review is Step 8 of Wave Execution.
 
 ## Step 1: Memory Writeback (`memory_mode=active`)
 
@@ -20,50 +20,29 @@ Skip if `memory_mode=degraded`.
 ## Step 2: Workflow Retrospective
 
 When the run exposed reusable workflow learning, store in `wing=opencode`, `room=team-retros`:
-
-- `epic_id`, `epic_title`, `run_outcome`
-- `clarification_effectiveness`
-- `rework_pattern`
-- `routing_misses`
-- `specialist_lane_learnings`
-- `memory_lane_issues`
-- `what_helped`
-- `policy_candidate`
+`epic_id`, `epic_title`, `run_outcome`, `clarification_effectiveness`, `rework_pattern`, `routing_misses`, `specialist_lane_learnings`, `memory_lane_issues`, `what_helped`, `policy_candidate`
 
 Skip for routine successful runs with no reusable lesson.
 
 ## Step 3: Pattern Mining (`memory_mode=active`)
 
-Extract reusable patterns from retrospective into KG triples:
+Extract reusable patterns from retrospective into KG triples.
 
-### If `policy_candidate` is non-empty:
+**If `policy_candidate` is non-empty:**
 
 1. Identify pattern type: `test_triage`, `contract_change`, `infra_failure`, `rework_loop`, `routing_miss`
 2. Sanitize policy text (remove `!`, `/`, special chars)
-3. Record origin:
-   ```
-   kg_add(subject=<pattern_type>, predicate="learned_from", object=<epic_id>)
-   ```
-4. Record policy:
-   ```
-   kg_add(subject=<pattern_type>, predicate="policy", object=<sanitized_policy>)
-   ```
+3. Record origin: `kg_add(subject=<pattern_type>, predicate="learned_from", object=<epic_id>)`
+4. Record policy: `kg_add(subject=<pattern_type>, predicate="policy", object=<sanitized_policy>)`
 
-### If bug pattern with fix approach:
+**If bug pattern with fix approach:**
+`kg_add(subject=<bug_pattern>, predicate="fixed_by", object=<fix_approach>)`
+`kg_add(subject=<bug_pattern>, predicate="seen_in", object=<epic_id>)`
 
-```
-kg_add(subject=<bug_pattern>, predicate="fixed_by", object=<fix_approach>)
-kg_add(subject=<bug_pattern>, predicate="seen_in", object=<epic_id>)
-```
-
-### If subsystem has recurring issues:
-
-```
-kg_add(subject=<subsystem>, predicate="risk_history", object=<compact_risk_note>)
-```
+**If subsystem has recurring issues:**
+`kg_add(subject=<subsystem>, predicate="risk_history", object=<compact_risk_note>)`
 
 Pattern Mining makes learnings queryable by Planning Memory Prime in future runs.
-
 Skip if `memory_mode=degraded`.
 
 ## Step 4: Close Epic
@@ -77,12 +56,7 @@ Update todos: mark "Epic Closure" as completed.
 
 ## Step 5: Final Report
 
-Report to user:
-
-- Epic closed
-- Summary of changes
-- Staff review findings (from wave execution)
-- Hand off for human review
+Report to user: epic closed, summary of changes, staff review findings, hand off for human review.
 
 ## Human Review and Release
 

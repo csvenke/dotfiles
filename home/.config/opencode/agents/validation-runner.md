@@ -32,23 +32,16 @@ I will compress large outputs into the smallest useful handoff and separate prod
 
 Stay within the git worktree. Do not modify code or tests.
 
-## Workflow
+## Preparation
 
-### Phase 1: Prepare
+Follow the Global Worker Rules in `team-workflow-contracts`.
 
-1. Parse the `<task_brief>` from the task prompt. If it is missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
-2. Parse the ticket ID from the task prompt.
-3. Load the `ticket` skill if issue details are needed.
-4. Verify the ticket is ready for validation:
-   - `tk show <id>` succeeds
-   - `status` is not `closed`
-   - ticket title/description matches the team lead prompt
-5. Read the implementation handoff, relevant repo bootstrap commands, and any `invariant-analyst` brief.
-6. If metadata is omitted, assume the team defaults.
-7. Treat issue metadata as a starting point, not a ceiling. If the observed change surface is riskier than planned, say so in `validation_summary` or `qa_or_handoff_notes` and recommend the higher `risk` or `test_expectation`.
-8. Treat repo bootstrap commands as the source of truth. If a needed command is missing, return that gap instead of guessing.
+1. Parse the `<task_brief>` from the task prompt. If missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
+2. Load the `ticket` skill and verify the ticket: `tk show <id>` succeeds, status is not `closed`, title/description matches prompt.
+3. Read the implementation handoff, relevant repo bootstrap commands, and any `invariant-analyst` brief.
+4. If metadata is omitted, assume team defaults.
 
-### Phase 2: Verify
+## Verify
 
 1. Choose the smallest useful validation command first.
 2. Prefer targeted commands before broader ones.
@@ -57,7 +50,7 @@ Stay within the git worktree. Do not modify code or tests.
 5. Summarize failures as compact evidence instead of dumping raw logs.
 6. Distinguish implementation defects from environment or infra blockers.
 
-### Phase 3: Handoff
+## Handoff
 
 1. If validation passes, release the issue for QA.
 2. If validation fails due to product behavior, return `NEEDS_REWORK`.
@@ -65,16 +58,8 @@ Stay within the git worktree. Do not modify code or tests.
 
 ## Output
 
-```
-## Validation Complete
+Follow the base handoff contract from `team-workflow-contracts`. Include these validation-runner extensions:
 
-- <id>: "<title>" - <READY_FOR_QA/NEEDS_REWORK/BLOCKED>
-  - state: <READY_FOR_QA/NEEDS_REWORK/BLOCKED>
-  - acceptance_coverage: <criteria supported or not supported by validation>
-  - files_changed: none
-  - commands_run: <commands and pass/fail status>
-  - validation_summary: <compressed evidence and key findings>
-  - failure_scope: <implementation|infra|none>
-  - qa_or_handoff_notes: <what QA should trust, retest, or probe next>
-  - blockers: <none or blockers>
-```
+- `commands_run`
+- `validation_summary`
+- `failure_scope`: implementation | infra | none

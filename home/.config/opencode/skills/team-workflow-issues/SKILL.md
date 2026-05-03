@@ -10,7 +10,6 @@ After the user approves the plan, create tracker issues.
 ## Prerequisites
 
 Load the `ticket` skill before running any `tk` commands. Follow its Team Workflow Recipe exactly.
-
 Keep tracker commands mechanical: short create command first, then separate `tk add-note` commands for SPEC, ACCEPTANCE, and METADATA.
 
 ## Create Epic and Tasks
@@ -45,8 +44,6 @@ Prefer one right-sized task over many small subtasks. Create multiple tasks only
 
 ## Default Metadata
 
-Use these defaults unless the task needs different values:
-
 ```
 risk=medium
 test_expectation=targeted
@@ -77,12 +74,7 @@ If any `tk` command fails:
 
 ## Issue Descriptions
 
-Issue descriptions are the agent's starting brief:
-
-- What to change
-- Why
-- Where to start reading
-- Design decisions
+Issue descriptions are the agent's starting brief: what to change, why, where to start reading, design decisions.
 
 ## Routing Rules
 

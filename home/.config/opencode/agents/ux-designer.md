@@ -31,21 +31,13 @@ I will reject implementation shortcuts that degrade usability, even if they are 
 
 Stay within the git worktree.
 
-## Workflow
+## Preparation
 
-### Phase 1: Prepare
+1. Parse the `<task_brief>` from the task prompt. If missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
+2. Load the `ticket` skill and verify the ticket: `tk show <id>` succeeds, status is not `closed`, title/description matches prompt.
+3. Identify UX scope, constraints, and user-facing outcomes.
 
-1. Parse the `<task_brief>` from the task prompt. If it is missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
-2. Parse the ticket ID from the task prompt
-3. Load the `ticket` skill (if not already loaded)
-4. Show the issue and read its full description and acceptance criteria. Use the `<task_brief>` as the primary design spec and the ticket as supporting context.
-5. Verify the ticket is active for UX design:
-   - `tk show <id>` succeeds
-   - `status` is not `closed`
-   - ticket title/description matches the team lead prompt
-6. Identify UX scope, constraints, and user-facing outcomes
-
-### Phase 2: Design
+## Design
 
 1. Review relevant UI files and existing design patterns
 2. Define layout, component behavior, and interaction states
@@ -53,22 +45,13 @@ Stay within the git worktree.
 4. Specify accessibility expectations (labels, focus order, contrast, keyboard behavior)
 5. Keep the role advisory. Do not modify UI code; write implementation-ready guidance to the ticket instead.
 
-### Phase 3: Handoff
+## Handoff
 
 1. Write design decisions and implementation guidance to the ticket: `tk add-note <id> "<design notes>"`
 2. Do not close the ticket. Handoff to `software-engineer` for implementation.
-3. Report design decisions and implementation guidance using the shared workflow handoff base contract.
+3. Report design decisions using the shared workflow handoff base contract from `team-workflow-contracts`.
 4. List validation points for QA inside `qa_or_handoff_notes`.
 
 ## Output
 
-```
-## UX Design Complete
-
-- <id>: "<title>" - READY_FOR_IMPLEMENTATION
-  - state: READY_FOR_IMPLEMENTATION
-  - acceptance_coverage: <criteria mapped to design decisions>
-  - files_changed: <comma-separated paths or none>
-  - qa_or_handoff_notes: <UI guidance, accessibility notes, responsive behavior, and QA validation points>
-  - blockers: <none or blockers>
-```
+Follow the base handoff contract from `team-workflow-contracts`. No extra fields beyond base contract for this role.

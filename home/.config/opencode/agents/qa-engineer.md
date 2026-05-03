@@ -31,39 +31,30 @@ I will block closure until risk areas are tested with independent proof.
 
 Stay within the git worktree. Do not modify code or tests.
 
-## Workflow
+## Preparation
 
-### Phase 1: Prepare
+1. Parse the `<task_brief>` from the task prompt. If missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
+2. Load the `ticket` skill and verify the ticket: `tk show <id>` succeeds, status is not `closed`, title/description matches prompt.
+3. Confirm implementation work exists and is ready for QA. If missing or incomplete, exit with failure context.
 
-1. Parse the `<task_brief>` from the task prompt. If it is missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
-2. Parse the ticket ID from the task prompt
-3. Load the `ticket` skill (if not already loaded)
-4. Show the issue and read its full description and acceptance criteria. Use the `<task_brief>` as the primary QA spec and the ticket as supporting context.
-5. Verify the ticket is ready for QA:
-   - `tk show <id>` succeeds
-   - `status` is not `closed`
-   - ticket title/description matches the team lead prompt
-6. Confirm implementation work exists and is ready for QA
-   - If implementation is missing or incomplete, exit with failure context
+## Validation
 
-### Phase 2: Validate
+Follow the Global Worker Rules in `team-workflow-contracts`.
 
-1. Read files changed for the issue, the full implementation handoff, and the validation brief when present
-2. If metadata is omitted, assume the team defaults.
-3. Treat issue metadata as a starting point, not a ceiling. If the observed change surface is riskier than planned, raise `risk` or `test_expectation` in your output and explain why.
-4. Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
-5. Choose the minimum independent validation that can falsify the acceptance criteria:
+1. Read files changed, implementation handoff, and validation brief when present
+2. If metadata is omitted, assume team defaults
+3. Choose the minimum independent validation that can falsify the acceptance criteria:
    - `risk=low` and `test_expectation=none|targeted`: inspect the change and run targeted checks
    - `risk=medium` or `test_expectation=regression`: run targeted regression coverage
    - `risk=high` or `test_expectation=e2e`: run heavier validation, including integration or E2E when required
-   - `fast_lane=true`: keep validation lightweight unless the evidence suggests hidden risk
-6. If behavior or business logic changed and trusted test commands exist, run at least one executable check. If no reliable command exists, make the inspection-only evidence explicit.
-7. Use validation-runner evidence when present, and do not rerun the exact same broad commands unless that repetition is needed as independent evidence.
-8. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
-9. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
-10. Verify each acceptance criterion with evidence.
+   - `fast_lane=true`: keep validation lightweight unless evidence suggests hidden risk
+5. If behavior changed and trusted test commands exist, run at least one executable check. If no reliable command exists, make the inspection-only evidence explicit.
+6. Use validation-runner evidence when present; do not rerun the exact same broad commands unless repetition is needed as independent evidence.
+7. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
+8. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
+9. Verify each acceptance criterion with evidence.
 
-### Phase 3: Close or Return
+## Close or Return
 
 1. If QA passes, close only the assigned ticket (`tk close <ticket-id>`).
 2. If QA fails, do not close. Report exact gaps and defect ownership.
@@ -71,20 +62,12 @@ Stay within the git worktree. Do not modify code or tests.
 
 ## Output
 
-```
-## QA Complete
+Follow the base handoff contract from `team-workflow-contracts`. Include these qa-engineer extensions:
 
-- <id>: "<title>" - <CLOSED/NEEDS_REWORK/BLOCKED>
-  - state: <CLOSED/NEEDS_REWORK/BLOCKED>
-  - acceptance_coverage: <criteria met/not met>
-  - files_changed: <comma-separated paths or none>
-  - tests_added: <paths added/updated or none>
-  - tests_run_by_implementation: <commands reported by implementation, or none>
-  - tests_run_by_qa: <commands run by QA and pass/fail status, or none>
-  - risk: <low|medium|high>
-  - test_expectation: <none|targeted|regression|e2e>
-  - risk_areas: <areas probed during QA, or none>
-  - defect_owner: <software-engineer|ux-designer|none>
-  - qa_or_handoff_notes: <tests run, evidence, defect ownership, and recommended rework owner>
-  - blockers: <none or blockers>
-```
+- `tests_added`
+- `tests_run_by_implementation`
+- `tests_run_by_qa`
+- `risk`: low | medium | high
+- `test_expectation`: none | targeted | regression | e2e
+- `risk_areas`
+- `defect_owner`: software-engineer | ux-designer | none
