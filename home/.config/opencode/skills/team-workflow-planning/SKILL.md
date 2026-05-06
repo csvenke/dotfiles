@@ -50,9 +50,9 @@ Prefer a small set of high-leverage questions that resolve scope, constraints, a
 
 ## Plan Presentation
 
-When the plan is ready:
+**CRITICAL — HARD STOP:** Before asking for approval, you MUST output the complete plan as markdown text in your response. Internal reasoning does NOT count as presentation.
 
-1. Present this exact section as regular text in the main thread:
+1. Output this exact section as regular text in the main thread:
 
    ```md
    ## Plan
@@ -72,10 +72,13 @@ When the plan is ready:
      Execution: sequential by default
    ```
 
-2. Keep the plan visible and concise.
-3. Ask for approval using the Questions tool: `Approve this plan?` — Options: `Approve` / `Request changes`
+2. Verify the plan markdown is visible in your response text above.
+3. **Only then** ask for approval using the Questions tool: `Approve this plan?` — Options: `Approve` / `Request changes`
+4. **Never** proceed to `ISSUE_CREATION` without explicit user approval.
 
-Call the Questions tool only after the plan and execution brief are visible to the user.
+Call the Questions tool only after the plan markdown is visible to the user.
+
+If you have not output the plan markdown above, do so NOW before continuing.
 
 If user requests changes, revise and re-present. Any clear affirmative counts as approval.
 

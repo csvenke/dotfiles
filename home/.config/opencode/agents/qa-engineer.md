@@ -48,11 +48,11 @@ Follow the Global Worker Rules in `team-workflow-contracts`.
    - `risk=medium` or `test_expectation=regression`: run targeted regression coverage
    - `risk=high` or `test_expectation=e2e`: run heavier validation, including integration or E2E when required
    - `fast_lane=true`: keep validation lightweight unless evidence suggests hidden risk
-5. If behavior changed and trusted test commands exist, run at least one executable check. If no reliable command exists, make the inspection-only evidence explicit.
-6. Use validation-runner evidence when present; do not rerun the exact same broad commands unless repetition is needed as independent evidence.
-7. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
-8. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
-9. Verify each acceptance criterion with evidence.
+4. If behavior changed and trusted test commands exist, run at least one executable check. If no reliable command exists, make the inspection-only evidence explicit.
+5. Use validation-runner evidence when present; do not rerun the exact same broad commands unless repetition is needed as independent evidence.
+6. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
+7. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
+8. Verify each acceptance criterion with evidence.
 
 ## Close or Return
 

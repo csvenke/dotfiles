@@ -48,10 +48,12 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
    - WAVE_EXECUTION → `team-workflow-waves`
    - EPIC_CLOSURE → `team-workflow-closure`
 4. **Follow the loaded skill exactly**
-5. **Load on demand**: `team-workflow-contracts` when dispatching workers; `ticket` before `tk` commands
+5. **PLANNING hard stop**: Before advancing to `ISSUE_CREATION`, verify the plan markdown was visibly output in the main thread and the user explicitly approved it. If no plan was visibly presented, output it now.
+6. **Load on demand**: `team-workflow-contracts` when dispatching workers; `ticket` before `tk` commands
 
 ## Autonomy Rules
 
 - Continue automatically until complete
+- **EXCEPTION — PLANNING PHASE HARD STOP:** Always output the full plan markdown in the main thread before asking for approval. Internal reasoning does NOT count as presentation. Do not proceed to `ISSUE_CREATION` without explicit user approval.
 - Only pause for: plan approval, real blockers requiring user decision, unclear/conflicting requirements, unsafe/unrecoverable state
 - After any status output or phase transition, immediately continue to the next action in the same turn
