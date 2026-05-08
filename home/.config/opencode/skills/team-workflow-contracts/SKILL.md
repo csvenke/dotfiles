@@ -60,6 +60,7 @@ All workers must follow these rules regardless of role:
 - Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
 - Load the `tdd` skill only when it will materially help write or restructure tests. Do not load it by default.
 - Reserve at least 15 steps for handoff formatting.
+- Before handoff, write a 1-sentence diary entry: `mempalace_diary_write(agent_name=<your-role>, entry=<1-sentence summary of work done and any blockers>)`
 
 ## Role-Specific Extensions
 

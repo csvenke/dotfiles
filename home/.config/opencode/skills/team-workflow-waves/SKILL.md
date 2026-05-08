@@ -31,6 +31,13 @@ Repeat until staff review passes. Load `team-workflow-contracts` for handoff for
 3. `mempalace_mempalace_add_drawer` for new durable text
 4. `mempalace_mempalace_kg_add` for relationship facts
 
+**Worker Diaries** (on handoff):
+
+All workers must write a 1-sentence diary entry before handoff:
+`mempalace_diary_write(agent_name=<role>, entry=<1-sentence summary of work done and any blockers>)`
+
+The team lead reads these diaries only when a worker returns `NEEDS_REWORK` or `BLOCKED`.
+
 Skip memory operations in `degraded` mode. Note `memory_status=degraded` in handoffs.
 
 ## Step 0: Repo Bootstrap (once per run)
@@ -102,7 +109,10 @@ Run when all tasks are closed.
 **Check Results**:
 
 - `has_blockers=false` → proceed to Epic Closure
-- `has_blockers=true`: create follow-up issues under same epic, update todo "Staff review - blockers found, created follow-ups", return to Step 1
+- `has_blockers=true`:
+  1. Create follow-up issues under same epic
+  2. Mine blockers into KG: `mempalace_mempalace_kg_add(subject=<blocker-type>, predicate="seen_in", object=<epic-id>)` and `mempalace_mempalace_kg_add(subject=<blocker-type>, predicate="policy", object=<fix-approach-or-escalation>)`
+  3. Update todo "Staff review - blockers found, created follow-ups", return to Step 1
 
 **Todo Updates**: Start = "Staff review" in_progress. Passed = completed, continue automatically. Blockers = completed with follow-ups note, continue to Step 1 automatically.
 

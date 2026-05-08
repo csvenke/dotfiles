@@ -48,6 +48,16 @@ Prefer a small set of high-leverage questions that resolve scope, constraints, a
 - Default to sequential execution
 - Parallelize only when surfaces are clearly independent
 
+## Duplicate Epic Check
+
+Before presenting the plan, run `mempalace_mempalace_check_duplicate` with the plan objective. If similarity `>0.85`, append a warning to the plan:
+
+```text
+⚠️ Similar epic <id> found (<outcome>). Review before approving.
+```
+
+Skip if `memory_mode=degraded` or no plausible prior work exists.
+
 ## Plan Presentation
 
 **CRITICAL — HARD STOP:** Before asking for approval, you MUST output the complete plan as markdown text in your response. Internal reasoning does NOT count as presentation.

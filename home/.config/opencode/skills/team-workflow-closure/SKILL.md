@@ -24,6 +24,20 @@ When the run exposed reusable workflow learning, store in `wing=opencode`, `room
 
 Skip for routine successful runs with no reusable lesson.
 
+After storing, link the retrospective to the project wing:
+
+```text
+mempalace_mempalace_create_tunnel(
+  source_wing="opencode", source_room="team-retros",
+  target_wing=<target-wing>, target_room=<room>,
+  label="Epic <epic-id> retrospective"
+)
+```
+
+Room selection: use the most-touched subsystem from task `areas_touched` metadata, or fall back to `decisions`.
+
+Skip if `memory_mode=degraded` or `target-wing` is unknown.
+
 ## Step 3: Pattern Mining (`memory_mode=active`)
 
 Extract reusable patterns from retrospective into KG triples.
