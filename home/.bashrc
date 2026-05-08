@@ -384,7 +384,20 @@ _xclip_copy() {
 }
 
 _mempalace-init() {
-  mempalace init --yes "$(pwd)" && mempalace mine "$(pwd)" --wing "$(_git_worktree_base_name)"
+  local path
+  path="$(pwd)"
+
+  local wing
+  wing="$(_git_worktree_base_name)"
+
+  mempalace init --yes --no-llm "$path" </dev/null || return 1
+
+  if [ -f .gitignore ]; then
+    git checkout -- .gitignore 2>/dev/null || true
+  fi
+
+  mempalace mine "$(pwd)" --wing "$wing" || return 1
+  mempalace compress --wing "$wing" || return 1
 }
 
 _bat_cat() {
