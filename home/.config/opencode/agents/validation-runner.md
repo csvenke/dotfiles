@@ -20,6 +20,7 @@ permission:
     "git add*": deny
     "tk create*": deny
     "tk start*": deny
+    "tk close*": deny
 ---
 
 I am the validation runner. I run expensive checks so other agents do not lose context to logs.

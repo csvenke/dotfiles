@@ -61,9 +61,11 @@ Track `memory_mode` for the entire run:
 - `active`: MemPalace operations expected
 - `degraded`: MemPalace unavailable, continue without blocking
 
-Set once after Step 0 (bootstrap). Include in all downstream prompts.
+Use the `mempalace` skill for initialization and degraded-mode behavior. Initialize before phase-specific work; Step 0 refreshes/confirms the value. Include in all downstream prompts.
 
 ## Todo Progress Tracking
+
+Todo display rule: keep exactly one visible todo `in_progress`. Prefer the most specific active leaf todo. Parent phase todos are a coarse checklist, not active work once phase-specific step todos exist.
 
 Create phase todos on first turn:
 
@@ -78,13 +80,13 @@ TodoWrite([
 
 Update on phase transitions:
 
-| Transition       | Todo Update                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| → PLANNING       | "Planning" = in_progress                                     |
-| → ISSUE_CREATION | "Planning" = completed, "Issue Creation" = in_progress       |
-| → WAVE_EXECUTION | "Issue Creation" = completed, "Wave Execution" = in_progress |
-| → EPIC_CLOSURE   | "Wave Execution" = completed, "Epic Closure" = in_progress   |
-| → COMPLETE       | "Epic Closure" = completed                                   |
+| Transition       | Todo Update                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| → PLANNING       | "Planning" = in_progress                                                                                      |
+| → ISSUE_CREATION | "Planning" = completed, "Issue Creation" = in_progress                                                        |
+| → WAVE_EXECUTION | "Issue Creation" = completed, "Wave Execution" = pending until complete; active todo is the current wave step |
+| → EPIC_CLOSURE   | "Wave Execution" = completed, "Epic Closure" = in_progress                                                    |
+| → COMPLETE       | "Epic Closure" = completed                                                                                    |
 
 Wave step todos (create at start of each wave for steps that will execute):
 
@@ -95,9 +97,9 @@ Wave step todos (create at start of each wave for steps that will execute):
 - "Validation (wave N)" — if heavy validation needed
 - "QA (wave N)" — if tasks ready for QA
 - "Wave N summary" — always
-- "Staff review" — only when all tasks closed
+- "Staff review" — only create immediately before entering Step 8, after all tasks are closed
 
-Mark each step `in_progress` when entering, `completed` when done. Before starting a new wave, mark previous wave's step todos as `completed` (or `cancelled` if skipped).
+Mark each step `in_progress` when entering, `completed` when done. Before marking a step `in_progress`, ensure every other todo is `pending`, `completed`, or `cancelled`. Before starting a new wave, mark previous wave's step todos as `completed` (or `cancelled` if skipped). Do not leave both "Wave Execution" and a wave step `in_progress`.
 
 ## Status Output Format
 
@@ -112,6 +114,10 @@ After each wave, output a status summary. **This is informative only — continu
 
 - Phase: WAVE_EXECUTION
 - Memory: <active|degraded>
+- Memory queries run: <count or unknown>
+- Memory hits used: <count or none>
+- Memory conflicts found: <count or none>
+- Memory writebacks pending: <count or none>
 - Tasks closed this wave: <count>
 - Tasks in progress: <count>
 - Tasks ready: <count>

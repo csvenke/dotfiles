@@ -11,6 +11,10 @@ tools:
   bash: false
   glob: true
   grep: true
+  mempalace_mempalace_search: true
+  mempalace_mempalace_list_drawers: true
+  mempalace_mempalace_get_drawer: true
+  mempalace_mempalace_kg_query: true
   task: false
   question: false
   skill: false

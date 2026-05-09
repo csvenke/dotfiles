@@ -9,6 +9,8 @@ description: "Handoff contracts and escalation rules for team workflow. Load whe
 
 Every worker prompt from the team lead must include `<global_rules>` followed by a self-contained `<task_brief>`. Workers may read the ticket, but the prompt must be sufficient to start safely.
 
+Load the `mempalace` skill before adding or interpreting `<memory_context>`.
+
 ```xml
 <global_rules>
 - Treat issue metadata as a starting point, not a ceiling. If observed surface exceeds plan, raise risk or test_expectation and explain why.
@@ -40,6 +42,8 @@ notes: <repo bootstrap, UX notes, memory context, or none>
 - `norms` = "how to write the code" — engineering standards the worker should follow (patterns, conventions, style). Omit or use `none` when the codebase has no strong conventions.
 - `safeguards` = "what must never break" — hard constraints, invariants, security rules. Omit or use `none` when no known invariants apply.
 
+When memory is active, include a `<memory_context>` block after `<task_brief>` if any relevant memory exists. Use the schema from the `mempalace` skill. If memory is degraded, include `memory_status: degraded` and do not invent prior work.
+
 !!CRITICAL!! If the brief is missing ticket id, objective, or acceptance criteria, the worker must report `BLOCKED` instead of guessing.
 
 ## Base Contract (all workflow roles)
@@ -60,6 +64,7 @@ All workers must follow these rules regardless of role:
 - Treat repo bootstrap commands as the source of truth. If a needed command is missing, report it as not run instead of guessing.
 - Load the `tdd` skill only when it will materially help write or restructure tests. Do not load it by default.
 - Reserve at least 15 steps for handoff formatting.
+- Treat `<memory_context>` as advisory evidence, except explicit user-confirmed reversals and hard invariants, which are safeguards. If repo evidence contradicts memory, report the conflict instead of silently choosing one.
 
 ## Role-Specific Extensions
 
@@ -99,6 +104,7 @@ Must also include:
 - `test_expectation`
 - `risk_areas`
 - `defect_owner`: software-engineer | ux-designer | none
+- `memory_risks_validated`
 
 ## Specialist Formats
 
@@ -118,6 +124,8 @@ Review summary format:
 - `blocker_count`
 - `concern_count`
 - `suggestion_count`
+- `memory_writeback_candidates`
+- `superseded_memory`
 
 ## Incomplete Responses
 
@@ -167,3 +175,9 @@ Do NOT log:
 - Implementation details
 - Test runs
 - Minor defects
+
+---
+
+# Memory Write Rules
+
+Use the `mempalace` skill for durable drawer writeback, project wing/room selection, canonical KG relationships, and KG slug rules.

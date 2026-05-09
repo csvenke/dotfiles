@@ -7,16 +7,19 @@ description: "Planning phase for team workflow. Memory Prime, clarification guid
 
 Until user approves the plan, behave like the built-in plan agent.
 
+Before Memory Prime, load the `mempalace` skill and initialize `memory_mode` if unset.
+
 ## Memory Prime (`memory_mode=active`)
 
-Before presenting a plan, search for relevant prior work:
+Before presenting a plan, use the `mempalace` Memory Prime to search for relevant prior work. When relevant prior work exists, include a compact `<prior_work>` block: similar epics, known pitfalls, applicable policy candidates.
 
-1. `mempalace_mempalace_search` with goal keywords and likely subsystems
-2. `mempalace_mempalace_kg_query` for subsystems to pull risk history
-3. `mempalace_mempalace_search` in `wing=opencode`, `room=team-retros` for applicable policies
-4. When relevant prior work exists, include a compact `<prior_work>` block: similar epics, known pitfalls, applicable policy candidates
+Memory Prime is mandatory before plan approval when the work touches files/subsystems with prior epics, reverses behavior, adds back removed behavior, changes validation policy, or depends on previous design choices.
 
-Skip Memory Prime when: goal is trivial, memory is degraded, or no plausible prior work exists.
+Skip Memory Prime only when: goal is trivial, memory is degraded, or there is no plausible prior work and no known target subsystem.
+
+## Memory Conflict Gate
+
+Apply the `mempalace` Memory Conflict Gate before issue creation. If the user confirms a reversal, include that confirmation in ticket memory notes and downstream `<memory_context>`.
 
 ## Structured Analysis
 
@@ -26,6 +29,15 @@ After Memory Prime, run a lightweight analysis to surface risks. Skip for trivia
 2. Use `explore` agent to scan relevant code areas — identify existing concepts and boundaries.
 3. Produce a compact `<analysis>` block: existing concepts, new concepts, key rules, risks and edge cases, scope boundaries (in vs out).
 4. Include `<analysis>` in the plan presentation so the user can validate understanding before approving.
+
+## Policy Application
+
+When Memory Prime finds workflow retrospectives or policy candidates, include a compact policy section in the plan:
+
+- `policies_applied`: policies that changed the plan, routing, validation, or questions
+- `policies_rejected`: relevant policies intentionally not used, with why
+
+Omit this section only when Memory Prime finds no applicable policy candidates.
 
 ## Planning Guidelines
 
@@ -58,18 +70,26 @@ Prefer a small set of high-leverage questions that resolve scope, constraints, a
    ## Plan
 
    Objective: <one sentence>
+
    Tasks:
 
    - <task 1>
    - <task 2 if needed>
-     Acceptance:
+
+   Acceptance:
+
    - <criterion 1>
    - <criterion 2>
-     Scope out: <what we explicitly will NOT do>
-     Definition of done: <concrete verification — tests, commands, or checks that prove completion>
-     Constraints: <constraints or none>
-     Assumptions: <assumptions or none>
-     Execution: sequential by default
+
+   Scope out: <what we explicitly will NOT do>
+   Definition of done: <concrete verification — tests, commands, or checks that prove completion>
+   Constraints: <constraints or none>
+   Assumptions: <assumptions or none>
+   Prior work: <compact prior work summary or none>
+   Memory conflicts: <conflicts requiring user confirmation or none>
+   Policies applied: <policy candidates applied or none>
+   Policies rejected: <relevant policy candidates intentionally skipped or none>
+   Execution: sequential by default
    ```
 
 2. Verify the plan markdown is visible in your response text above.

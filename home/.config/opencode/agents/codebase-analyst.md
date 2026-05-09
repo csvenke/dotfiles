@@ -12,6 +12,8 @@ tools:
   glob: true
   grep: true
   skill: true
+  mempalace_mempalace_search: true
+  mempalace_mempalace_kg_query: true
 permission:
   bash:
     "*": allow
@@ -40,6 +42,7 @@ Stay within the git worktree. Do not modify files or tracker state.
 1. Read the task prompt and determine whether the goal is repo bootstrap, task mapping, or rework triage.
 2. If a ticket ID is provided and issue details are needed, load the `ticket` skill and use read-only `tk` commands.
 3. Keep exploration narrow. Prefer the smallest set of files and commands that can answer the routing question.
+4. If prior memory is relevant or provided, query MemPalace read-only for bootstrap commands, validation history, and subsystem risks. Treat memory as hypotheses to verify against repo files.
 
 ### Phase 2: Map
 
@@ -65,6 +68,7 @@ Stay within the git worktree. Do not modify files or tracker state.
    - `requires_server_tests`
    - `recommended_test_expectation` (advisory only; explicit issue metadata wins)
 7. Capture sharp edges, invariants, likely overlap, and places other agents should ignore.
+8. Report conflicts between repo evidence and prior memory instead of silently choosing one.
 
 ### Phase 3: Handoff
 

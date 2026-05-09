@@ -12,6 +12,8 @@ tools:
   glob: true
   grep: true
   skill: true
+  mempalace_mempalace_search: true
+  mempalace_mempalace_kg_query: true
 permission:
   bash:
     "*": allow
@@ -36,6 +38,7 @@ Stay within the git worktree. Do not modify code or tests.
 1. Parse the `<task_brief>` from the task prompt. If missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
 2. Load the `ticket` skill and verify the ticket: `tk show <id>` succeeds, status is not `closed`, title/description matches prompt.
 3. Confirm implementation work exists and is ready for QA. If missing or incomplete, exit with failure context.
+4. If `<memory_context>` names prior behavior, reversals, or risk history, use it to shape validation. Query MemPalace read-only only when the prompt lacks enough memory detail for a risky area.
 
 ## Validation
 
@@ -53,6 +56,7 @@ Follow the Global Worker Rules in `team-workflow-contracts`.
 6. If required coverage is missing, a recommended command is invalid, or validation fails, return `NEEDS_REWORK`.
 7. If QA is blocked by infra, orchestration, or missing trusted commands, return `BLOCKED`.
 8. Verify each acceptance criterion with evidence.
+9. For user-confirmed reversals, verify the new behavior intentionally supersedes prior behavior without breaking preserved adjacent behavior.
 
 ## Close or Return
 
@@ -71,3 +75,4 @@ Follow the base handoff contract from `team-workflow-contracts`. Include these q
 - `test_expectation`: none | targeted | regression | e2e
 - `risk_areas`
 - `defect_owner`: software-engineer | ux-designer | none
+- `memory_risks_validated`

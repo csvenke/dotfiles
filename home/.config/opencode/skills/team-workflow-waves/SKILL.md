@@ -18,38 +18,39 @@ Repeat until staff review passes. Load `team-workflow-contracts` for handoff for
 
 ## Memory Loop
 
+Load the `mempalace` skill before memory operations. Track lightweight memory counters per the `mempalace` skill.
+
 **Memory Prime** (before dispatch, `memory_mode=active`):
 
-1. `mempalace_mempalace_search` with ticket id/title and scope terms
-2. `mempalace_mempalace_kg_query` for ticket id and epic id
-3. Build compact `<memory_context>` block, include in downstream prompts
+Use the `mempalace` Memory Prime with ticket id/title, scope terms, epic id, and known subsystem or file-area slugs. Build compact `<memory_context>` using the `mempalace` schema and include it in downstream prompts. If memory shows a contradiction not approved during planning, apply the `mempalace` Memory Conflict Gate before dispatch.
 
 **Memory Writeback** (on task closure, `memory_mode=active`):
 
-1. Capture durable outcomes only
-2. `mempalace_mempalace_check_duplicate` before writing
-3. `mempalace_mempalace_add_drawer` for new durable text
-4. `mempalace_mempalace_kg_add` for relationship facts
+Use the `mempalace` Memory Writeback rules. Write workflow-level task outcomes to `wing=opencode`, `room=task-outcomes`; write durable project facts, invariants, risks, or decisions to the project/domain target selected by the `mempalace` skill.
 
-Skip memory operations in `degraded` mode. Note `memory_status=degraded` in handoffs.
+Skip memory operations in `degraded` mode per the `mempalace` skill. Note `memory_status=degraded` in handoffs.
 
 ## Step 0: Repo Bootstrap (once per run)
 
-Launch `codebase-analyst` to determine: `base_branch`, `lint_command`, `typecheck_command`, `unit_test_command`, `integration_test_command`, `e2e_command`, `build_command`, `playwright_available`. Record `none` instead of guessing. Set `memory_mode` after checking lane availability.
+Refresh MemPalace availability using the `mempalace` skill.
 
-Update todos: mark "Find ready work (wave 1)" as in_progress.
+When `memory_mode=active`, use the `mempalace` Memory Prime for prior repo bootstrap and risk memory. Pass prior memory to `codebase-analyst` as hypotheses to verify, not as source of truth.
+
+Launch `codebase-analyst` to determine: `base_branch`, `lint_command`, `typecheck_command`, `unit_test_command`, `integration_test_command`, `e2e_command`, `build_command`, `playwright_available`. Record `none` instead of guessing. Repo evidence wins over stale memory; report conflicts in the bootstrap brief.
+
+Update todos: mark "Find ready work (wave 1)" as the only `in_progress` todo. Keep the parent "Wave Execution" todo pending until the phase completes.
 
 ## Step 1: Find Ready Work
 
 `tk ready -T team-task` → split into UI tasks, fast-lane, domain-heavy, standard. Default to first ready task by priority. Group multiple tasks only when `parallel_safe=true`, `areas_touched` don't overlap, and coordination is obviously simple.
 
-Create wave step todos for steps that will execute. Before dispatching, include `<global_rules>` and a complete `<task_brief>` (templates in `team-workflow-contracts`) in the worker prompt.
+Create wave step todos only for steps that will execute. Do not create "Staff review" until all tasks are closed and Step 8 is about to run. Before dispatching, include `<global_rules>` and a complete `<task_brief>` (templates in `team-workflow-contracts`) in the worker prompt.
 
 ## Step 2: Domain Brief (selective)
 
 Skip unless task is domain-heavy or underspecified.
 
-1. `invariant-analyst "Review invariants for ticket <id>: <title>"`
+1. `invariant-analyst "Review invariants for ticket <id>: <title>"` with complete `<global_rules>` and `<task_brief>` including repo bootstrap and `<memory_context>` when present
 2. Include brief excerpts in downstream prompts
 3. Log durable core invariants: `tk add-note <id> "INVARIANTS: <summary>"`
 

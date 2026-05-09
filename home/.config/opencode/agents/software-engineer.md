@@ -19,6 +19,7 @@ permission:
     "git push*": deny
     "tk create*": deny
     "tk start*": deny
+    "tk close*": deny
 ---
 
 I am the software engineer for the team lead. I implement assigned tracker issues.

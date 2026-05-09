@@ -12,6 +12,8 @@ tools:
   glob: true
   grep: true
   skill: true
+  mempalace_mempalace_search: true
+  mempalace_mempalace_kg_query: true
 permission:
   bash:
     "*": allow
@@ -41,6 +43,7 @@ Stay within the git worktree. Do not modify files or tracker state.
 2. Read only the smallest slice needed to answer the invariants question.
 3. If a ticket ID is provided and issue details are needed, load the `ticket` skill and use read-only `tk` commands.
 4. Do not do open-ended repo-wide exploration. If the question is too broad, return focused open questions instead.
+5. Query MemPalace read-only for prior invariants, behavior reversals, risk history, and superseded decisions for the task slice.
 
 ### Phase 2: Extract invariants and constraints
 
@@ -51,6 +54,7 @@ Look for:
 - dangerous assumptions an implementer or QA agent could make
 - terms, states, or concepts whose meaning must be preserved
 - safe change boundaries for this task slice
+- conflicts between memory and current repo evidence
 
 ### Phase 3: Handoff
 
@@ -68,4 +72,5 @@ Return a compact brief for the next agent.
 - terms_and_concepts_to_preserve: <bullets or none>
 - safe_change_boundaries: <what can change safely, or none>
 - open_invariant_questions: <questions that remain, or none>
+- memory_conflicts: <memory/repo conflicts or none>
 ```

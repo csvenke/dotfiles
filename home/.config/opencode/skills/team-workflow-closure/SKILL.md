@@ -7,15 +7,17 @@ description: "Epic closure phase for team workflow. Memory writeback, pattern mi
 
 Enter after staff review passes (`has_blockers=false`). Staff review is Step 8 of Wave Execution.
 
-## Step 1: Memory Writeback (`memory_mode=active`)
+## Step 1: Memory Writeback
 
 Capture epic-level durable outcomes:
 
-1. `mempalace_mempalace_check_duplicate` before drawer writes
-2. `mempalace_mempalace_add_drawer` for new durable text
-3. `mempalace_mempalace_kg_add` for durable relationship facts
+1. Load the `mempalace` skill
+2. Use Memory Writeback rules for workflow-level durable text in `wing=opencode`
+3. Use project/domain target rules for project durable text
+4. Use canonical KG relationships and slug rules for durable relationship facts
+5. Invalidate stale facts before adding replacements when the epic supersedes prior memory
 
-Skip if `memory_mode=degraded`.
+If `memory_mode=degraded`, use the `mempalace` degraded-mode retry behavior.
 
 ## Step 2: Workflow Retrospective
 
@@ -26,21 +28,21 @@ Skip for routine successful runs with no reusable lesson.
 
 ## Step 3: Pattern Mining (`memory_mode=active`)
 
-Extract reusable patterns from retrospective into KG triples.
+Extract reusable patterns from retrospective into KG triples. Apply the canonical relationships and KG slug rules from the `mempalace` skill to every fact.
 
 **If `policy_candidate` is non-empty:**
 
 1. Identify pattern type: `test_triage`, `contract_change`, `infra_failure`, `rework_loop`, `routing_miss`
 2. Sanitize policy text (remove `!`, `/`, special chars)
-3. Record origin: `kg_add(subject=<pattern_type>, predicate="learned_from", object=<epic_id>)`
-4. Record policy: `kg_add(subject=<pattern_type>, predicate="policy", object=<sanitized_policy>)`
+3. Record origin: `kg_add(subject=<pattern_type_slug>, predicate="learned_from", object=<epic_id>)`
+4. Record policy: `kg_add(subject=<pattern_type_slug>, predicate="policy", object=<sanitized_policy_slug>)`
 
 **If bug pattern with fix approach:**
-`kg_add(subject=<bug_pattern>, predicate="fixed_by", object=<fix_approach>)`
-`kg_add(subject=<bug_pattern>, predicate="seen_in", object=<epic_id>)`
+`kg_add(subject=<bug_pattern_slug>, predicate="fixed_by", object=<fix_approach_slug>)`
+`kg_add(subject=<bug_pattern_slug>, predicate="seen_in", object=<epic_id>)`
 
 **If subsystem has recurring issues:**
-`kg_add(subject=<subsystem>, predicate="risk_history", object=<compact_risk_note>)`
+`kg_add(subject=<subsystem_slug>, predicate="risk_history", object=<compact_risk_slug>)`
 
 Pattern Mining makes learnings queryable by Planning Memory Prime in future runs.
 Skip if `memory_mode=degraded`.

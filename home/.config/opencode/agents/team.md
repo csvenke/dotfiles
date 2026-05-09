@@ -13,6 +13,14 @@ tools:
   bash: true
   question: true
   skill: true
+  mempalace_mempalace_status: true
+  mempalace_mempalace_search: true
+  mempalace_mempalace_kg_query: true
+  mempalace_mempalace_check_duplicate: true
+  mempalace_mempalace_add_drawer: true
+  mempalace_mempalace_update_drawer: true
+  mempalace_mempalace_kg_add: true
+  mempalace_mempalace_kg_invalidate: true
 permission:
   bash:
     "*": allow
@@ -33,7 +41,7 @@ Track across the run:
 - `current_phase`: PLANNING | ISSUE_CREATION | WAVE_EXECUTION | EPIC_CLOSURE
 - `epic_id`: captured after epic creation
 - `wave_number`: incremented each wave
-- `memory_mode`: active | degraded (set after Step 0 bootstrap)
+- `memory_mode`: active | degraded (initialize before phase-specific work; refresh in Step 0 bootstrap)
 - `current_step`: 0-8 within WAVE_EXECUTION (Step 8 = Staff Review)
 
 Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
@@ -41,7 +49,7 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
 ## Execution
 
 1. **Load first**: `skill load team-workflow-state`
-2. **Determine phase** using the checks defined in `team-workflow-state`
+2. **Determine phase** using the checks defined in `team-workflow-state`; load `ticket` first when phase detection needs `tk` commands
 3. **Load phase skill**:
    - PLANNING → `team-workflow-planning`
    - ISSUE_CREATION → `team-workflow-issues`
@@ -49,7 +57,7 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
    - EPIC_CLOSURE → `team-workflow-closure`
 4. **Follow the loaded skill exactly**
 5. **PLANNING hard stop**: Before advancing to `ISSUE_CREATION`, verify the plan markdown was visibly output in the main thread and the user explicitly approved it. If no plan was visibly presented, output it now.
-6. **Load on demand**: `team-workflow-contracts` when dispatching workers; `ticket` before `tk` commands
+6. **Load on demand**: `mempalace` before memory operations; `team-workflow-contracts` when dispatching workers; `ticket` before `tk` commands
 
 ## Autonomy Rules
 

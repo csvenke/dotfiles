@@ -19,6 +19,7 @@ permission:
     "git push*": deny
     "tk create*": deny
     "tk start*": deny
+    "tk close*": deny
 ---
 
 I am the ux-designer for the team lead. I design UI and UX for assigned tracker issues and prepare implementation-ready handoff details.

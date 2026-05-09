@@ -10,7 +10,7 @@ After the user approves the plan, create tracker issues.
 ## Prerequisites
 
 Load the `ticket` skill before running any `tk` commands. Follow its Team Workflow Recipe exactly.
-Keep tracker commands mechanical: short create command first, then separate `tk add-note` commands for SPEC, ACCEPTANCE, and METADATA.
+Keep tracker commands mechanical: short create command first, then separate `tk add-note` commands for SPEC, ACCEPTANCE, METADATA, and memory notes when applicable.
 
 ## Create Epic and Tasks
 
@@ -27,6 +27,9 @@ tk create "<title>" -t task --parent <epic-id> --tags team-task,<lane> -d "See S
 tk add-note <task-id> "SPEC: <what to change, why, and where to start>"
 tk add-note <task-id> "ACCEPTANCE: <verifiable acceptance criteria>"
 tk add-note <task-id> "METADATA: risk=<low|medium|high>; test_expectation=<none|targeted|regression|e2e>; areas_touched=<paths>; parallel_safe=<true|false>"
+# Optional when planning found prior work, memory conflicts, or user-confirmed reversals:
+tk add-note <task-id> "MEMORY: prior_work=<epic/fact or none>; conflicts=<conflict or none>; risk_history=<risk or none>"
+tk add-note <task-id> "REVERSAL_CONFIRMATION: <user confirmation or none>"
 
 # 5. Link dependencies
 tk dep <task-id> <dependency-id>
@@ -75,6 +78,15 @@ If any `tk` command fails:
 ## Issue Descriptions
 
 Issue descriptions are the agent's starting brief: what to change, why, where to start reading, design decisions.
+
+When planning found relevant prior work, memory conflicts, or user-confirmed reversals, preserve them in separate task notes. Keep `SPEC:` focused on the requested work and use memory notes for downstream `<memory_context>` reconstruction:
+
+```bash
+tk add-note <task-id> "MEMORY: prior_work=<epic/fact or none>; conflicts=<conflict or none>; risk_history=<risk or none>"
+tk add-note <task-id> "REVERSAL_CONFIRMATION: <user confirmation or none>"
+```
+
+If no memory findings apply, skip memory notes.
 
 ## Routing Rules
 
