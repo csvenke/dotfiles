@@ -10,14 +10,14 @@
 let
   mempalace = python3Packages.buildPythonPackage rec {
     pname = "mempalace";
-    version = "3.3.4";
+    version = "3.3.5";
     format = "pyproject";
 
     src = fetchFromGitHub {
       owner = "MemPalace";
       repo = "mempalace";
       rev = "v${version}";
-      hash = "sha256-2QlAnXFVl2AY3OIQDnFBryd89yJVcH6NjIe46+AzfYQ=";
+      hash = "sha256-MOX9HsIhM4LwtYiW25MrkPyTLXZXpSAWVk1NBewzDYA=";
     };
 
     nativeBuildInputs = with python3Packages; [
