@@ -222,11 +222,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1779362995,
-        "narHash": "sha256-OXS1YYnCpx66TZIm9O+/pFYJeDSj/jU4ZjUwGCMitUo=",
+        "lastModified": 1779799436,
+        "narHash": "sha256-MJ07X/a8TGrvDNWHNZuM8qYmG8ktmO1sbcQ1yvvFrQc=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "3c4a593f1a8c3be91b634b2a221db23cb2a68700",
+        "rev": "10a2c7e3cc0797cc4f99d59b117df5a9d2f4f212",
         "type": "github"
       },
       "original": {
