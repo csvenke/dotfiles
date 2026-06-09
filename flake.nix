@@ -82,6 +82,7 @@
               delta
               ripgrep
               jq
+              httpie
               tldr
               wget
               git
