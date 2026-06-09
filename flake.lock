@@ -222,11 +222,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1781010839,
-        "narHash": "sha256-mYGzaY508iHJ3tecKYgWqaO7agvjl33AxJ9S98SZ4wM=",
+        "lastModified": 1781011932,
+        "narHash": "sha256-KrRRr3GibaPIthQg6vMUE30hZN/ikw2/n0yAlM4BSUA=",
         "owner": "csvenke",
         "repo": "neovim-flake",
-        "rev": "1882e5e899d41cf06cc959ff531750af3777ecf5",
+        "rev": "7b6f251c83512ef209c13a9da69dc109de14c3ee",
         "type": "github"
       },
       "original": {
@@ -381,11 +381,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1775636079,
-        "narHash": "sha256-pc20NRoMdiar8oPQceQT47UUZMBTiMdUuWrYu2obUP0=",
+        "lastModified": 1780220602,
+        "narHash": "sha256-eynAfOmbmxJnkp7YewvCEbShNnnYJ9gLLqkzsYtBPeM=",
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "rev": "790751ff7fd3801feeaf96d7dc416a8d581265ba",
+        "rev": "db947814a175b7ca6ded66e21383d938df01c227",
         "type": "github"
       },
       "original": {
