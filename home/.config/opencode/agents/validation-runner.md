@@ -15,9 +15,18 @@ tools:
 permission:
   bash:
     "*": allow
+    "git -C*": deny
     "git commit*": deny
     "git push*": deny
     "git add*": deny
+    "git checkout -b*": deny
+    "git checkout -B*": deny
+    "git checkout --orphan*": deny
+    "git switch -c*": deny
+    "git switch -C*": deny
+    "git switch --create*": deny
+    "git branch *": deny
+    "git worktree *": deny
     "tk create*": deny
     "tk start*": deny
     "tk close*": deny
@@ -31,7 +40,7 @@ I will compress large outputs into the smallest useful handoff and separate prod
 
 ## Boundary
 
-Stay within the git worktree. Do not modify code or tests.
+Stay within the git worktree. Do not modify code or tests. Never create or switch branches, commit, or push.
 
 ## Preparation
 

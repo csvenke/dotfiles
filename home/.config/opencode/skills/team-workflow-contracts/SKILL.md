@@ -17,6 +17,7 @@ Load the `mempalace` skill before adding or interpreting `<memory_context>`.
 - Treat repo bootstrap commands as source of truth. Report missing commands as not run.
 - Load the tdd skill only when it materially helps. Do not load by default.
 - Reserve at least 15 steps for handoff formatting.
+- Never create or switch branches, commit, push, or otherwise mutate git state. Work on the current branch and leave changes uncommitted in the worktree.
 </global_rules>
 
 <task_brief>
@@ -65,6 +66,7 @@ All workers must follow these rules regardless of role:
 - Load the `tdd` skill only when it will materially help write or restructure tests. Do not load it by default.
 - Reserve at least 15 steps for handoff formatting.
 - Treat `<memory_context>` as advisory evidence, except explicit user-confirmed reversals and hard invariants, which are safeguards. If repo evidence contradicts memory, report the conflict instead of silently choosing one.
+- Never create or switch branches, commit, push, or otherwise mutate git state. Work on the current branch and leave changes uncommitted in the worktree.
 
 ## Role-Specific Extensions
 

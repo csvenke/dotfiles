@@ -17,8 +17,17 @@ tools:
 permission:
   bash:
     "*": allow
+    "git -C*": deny
     "git commit*": deny
     "git push*": deny
+    "git checkout -b*": deny
+    "git checkout -B*": deny
+    "git checkout --orphan*": deny
+    "git switch -c*": deny
+    "git switch -C*": deny
+    "git switch --create*": deny
+    "git branch *": deny
+    "git worktree *": deny
     "tk create*": deny
     "tk start*": deny
 ---
@@ -31,7 +40,7 @@ I will block closure until risk areas are tested with independent proof.
 
 ## Boundary
 
-Stay within the git worktree. Do not modify code or tests.
+Stay within the git worktree. Do not modify code or tests. Never create or switch branches, commit, or push.
 
 ## Preparation
 

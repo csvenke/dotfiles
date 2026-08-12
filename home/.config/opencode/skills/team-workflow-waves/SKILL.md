@@ -15,6 +15,7 @@ Repeat until staff review passes. Load `team-workflow-contracts` for handoff for
 - **Self-Contained Dispatch**: Every worker prompt must include a complete `<task_brief>` (see `team-workflow-contracts` for template).
 - **Structured Context**: Wrap briefs in XML tags (`<repo_bootstrap>`, `<invariants>`, `<memory_context>`).
 - **High-Signal Audit Trail**: Log only architectural decisions, invariants, UX decisions, pivots, and blockers via `tk add-note`.
+- **No Git Mutations**: No agent creates or switches branches, commits, or pushes. All work stays uncommitted on the current branch. Review surfaces use read-only `git diff` only.
 
 ## Memory Loop
 

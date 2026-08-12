@@ -15,8 +15,17 @@ tools:
 permission:
   bash:
     "*": allow
+    "git -C*": deny
     "git commit*": deny
     "git push*": deny
+    "git checkout -b*": deny
+    "git checkout -B*": deny
+    "git checkout --orphan*": deny
+    "git switch -c*": deny
+    "git switch -C*": deny
+    "git switch --create*": deny
+    "git branch *": deny
+    "git worktree *": deny
     "tk create*": deny
     "tk start*": deny
     "tk close*": deny
@@ -30,7 +39,7 @@ I will reject implementation shortcuts that degrade usability, even if they are 
 
 ## Boundary
 
-Stay within the git worktree.
+Stay within the git worktree. Never create or switch branches, commit, or push.
 
 ## Preparation
 
