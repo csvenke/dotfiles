@@ -1,6 +1,59 @@
 # Omarchy setup
 
-## Hardware
+## Config
+
+### hyprland
+
+**`.config/hypr/bindings.conf`**
+
+```hyprlang
+# Vim-style window navigation
+unbind = SUPER, H
+unbind = SUPER, J
+unbind = SUPER, K
+unbind = SUPER, L
+unbind = SUPER SHIFT, H
+unbind = SUPER SHIFT, J
+unbind = SUPER SHIFT, K
+unbind = SUPER SHIFT, L
+
+# Move focus between windows
+bindd = SUPER, H, Focus on left window, movefocus, l
+bindd = SUPER, J, Focus on below window, movefocus, d
+bindd = SUPER, K, Focus on above window, movefocus, u
+bindd = SUPER, L, Focus on right window, movefocus, r
+
+# Move (swap) windows
+bindd = SUPER SHIFT, H, Swap window to the left, swapwindow, l
+bindd = SUPER SHIFT, J, Swap window down, swapwindow, d
+bindd = SUPER SHIFT, K, Swap window up, swapwindow, u
+bindd = SUPER SHIFT, L, Swap window to the right, swapwindow, r
+```
+
+### keyd
+
+Install `keyd`
+
+```bash
+sudo pacman -S keyd
+sudo systemctl enable keyd --now
+sudo keyd reload
+```
+
+Put the following in `/etc/keyd/default.conf`
+
+```conf
+[ids]
+
+*
+
+[main]
+
+# Maps capslock to escape when pressed and super when held.
+capslock = overload(super, esc)
+```
+
+## Machine specific
 
 ### MacBook Pro 14,3
 
@@ -32,7 +85,7 @@
 
 **Issue**: TouchBar is not functional
 
-**Solution 1**: Remap capslock to escape
+**Solution**: Remap capslock to escape
 
 Add to `.config/hypr/input.conf`:
 
@@ -40,30 +93,6 @@ Add to `.config/hypr/input.conf`:
 input {
   kb_options = caps:escape
 }
-```
-
-**Solution 2**: Remap capslock with keyd
-
-```bash
-sudo pacman -S keyd
-sudo systemctl enable keyd --now
-sudo keyd reload
-```
-
-Put the following in `/etc/keyd/default.conf`
-
-```conf
-[ids]
-
-*
-
-[main]
-
-# Maps capslock to escape when pressed and control when held.
-capslock = overload(control, esc)
-
-# Remaps the escape key to capslock
-esc = capslock
 ```
 
 **Issue**: Integrated camera is not functioning
