@@ -4,30 +4,33 @@
 
 ### hyprland
 
-**`.config/hypr/bindings.conf`**
+**`.config/hypr/input.lua`**
 
-```hyprlang
-# Vim-style window navigation
-unbind = SUPER, H
-unbind = SUPER, J
-unbind = SUPER, K
-unbind = SUPER, L
-unbind = SUPER SHIFT, H
-unbind = SUPER SHIFT, J
-unbind = SUPER SHIFT, K
-unbind = SUPER SHIFT, L
+```lua
+hl.config({
+	input = {
+		kb_layout = "no",
+		kb_options = "",
+	},
+})
+```
 
-# Move focus between windows
-bindd = SUPER, H, Focus on left window, movefocus, l
-bindd = SUPER, J, Focus on below window, movefocus, d
-bindd = SUPER, K, Focus on above window, movefocus, u
-bindd = SUPER, L, Focus on right window, movefocus, r
+**`.config/hypr/bindings.lua`**
 
-# Move (swap) windows
-bindd = SUPER SHIFT, H, Swap window to the left, swapwindow, l
-bindd = SUPER SHIFT, J, Swap window down, swapwindow, d
-bindd = SUPER SHIFT, K, Swap window up, swapwindow, u
-bindd = SUPER SHIFT, L, Swap window to the right, swapwindow, r
+```lua
+-- Vim style navigation/movement.
+hl.unbind("SUPER + J")
+hl.unbind("SUPER + K")
+hl.unbind("SUPER + L")
+
+o.bind("SUPER + H", "Move focus left", hl.dsp.focus({ direction = "l" }))
+o.bind("SUPER + J", "Move focus down", hl.dsp.focus({ direction = "d" }))
+o.bind("SUPER + K", "Move focus up", hl.dsp.focus({ direction = "u" }))
+o.bind("SUPER + L", "Move focus right", hl.dsp.focus({ direction = "r" }))
+o.bind("SUPER + SHIFT + H", "Move window left", hl.dsp.window.move({ direction = "l" }))
+o.bind("SUPER + SHIFT + J", "Move window down", hl.dsp.window.move({ direction = "d" }))
+o.bind("SUPER + SHIFT + K", "Move window up", hl.dsp.window.move({ direction = "u" }))
+o.bind("SUPER + SHIFT + L", "Move window right", hl.dsp.window.move({ direction = "r" }))
 ```
 
 ### keyd
