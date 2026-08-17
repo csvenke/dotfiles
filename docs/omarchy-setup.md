@@ -18,19 +18,20 @@ hl.config({
 **`.config/hypr/bindings.lua`**
 
 ```lua
--- Vim style navigation/movement.
+hl.unbind("SUPER + H")
 hl.unbind("SUPER + J")
 hl.unbind("SUPER + K")
 hl.unbind("SUPER + L")
 
-o.bind("SUPER + H", "Move focus left", hl.dsp.focus({ direction = "l" }))
-o.bind("SUPER + J", "Move focus down", hl.dsp.focus({ direction = "d" }))
-o.bind("SUPER + K", "Move focus up", hl.dsp.focus({ direction = "u" }))
-o.bind("SUPER + L", "Move focus right", hl.dsp.focus({ direction = "r" }))
-o.bind("SUPER + SHIFT + H", "Move window left", hl.dsp.window.move({ direction = "l" }))
-o.bind("SUPER + SHIFT + J", "Move window down", hl.dsp.window.move({ direction = "d" }))
-o.bind("SUPER + SHIFT + K", "Move window up", hl.dsp.window.move({ direction = "u" }))
-o.bind("SUPER + SHIFT + L", "Move window right", hl.dsp.window.move({ direction = "r" }))
+-- Vim style navigation/movement.
+hl.bind("SUPER + H", hl.dsp.focus({ direction = "l" }), { description = "Move focus left" })
+hl.bind("SUPER + J", hl.dsp.focus({ direction = "d" }), { description = "Move focus down" })
+hl.bind("SUPER + K", hl.dsp.focus({ direction = "u" }), { description = "Move focus up" })
+hl.bind("SUPER + L", hl.dsp.focus({ direction = "r" }), { description = "Move focus right" })
+hl.bind("SUPER + SHIFT + H", hl.dsp.window.move({ direction = "l" }), { description = "Move window left" })
+hl.bind("SUPER + SHIFT + J", hl.dsp.window.move({ direction = "d" }), { description = "Move window down" })
+hl.bind("SUPER + SHIFT + K", hl.dsp.window.move({ direction = "u" }), { description = "Move window up" })
+hl.bind("SUPER + SHIFT + L", hl.dsp.window.move({ direction = "r" }), { description = "Move window right" })
 ```
 
 ### keyd
@@ -60,47 +61,10 @@ capslock = overload(super, esc)
 
 ### MacBook Pro 14,3
 
-#### Power Management
-
-**Issue**: Sleep/Suspend functionality is not working properly  
-**Solution**: Configure the system to lock instead of suspend when the lid is closed, and use Hyprland to manage display state
-
-1. Configure systemd login manager:
-
-   Edit `/etc/systemd/logind.conf`:
-
-   ```conf
-   [Login]
-   HandleLidSwitch=lock
-   HandleLidSwitchExternalPower=lock
-   ```
-
-2. Configure Hyprland lid switch behavior:
-
-   Add to `.config/hypr/bindings.conf`:
-
-   ```hyprlang
-   bindl = , switch:on:Lid Switch, exec, hyprctl keyword monitor "eDP-1,disable"
-   bindl = , switch:off:Lid Switch, exec, hyprctl keyword monitor "eDP-1,preferred,auto,2"
-   ```
-
 #### Input Devices
 
 **Issue**: TouchBar is not functional
-
 **Solution**: Remap capslock to escape
 
-Add to `.config/hypr/input.conf`:
-
-```hyprlang
-input {
-  kb_options = caps:escape
-}
-```
-
 **Issue**: Integrated camera is not functioning
-
-#### Audio
-
-**Issue**: Internal speakers are not working  
-**Workaround**: Use external speakers or headphones for audio output
+**Solution**: No solution, dependent on touchbar
