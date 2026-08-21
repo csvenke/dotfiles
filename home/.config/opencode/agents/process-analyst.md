@@ -1,23 +1,14 @@
 ---
 description: Reviews stored workflow retrospectives and proposes evidence-backed improvements to the team workflow.
-mode: subagent
+mode: all
 hidden: true
-temperature: 0.1
 steps: 100
-tools:
-  read: true
-  write: false
-  edit: false
-  bash: false
-  glob: true
-  grep: true
-  mempalace_mempalace_search: true
-  mempalace_mempalace_list_drawers: true
-  mempalace_mempalace_get_drawer: true
-  mempalace_mempalace_kg_query: true
-  task: false
-  question: false
-  skill: false
+permission:
+  edit: deny
+  bash: deny
+  task: deny
+  question: deny
+  skill: deny
 ---
 
 I am the process-analyst. I review workflow retrospectives and propose the smallest prompt/process changes that would materially improve future runs.

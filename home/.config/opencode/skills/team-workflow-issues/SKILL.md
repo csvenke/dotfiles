@@ -60,9 +60,20 @@ Always include `areas_touched=<subsystems/files>`.
 
 ## Acceptance Criteria
 
-- `--acceptance` must be concrete and verifiable by QA.
-- If tests are expected, specify: targeted, regression, or E2E
-- Dependencies should reflect real ordering constraints only
+Weak acceptance criteria are the root cause of weak QA. A criterion that cannot be falsified cannot gate anything.
+
+Every criterion must name **an observable behavior** and **how it is verified**:
+
+- Good: `Invalid tokens return 401 and log an auth_failed event — verify with the auth unit suite`
+- Good: `Config file missing does not crash; falls back to defaults — verify by running the CLI with no config present`
+- Bad: `Works correctly` / `Handles errors properly` / `Code is clean`
+
+Rules:
+
+- `--acceptance` must be concrete and verifiable by QA without asking the implementer what was meant.
+- Reject and rewrite any criterion that has no observable behavior or no verification path.
+- If tests are expected, specify which kind: targeted, regression, or E2E.
+- Dependencies should reflect real ordering constraints only.
 - Put task metadata in `METADATA:` notes; `tk` does not have dedicated metadata fields beyond frontmatter.
 
 ## Command Recovery

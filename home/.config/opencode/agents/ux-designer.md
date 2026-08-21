@@ -2,17 +2,9 @@
 description: Designs UX direction for assigned UI tasks and writes implementation-ready guidance for software-engineer.
 mode: subagent
 hidden: true
-temperature: 0.45
 steps: 100
-tools:
-  read: true
-  write: false
-  edit: false
-  bash: true
-  glob: true
-  grep: true
-  skill: true
 permission:
+  edit: deny
   bash:
     "*": allow
     "git -C*": deny

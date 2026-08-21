@@ -11,12 +11,10 @@
   },
   "mcp": {
     "context7": {
-      "enabled": true,
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
     },
     "mempalace": {
-      "enabled": true,
       "type": "local",
       "command": ["mempalace-mcp"]
     }

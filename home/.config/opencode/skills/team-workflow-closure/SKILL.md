@@ -16,6 +16,7 @@ Capture epic-level durable outcomes:
 3. Use project/domain target rules for project durable text
 4. Use canonical KG relationships and slug rules for durable relationship facts
 5. Invalidate stale facts before adding replacements when the epic supersedes prior memory
+6. Write any `mechanical_invariant_gaps` reported by `staff-engineer` (Step 6.5 or Step 8) as durable project memory. These identify where a lint rule, type constraint, or structural test would prevent a whole defect class — they are among the most reusable findings a run produces.
 
 If `memory_mode=degraded`, use the `mempalace` degraded-mode retry behavior.
 
@@ -59,6 +60,8 @@ Update todos: mark "Epic Closure" as completed.
 ## Step 5: Final Report
 
 Report to user: epic closed, summary of changes, staff review findings, hand off for human review.
+
+Include any `mechanical_invariant_gaps` as an explicit "recommended permanent gates" list. These are the highest-leverage follow-ups available — each one converts a class of defects into something the toolchain catches automatically instead of relying on review.
 
 ## Human Review and Release
 

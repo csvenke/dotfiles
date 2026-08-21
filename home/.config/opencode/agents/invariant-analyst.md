@@ -2,19 +2,9 @@
 description: Surfaces application invariants, intentional weirdness, and dangerous assumptions for a narrow task slice.
 mode: subagent
 hidden: true
-temperature: 0.1
 steps: 60
-tools:
-  read: true
-  write: false
-  edit: false
-  bash: true
-  glob: true
-  grep: true
-  skill: true
-  mempalace_mempalace_search: true
-  mempalace_mempalace_kg_query: true
 permission:
+  edit: deny
   bash:
     "*": allow
     "git -C*": deny

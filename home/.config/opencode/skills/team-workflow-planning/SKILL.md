@@ -60,6 +60,16 @@ Prefer a small set of high-leverage questions that resolve scope, constraints, a
 - Default to sequential execution
 - Parallelize only when surfaces are clearly independent
 
+## Design Gate for High-Risk Work
+
+The cheapest review is the one that happens before code exists. When the plan contains any task you would label `risk=high` — or that changes a public interface, data shape, security boundary, or persistence format — the plan **must** include an `Approach:` section covering:
+
+- the design decision being made, in two or three sentences
+- at least one alternative considered and why it was rejected
+- the blast radius if the approach turns out to be wrong
+
+This puts design intent in front of the user before issue creation, when changing course is free. Omit the section entirely for low and medium risk work — do not pad plans with it.
+
 ## Plan Presentation
 
 **CRITICAL — HARD STOP:** Before asking for approval, you MUST output the complete plan as markdown text in your response. Internal reasoning does NOT count as presentation.
@@ -81,6 +91,7 @@ Prefer a small set of high-leverage questions that resolve scope, constraints, a
    - <criterion 1>
    - <criterion 2>
 
+   Approach: <design decision, rejected alternative, blast radius — required when any task is high risk, omit otherwise>
    Scope out: <what we explicitly will NOT do>
    Definition of done: <concrete verification — tests, commands, or checks that prove completion>
    Constraints: <constraints or none>

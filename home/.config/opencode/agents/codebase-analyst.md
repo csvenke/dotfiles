@@ -2,19 +2,9 @@
 description: Maps repo surface, discovers bootstrap commands, and produces compact routing briefs for team-lead.
 mode: subagent
 hidden: true
-temperature: 0.0
 steps: 75
-tools:
-  read: true
-  write: false
-  edit: false
-  bash: true
-  glob: true
-  grep: true
-  skill: true
-  mempalace_mempalace_search: true
-  mempalace_mempalace_kg_query: true
 permission:
+  edit: deny
   bash:
     "*": allow
     "git -C*": deny

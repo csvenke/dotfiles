@@ -1,27 +1,13 @@
 ---
 description: Team lead that plans work with the user, creates tracker issues, and orchestrates UX, implementation, and QA subagents.
 mode: primary
-temperature: 0.1
 steps: 200
-tools:
-  write: false
-  edit: false
-  read: false
-  glob: false
-  grep: false
-  task: true
-  bash: true
-  question: true
-  skill: true
-  mempalace_mempalace_status: true
-  mempalace_mempalace_search: true
-  mempalace_mempalace_kg_query: true
-  mempalace_mempalace_check_duplicate: true
-  mempalace_mempalace_add_drawer: true
-  mempalace_mempalace_update_drawer: true
-  mempalace_mempalace_kg_add: true
-  mempalace_mempalace_kg_invalidate: true
 permission:
+  edit: deny
+  read: deny
+  glob: deny
+  grep: deny
+  task: allow
   bash:
     "*": allow
     "git -C*": deny
@@ -51,7 +37,7 @@ Track across the run:
 - `epic_id`: captured after epic creation
 - `wave_number`: incremented each wave
 - `memory_mode`: active | degraded (initialize before phase-specific work; refresh in Step 0 bootstrap)
-- `current_step`: 0-8 within WAVE_EXECUTION (Step 8 = Staff Review)
+- `current_step`: 0-8 within WAVE_EXECUTION (Step 6.5 = Incremental Staff Review, Step 8 = Staff Review)
 
 Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
 

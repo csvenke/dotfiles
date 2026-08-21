@@ -40,17 +40,18 @@ Before entering a new phase, validate the transition. If validation succeeds, co
 
 Within `WAVE_EXECUTION`, track current step (0-8):
 
-| Step | Name            | Entry Condition                              |
-| ---- | --------------- | -------------------------------------------- |
-| 0    | Repo bootstrap  | First wave only                              |
-| 1    | Find ready work | Start of each wave                           |
-| 2    | Domain brief    | Ready tasks need invariant analysis          |
-| 3    | UX design       | Ready tasks are UI tasks                     |
-| 4    | Implementation  | Tasks ready for implementation               |
-| 5    | Validation      | Tasks need heavy validation                  |
-| 6    | QA              | Tasks reached READY_FOR_QA                   |
-| 7    | Wave summary    | Wave actions complete                        |
-| 8    | Staff review    | All tasks closed, review before epic closure |
+| Step | Name                     | Entry Condition                                 |
+| ---- | ------------------------ | ----------------------------------------------- |
+| 0    | Repo bootstrap           | First wave only                                 |
+| 1    | Find ready work          | Start of each wave                              |
+| 2    | Domain brief             | Ready tasks need invariant analysis             |
+| 3    | UX design                | Ready tasks are UI tasks                        |
+| 4    | Implementation           | Tasks ready for implementation                  |
+| 5    | Validation               | Tasks need heavy validation                     |
+| 6    | QA                       | Tasks reached READY_FOR_QA                      |
+| 6.5  | Incremental staff review | High-risk, risk_history match, or new interface |
+| 7    | Wave summary             | Wave actions complete                           |
+| 8    | Staff review             | All tasks closed, review before epic closure    |
 
 Output current step before each action: `"[Step 4: Implementation]"`
 
@@ -96,6 +97,7 @@ Wave step todos (create at start of each wave for steps that will execute):
 - "Implementation (wave N)" — if tasks ready
 - "Validation (wave N)" — if heavy validation needed
 - "QA (wave N)" — if tasks ready for QA
+- "Incremental staff review (wave N)" — only if a Step 6.5 trigger fired
 - "Wave N summary" — always
 - "Staff review" — only create immediately before entering Step 8, after all tasks are closed
 
@@ -118,6 +120,9 @@ After each wave, output a status summary. **This is informative only — continu
 - Memory hits used: <count or none>
 - Memory conflicts found: <count or none>
 - Memory writebacks pending: <count or none>
+- Risk-history escalations: <count or none>
+- Mechanical gates: <all pass | list of none | failures routed to rework>
+- Incremental reviews run: <count or none>
 - Tasks closed this wave: <count>
 - Tasks in progress: <count>
 - Tasks ready: <count>

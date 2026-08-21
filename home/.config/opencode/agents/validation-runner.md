@@ -2,17 +2,9 @@
 description: Runs execution-heavy validation when needed and hands concise evidence to qa-engineer or software-engineer.
 mode: subagent
 hidden: true
-temperature: 0.0
 steps: 75
-tools:
-  read: true
-  write: false
-  edit: false
-  bash: true
-  glob: true
-  grep: true
-  skill: true
 permission:
+  edit: deny
   bash:
     "*": allow
     "git -C*": deny
@@ -54,11 +46,12 @@ Follow the Global Worker Rules in `team-workflow-contracts`.
 ## Verify
 
 1. Choose the smallest useful validation command first.
-2. Prefer targeted commands before broader ones.
-3. If behavior or business logic changed and trusted test commands exist, run at least one executable check.
-4. Use heavier commands when the task requires them, especially for `requires_server_tests=true` or `test_expectation=regression|e2e`.
-5. Summarize failures as compact evidence instead of dumping raw logs.
-6. Distinguish implementation defects from environment or infra blockers.
+2. Run the discovered mechanical gates (`lint_command`, `typecheck_command`, `build_command`) when they exist and have not already been proven to pass. Report each as `pass`, `fail`, or `none`.
+3. Prefer targeted commands before broader ones.
+4. If behavior or business logic changed and trusted test commands exist, run at least one executable check.
+5. Use heavier commands when the task requires them, especially for `requires_server_tests=true` or `test_expectation=regression|e2e`.
+6. Summarize failures as compact evidence instead of dumping raw logs.
+7. Distinguish implementation defects from environment or infra blockers.
 
 ## Handoff
 
@@ -71,5 +64,6 @@ Follow the Global Worker Rules in `team-workflow-contracts`.
 Follow the base handoff contract from `team-workflow-contracts`. Include these validation-runner extensions:
 
 - `commands_run`
+- `mechanical_gates`: `lint=<pass|fail|none>; typecheck=<pass|fail|none>; build=<pass|fail|none>`
 - `validation_summary`
 - `failure_scope`: implementation | infra | none
