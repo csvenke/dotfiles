@@ -561,6 +561,10 @@ if _has_cmd "opencode"; then
   alias oc='opencode'
 fi
 
+if _has_cmd "opencode2"; then
+  alias oc2='opencode2'
+fi
+
 if _has_cmd "mempalace"; then
   alias mem-init='_mempalace-init'
 fi
