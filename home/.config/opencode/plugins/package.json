@@ -1,0 +1,8 @@
+{
+  "name": "opencode-local-plugins",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@opencode-ai/plugin": "^0.0.0-beta-17927"
+  }
+}
