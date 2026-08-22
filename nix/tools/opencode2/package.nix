@@ -7,24 +7,24 @@
 }:
 
 let
-  version = "0.0.0-beta-17823"; # tracks @opencode-ai/cli "beta" dist-tag; bump manually
+  version = "0.0.0-beta-17927"; # tracks @opencode-ai/cli "beta" dist-tag; bump manually
 
   perSystem = {
     x86_64-linux = {
       pkg = "cli-linux-x64";
-      hash = "sha512-D5KP6uIWLjbdY6TmPEYZqbBmOgqg7i76O+KwM566JRPVNUxYRfvA/OhR9g7Iz6HOQZqU/fWMJa+1E0irteImwg==";
+      hash = "sha512-sCuCbo+s0xU6vlWqTGO72URboviGaitTwi+t82q+qDZag4wotgXMppCnBNl9x/Eqwdb+AwJsoD6XYJX+fn5jVg==";
     };
     aarch64-linux = {
       pkg = "cli-linux-arm64";
-      hash = "sha512-nZ6HkT0qL0mSB7nW57hIxaf3KdxAGyWeeoLHDCbxlpQMYcpFiqDYNc5nl/xKDdsJ8lPHSMQTUy1fdeOqMphYyA==";
+      hash = "sha512-Q/MDYbAahNU7dgkvZmyNvJURBbUH6KzKFYLscbnuge3tlHfztxgjrWCbopN2eoOK0/oBsohT+q5JvY0A7kxtmw==";
     };
     aarch64-darwin = {
       pkg = "cli-darwin-arm64";
-      hash = "sha512-10vuMRIVxzOw/wy/ikyOQbjotPSAGsV95S1YMqy+BFRPSlvAcppBjXGRbguPsqctsIniRh/rQkJMbjLLK83hQA==";
+      hash = "sha512-9QXFLYAtG1V/yJHZE/umQ3xabUQXo+Vkay5HPbREFvTMMbEXcbtUXIpO63cHjyuWejY+bFJ9NSmYdCSN+6IT0g==";
     };
     x86_64-darwin = {
       pkg = "cli-darwin-x64";
-      hash = "sha512-oNkUyQ3Y+5HK1O1bdP9Khqn2Bn3v4ayoPiGmCMrg//UVMUIcc3NW9VqhCdxFX84WITxV2Mx0NQUQ83Qg/qSN4g==";
+      hash = "sha512-JJfO4E5XiR98p4/+5eYS4UyZt6q2Qy7mnMwxAke+xPWiXzajRTMc3wcq7vWH65+ylWmB01iJ6tKvXxdEEnLaSw==";
     };
   };
 
