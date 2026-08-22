@@ -10,14 +10,14 @@
 let
   mempalace = python3Packages.buildPythonPackage rec {
     pname = "mempalace";
-    version = "3.3.5";
+    version = "3.7.1";
     format = "pyproject";
 
     src = fetchFromGitHub {
       owner = "MemPalace";
       repo = "mempalace";
       rev = "v${version}";
-      hash = "sha256-MOX9HsIhM4LwtYiW25MrkPyTLXZXpSAWVk1NBewzDYA=";
+      hash = "sha256-XlEjuVKARzh94xB4oZLAkgffDcaScgGqL5SUIxh968Q=";
     };
 
     nativeBuildInputs = with python3Packages; [
@@ -29,6 +29,10 @@ let
 
     propagatedBuildInputs = with python3Packages; [
       chromadb
+      huggingface-hub
+      tokenizers
+      numpy
+      python-dateutil
       pyyaml
     ];
 
