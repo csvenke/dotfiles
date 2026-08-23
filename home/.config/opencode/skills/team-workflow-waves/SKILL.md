@@ -27,9 +27,9 @@ Use the `mempalace` Memory Prime with ticket id/title, scope terms, epic id, and
 
 **Risk History Escalation** (`memory_mode=active`):
 
-Memory that only informs is wasted. When Memory Prime returns a `risk_history` fact for a subsystem in the task's `areas_touched`:
+Memory that only informs is wasted. When Memory Prime returns a `risk_history` fact for a subsystem in the task's `areas_touched`, check `mempalace_mempalace_kg_timeline` for that subsystem before deciding the escalation level — a single historical hit and a recurring pattern warrant different responses:
 
-1. Raise `test_expectation` one level (`none`→`targeted`→`regression`→`e2e`) and say why in the brief.
+1. Raise `test_expectation` one level (`none`→`targeted`→`regression`→`e2e`) for a single historical hit, or two levels for a recurring pattern shown in the timeline, and say why in the brief.
 2. Set the Step 6.5 incremental review trigger for that task.
 3. Note the escalation in `<memory_context>` so the worker knows the bar moved and why.
 

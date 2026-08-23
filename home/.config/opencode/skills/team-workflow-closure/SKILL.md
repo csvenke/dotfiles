@@ -13,12 +13,14 @@ Capture epic-level durable outcomes:
 
 1. Load the `mempalace` skill
 2. Use Memory Writeback rules for workflow-level durable text in `wing=opencode`
-3. Use project/domain target rules for project durable text
+3. Use project/domain target rules for project durable text, checking existing taxonomy/rooms first per the `mempalace` skill
 4. Use canonical KG relationships and slug rules for durable relationship facts
 5. Invalidate stale facts before adding replacements when the epic supersedes prior memory
 6. Write any `mechanical_invariant_gaps` reported by `staff-engineer` (Step 6.5 or Step 8) as durable project memory. These identify where a lint rule, type constraint, or structural test would prevent a whole defect class — they are among the most reusable findings a run produces.
+7. If a durable fact generalizes from a project/domain wing into an `opencode` workflow policy (or the reverse), link them with `mempalace_mempalace_create_tunnel` per the `mempalace` skill's Cross-Wing Tunnels guidance.
+8. Run a dry-run `mempalace_mempalace_sync` for the project wing (no `apply`). If it reports meaningful drift, mention it in the Final Report as a suggestion; never pass `apply=true` without explicit user confirmation.
 
-If `memory_mode=degraded`, use the `mempalace` degraded-mode retry behavior.
+If `memory_mode=degraded`, use the `mempalace` skill's degraded-mode retry behavior (including `mempalace_mempalace_reconnect`).
 
 ## Step 2: Workflow Retrospective
 
@@ -47,6 +49,10 @@ Extract reusable patterns from retrospective into KG triples. Apply the canonica
 
 Pattern Mining makes learnings queryable by Planning Memory Prime in future runs.
 Skip if `memory_mode=degraded`.
+
+## Step 3.5: Team Lead Diary (`memory_mode=active`, optional)
+
+When the run produced a reusable lesson (Step 2 was not skipped), write a compact `mempalace_mempalace_diary_write` entry as `agent_name="team-lead"` in AAAK format summarizing the epic outcome and lesson. This is a cheaper continuity layer than `team-retros` drawers — Planning may `mempalace_mempalace_diary_read` it for fast self-context before running a full Memory Prime search. Skip for routine runs with no reusable lesson.
 
 ## Step 4: Close Epic
 

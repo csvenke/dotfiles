@@ -109,6 +109,12 @@ Project/domain writeback target:
 - Room: primary `areas_touched` slug when clear; otherwise `general`
 - If the target is uncertain, prefer `wing=opencode`, `room=task-outcomes` and include the uncertainty in the drawer content
 
+Before writing, check `mempalace_mempalace_get_taxonomy` (or `mempalace_mempalace_list_rooms` scoped to the target wing) for an existing room that already covers the same area. Reuse the existing name instead of inventing a near-duplicate (e.g. `auth` vs `authentication` vs `authn`). Only create a new room name when no existing room is a reasonable match.
+
+## Cross-Wing Tunnels
+
+When a durable fact learned in a project/domain wing generalizes into a workflow policy in `wing=opencode` (or vice versa), record the link with `mempalace_mempalace_create_tunnel` so future runs can `mempalace_mempalace_follow_tunnels` from the project room straight to the generalized policy. Use this only for genuine cross-wing relevance, not for every writeback — most drawers need no tunnel.
+
 ## Canonical KG Relationships
 
 Use these relationships for team workflow facts:
@@ -133,4 +139,8 @@ Write KG facts for finalized durable relationships and outcomes. Active status a
 
 ## Degraded Mode
 
-Skip memory operations in `degraded` mode. Continue workflow execution and include `memory_status=degraded` in handoffs. At closure, retry one cheap MemPalace read; if recovered, perform delayed writeback. If still degraded, state that memory was not updated.
+Skip memory operations in `degraded` mode. Continue workflow execution and include `memory_status=degraded` in handoffs. At closure, call `mempalace_mempalace_reconnect` once, then retry one cheap MemPalace read; if recovered, perform delayed writeback. If still degraded, state that memory was not updated.
+
+## Risk History Depth
+
+For risk-history checks in Memory Prime and Wave Execution, prefer `mempalace_mempalace_kg_timeline` over `mempalace_mempalace_kg_query` when a subsystem/file-area entity has multiple prior facts. `kg_query` only returns the current snapshot; `kg_timeline` shows whether the risk is a one-off or a recurring pattern, which changes how much the test bar should move.
