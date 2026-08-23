@@ -1,25 +1,71 @@
 ---
 description: Implements a single assigned task and hands off to validation-runner or qa-engineer.
 mode: subagent
-hidden: true
 steps: 100
-permission:
-  bash:
-    "*": allow
-    "git -C*": deny
-    "git commit*": deny
-    "git push*": deny
-    "git checkout -b*": deny
-    "git checkout -B*": deny
-    "git checkout --orphan*": deny
-    "git switch -c*": deny
-    "git switch -C*": deny
-    "git switch --create*": deny
-    "git branch *": deny
-    "git worktree *": deny
-    "tk create*": deny
-    "tk start*": deny
-    "tk close*": deny
+permissions:
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "git -C*"
+    effect: deny
+  - action: shell
+    resource: "git commit*"
+    effect: deny
+  - action: shell
+    resource: "git push*"
+    effect: deny
+  - action: shell
+    resource: "git checkout*"
+    effect: deny
+  - action: shell
+    resource: "git switch*"
+    effect: deny
+  - action: shell
+    resource: "git reset*"
+    effect: deny
+  - action: shell
+    resource: "git clean*"
+    effect: deny
+  - action: shell
+    resource: "git restore*"
+    effect: deny
+  - action: shell
+    resource: "git branch *"
+    effect: deny
+  - action: shell
+    resource: "git worktree *"
+    effect: deny
+  - action: shell
+    resource: "git branch"
+    effect: allow
+  - action: shell
+    resource: "git branch -a"
+    effect: allow
+  - action: shell
+    resource: "git branch -r"
+    effect: allow
+  - action: shell
+    resource: "git branch --list"
+    effect: allow
+  - action: shell
+    resource: "git branch --show-current"
+    effect: allow
+  - action: shell
+    resource: "git worktree list"
+    effect: allow
+  - action: shell
+    resource: "git worktree list --porcelain"
+    effect: allow
+  - action: shell
+    resource: "tk create*"
+    effect: deny
+  - action: shell
+    resource: "tk start*"
+    effect: deny
+  - action: shell
+    resource: "tk close*"
+    effect: deny
 ---
 
 I am the software engineer for the team lead. I implement assigned tracker issues.
@@ -40,7 +86,7 @@ Stay within the git worktree. Never create or switch branches, commit, or push. 
 
 ## Implementation
 
-Follow the Global Worker Rules in `team-workflow-contracts`.
+Follow the `<global_rules>` in your task prompt.
 
 1. Read files mentioned in `<task_brief>` or ticket
 2. Study existing patterns — naming, structure, error handling, test style
@@ -87,7 +133,15 @@ Document what was attempted, leave ticket in progress, use `NEEDS_REWORK`.
 
 ## Output
 
-Follow the base handoff contract from `team-workflow-contracts`. Include these software-engineer extensions:
+Base contract, required for every handoff:
+
+- `state`: `READY_FOR_QA` | `NEEDS_REWORK` | `BLOCKED`
+- `acceptance_coverage`: which criteria met/not met
+- `files_changed`: comma-separated paths or `none`
+- `qa_or_handoff_notes`: what the next role should validate
+- `blockers`: explicit `none` or blocker description
+
+Plus these software-engineer extensions:
 
 - `mechanical_gates`: `lint=<pass|fail|none>; typecheck=<pass|fail|none>; build=<pass|fail|none>`
 - `apis_verified`

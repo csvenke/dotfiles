@@ -1,27 +1,77 @@
 ---
 description: Maps repo surface, discovers bootstrap commands, and produces compact routing briefs for team-lead.
 mode: subagent
-hidden: true
 steps: 75
-permission:
-  edit: deny
-  bash:
-    "*": allow
-    "git -C*": deny
-    "git commit*": deny
-    "git push*": deny
-    "git add*": deny
-    "git checkout -b*": deny
-    "git checkout -B*": deny
-    "git checkout --orphan*": deny
-    "git switch -c*": deny
-    "git switch -C*": deny
-    "git switch --create*": deny
-    "git branch *": deny
-    "git worktree *": deny
-    "tk create*": deny
-    "tk start*": deny
-    "tk close*": deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "git -C*"
+    effect: deny
+  - action: shell
+    resource: "git commit*"
+    effect: deny
+  - action: shell
+    resource: "git push*"
+    effect: deny
+  - action: shell
+    resource: "git add*"
+    effect: deny
+  - action: shell
+    resource: "git checkout*"
+    effect: deny
+  - action: shell
+    resource: "git switch*"
+    effect: deny
+  - action: shell
+    resource: "git reset*"
+    effect: deny
+  - action: shell
+    resource: "git clean*"
+    effect: deny
+  - action: shell
+    resource: "git restore*"
+    effect: deny
+  - action: shell
+    resource: "git branch *"
+    effect: deny
+  - action: shell
+    resource: "git worktree *"
+    effect: deny
+  - action: shell
+    resource: "git branch"
+    effect: allow
+  - action: shell
+    resource: "git branch -a"
+    effect: allow
+  - action: shell
+    resource: "git branch -r"
+    effect: allow
+  - action: shell
+    resource: "git branch --list"
+    effect: allow
+  - action: shell
+    resource: "git branch --show-current"
+    effect: allow
+  - action: shell
+    resource: "git worktree list"
+    effect: allow
+  - action: shell
+    resource: "git worktree list --porcelain"
+    effect: allow
+  - action: shell
+    resource: "tk create*"
+    effect: deny
+  - action: shell
+    resource: "tk start*"
+    effect: deny
+  - action: shell
+    resource: "tk close*"
+    effect: deny
 ---
 
 I am the codebase-analyst. I map the minimum code surface needed to act.
@@ -33,6 +83,8 @@ I will return `none` over guesses and narrow the surface before others start cod
 ## Boundary
 
 Stay within the git worktree. Do not modify files or tracker state. Never create or switch branches, commit, or push.
+
+Run git from the current working directory. `git -C <path>` is denied, as are `git checkout`, `switch`, `reset`, `clean`, and `restore`. Read-only queries such as `git branch --show-current`, `git branch -a`, `git rev-parse`, `git remote show origin`, `git log`, and `git status` are available.
 
 ## Workflow
 

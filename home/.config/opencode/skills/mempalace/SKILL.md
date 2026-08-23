@@ -74,15 +74,6 @@ memory_status: active | degraded
 
 If memory is degraded, include `memory_status: degraded` and do not invent prior work.
 
-## Memory Counters
-
-Track lightweight counters per wave:
-
-- `memory_queries_run`: explicit MemPalace reads run by team lead; use `unknown` if subagents also queried memory independently
-- `memory_hits_used`: relevant memory items included in `<memory_context>` or routing decisions
-- `memory_conflicts_found`: prior decisions/facts that contradicted the requested direction
-- `memory_writebacks_pending`: durable task outcomes not yet written or skipped because memory is degraded
-
 ## Memory Writeback
 
 Capture durable outcomes only:

@@ -1,16 +1,14 @@
 ---
 name: team-workflow-issues
-description: "Issue creation phase for team workflow. Creating epic, tasks, and linking dependencies."
+description: "Issue creation phase for the team workflow. Creating the epic, tasks, acceptance criteria, and dependencies."
 ---
 
-# Issue Creation Phase
+# Phase 2: Issue Creation
 
-After the user approves the plan, create tracker issues.
-
-## Prerequisites
-
-Load the `ticket` skill before running any `tk` commands. Follow its Team Workflow Recipe exactly.
-Keep tracker commands mechanical: short create command first, then separate `tk add-note` commands for SPEC, ACCEPTANCE, METADATA, and memory notes when applicable.
+After the user approves the plan, create tracker issues. Load the `ticket` skill
+first and follow its Team Workflow Recipe exactly. Keep tracker commands mechanical:
+short create command first, then separate `tk add-note` commands for SPEC,
+ACCEPTANCE, METADATA, and memory notes when applicable.
 
 ## Create Epic and Tasks
 
@@ -43,7 +41,8 @@ tk dep <task-id> <dependency-id>
 | Too small   | One-line fixes, renames, config nits → fold into parent |
 | Too large   | Unrelated concerns, 10+ files → split by boundaries     |
 
-Prefer one right-sized task over many small subtasks. Create multiple tasks only when there is a real dependency boundary or independent work surface.
+Prefer one right-sized task over many small subtasks. Create multiple tasks only
+when there is a real dependency boundary or independent work surface.
 
 ## Default Metadata
 
@@ -60,7 +59,8 @@ Always include `areas_touched=<subsystems/files>`.
 
 ## Acceptance Criteria
 
-Weak acceptance criteria are the root cause of weak QA. A criterion that cannot be falsified cannot gate anything.
+Weak acceptance criteria are the root cause of weak QA. A criterion that cannot be
+falsified cannot gate anything.
 
 Every criterion must name **an observable behavior** and **how it is verified**:
 
@@ -70,34 +70,24 @@ Every criterion must name **an observable behavior** and **how it is verified**:
 
 Rules:
 
-- `--acceptance` must be concrete and verifiable by QA without asking the implementer what was meant.
-- Reject and rewrite any criterion that has no observable behavior or no verification path.
+- `--acceptance` must be concrete and verifiable by QA without asking the
+  implementer what was meant.
+- Reject and rewrite any criterion that has no observable behavior or no
+  verification path.
 - If tests are expected, specify which kind: targeted, regression, or E2E.
 - Dependencies should reflect real ordering constraints only.
-- Put task metadata in `METADATA:` notes; `tk` does not have dedicated metadata fields beyond frontmatter.
-
-## Command Recovery
-
-If any `tk` command fails:
-
-1. Stop issuing new tracker commands.
-2. Reload the `ticket` skill.
-3. Compare the failed command to the exact Team Workflow Recipe.
-4. Retry once with only the allowed flags.
-5. If retry fails, ask the user instead of guessing another flag.
+- Put task metadata in `METADATA:` notes; `tk` has no dedicated metadata fields
+  beyond frontmatter.
 
 ## Issue Descriptions
 
-Issue descriptions are the agent's starting brief: what to change, why, where to start reading, design decisions.
+Issue descriptions are the agent's starting brief: what to change, why, where to
+start reading, design decisions.
 
-When planning found relevant prior work, memory conflicts, or user-confirmed reversals, preserve them in separate task notes. Keep `SPEC:` focused on the requested work and use memory notes for downstream `<memory_context>` reconstruction:
-
-```bash
-tk add-note <task-id> "MEMORY: prior_work=<epic/fact or none>; conflicts=<conflict or none>; risk_history=<risk or none>"
-tk add-note <task-id> "REVERSAL_CONFIRMATION: <user confirmation or none>"
-```
-
-If no memory findings apply, skip memory notes.
+When planning found relevant prior work, memory conflicts, or user-confirmed
+reversals, preserve them in separate task notes. Keep `SPEC:` focused on the
+requested work and use memory notes for downstream `<memory_context>`
+reconstruction. If no memory findings apply, skip memory notes.
 
 ## Routing Rules
 
@@ -106,6 +96,12 @@ If no memory findings apply, skip memory notes.
 - Mark `requires_server_tests=true` for work that starts app services
 - Use `fast_lane=true` only for docs, comments, safe config tweaks
 
+## Command Recovery
+
+If any `tk` command fails: stop issuing new tracker commands, reload the `ticket`
+skill, compare the failed command to the Team Workflow Recipe, retry once with only
+the allowed flags, and ask the user rather than guessing another flag.
+
 ## Exit Condition
 
-All planned issues created → Load `team-workflow-waves` skill
+All planned issues created → load `team-workflow-execution`.

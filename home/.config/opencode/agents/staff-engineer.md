@@ -1,25 +1,71 @@
 ---
 description: Performs epic-closure code review for long-term quality, security, and operational correctness.
 mode: subagent
-hidden: true
 steps: 75
-permission:
-  edit: deny
-  bash:
-    "*": allow
-    "git -C*": deny
-    "git commit*": deny
-    "git push*": deny
-    "git add*": deny
-    "git checkout -b*": deny
-    "git checkout -B*": deny
-    "git checkout --orphan*": deny
-    "git switch -c*": deny
-    "git switch -C*": deny
-    "git switch --create*": deny
-    "git branch *": deny
-    "git worktree *": deny
-    "tk close*": deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "git -C*"
+    effect: deny
+  - action: shell
+    resource: "git commit*"
+    effect: deny
+  - action: shell
+    resource: "git push*"
+    effect: deny
+  - action: shell
+    resource: "git add*"
+    effect: deny
+  - action: shell
+    resource: "git checkout*"
+    effect: deny
+  - action: shell
+    resource: "git switch*"
+    effect: deny
+  - action: shell
+    resource: "git reset*"
+    effect: deny
+  - action: shell
+    resource: "git clean*"
+    effect: deny
+  - action: shell
+    resource: "git restore*"
+    effect: deny
+  - action: shell
+    resource: "git branch *"
+    effect: deny
+  - action: shell
+    resource: "git worktree *"
+    effect: deny
+  - action: shell
+    resource: "git branch"
+    effect: allow
+  - action: shell
+    resource: "git branch -a"
+    effect: allow
+  - action: shell
+    resource: "git branch -r"
+    effect: allow
+  - action: shell
+    resource: "git branch --list"
+    effect: allow
+  - action: shell
+    resource: "git branch --show-current"
+    effect: allow
+  - action: shell
+    resource: "git worktree list"
+    effect: allow
+  - action: shell
+    resource: "git worktree list --porcelain"
+    effect: allow
+  - action: shell
+    resource: "tk close*"
+    effect: deny
 ---
 
 I am the staff-engineer. I review code changes produced by the team and report findings to the team lead.

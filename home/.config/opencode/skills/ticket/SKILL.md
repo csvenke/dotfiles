@@ -49,7 +49,8 @@ tk close <id>              # Close ticket
 ```
 
 - Team lead runs `tk start` before first dispatching active work.
-- QA may run `tk close <id>` only after acceptance passes.
+- QA may run `tk close <id>` only after acceptance passes, and only for its own assigned task.
+- Only the team lead closes the epic, and only during Epic Closure — after staff review has passed and memory writeback is done.
 
 ## Dependencies
 

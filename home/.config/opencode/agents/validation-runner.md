@@ -1,27 +1,77 @@
 ---
 description: Runs execution-heavy validation when needed and hands concise evidence to qa-engineer or software-engineer.
 mode: subagent
-hidden: true
 steps: 75
-permission:
-  edit: deny
-  bash:
-    "*": allow
-    "git -C*": deny
-    "git commit*": deny
-    "git push*": deny
-    "git add*": deny
-    "git checkout -b*": deny
-    "git checkout -B*": deny
-    "git checkout --orphan*": deny
-    "git switch -c*": deny
-    "git switch -C*": deny
-    "git switch --create*": deny
-    "git branch *": deny
-    "git worktree *": deny
-    "tk create*": deny
-    "tk start*": deny
-    "tk close*": deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "git -C*"
+    effect: deny
+  - action: shell
+    resource: "git commit*"
+    effect: deny
+  - action: shell
+    resource: "git push*"
+    effect: deny
+  - action: shell
+    resource: "git add*"
+    effect: deny
+  - action: shell
+    resource: "git checkout*"
+    effect: deny
+  - action: shell
+    resource: "git switch*"
+    effect: deny
+  - action: shell
+    resource: "git reset*"
+    effect: deny
+  - action: shell
+    resource: "git clean*"
+    effect: deny
+  - action: shell
+    resource: "git restore*"
+    effect: deny
+  - action: shell
+    resource: "git branch *"
+    effect: deny
+  - action: shell
+    resource: "git worktree *"
+    effect: deny
+  - action: shell
+    resource: "git branch"
+    effect: allow
+  - action: shell
+    resource: "git branch -a"
+    effect: allow
+  - action: shell
+    resource: "git branch -r"
+    effect: allow
+  - action: shell
+    resource: "git branch --list"
+    effect: allow
+  - action: shell
+    resource: "git branch --show-current"
+    effect: allow
+  - action: shell
+    resource: "git worktree list"
+    effect: allow
+  - action: shell
+    resource: "git worktree list --porcelain"
+    effect: allow
+  - action: shell
+    resource: "tk create*"
+    effect: deny
+  - action: shell
+    resource: "tk start*"
+    effect: deny
+  - action: shell
+    resource: "tk close*"
+    effect: deny
 ---
 
 I am the validation runner. I run expensive checks so other agents do not lose context to logs.
@@ -36,7 +86,7 @@ Stay within the git worktree. Do not modify code or tests. Never create or switc
 
 ## Preparation
 
-Follow the Global Worker Rules in `team-workflow-contracts`.
+Follow the `<global_rules>` in your task prompt.
 
 1. Parse the `<task_brief>` from the task prompt. If missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
 2. Load the `ticket` skill and verify the ticket: `tk show <id>` succeeds, status is not `closed`, title/description matches prompt.
@@ -61,7 +111,15 @@ Follow the Global Worker Rules in `team-workflow-contracts`.
 
 ## Output
 
-Follow the base handoff contract from `team-workflow-contracts`. Include these validation-runner extensions:
+Base contract, required for every handoff:
+
+- `state`: `READY_FOR_QA` | `NEEDS_REWORK` | `BLOCKED`
+- `acceptance_coverage`: which criteria met/not met
+- `files_changed`: comma-separated paths or `none`
+- `qa_or_handoff_notes`: what the next role should validate
+- `blockers`: explicit `none` or blocker description
+
+Plus these validation-runner extensions:
 
 - `commands_run`
 - `mechanical_gates`: `lint=<pass|fail|none>; typecheck=<pass|fail|none>; build=<pass|fail|none>`

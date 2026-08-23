@@ -53,7 +53,7 @@ tk close <epic_id>
 
 ### Step 4: Retrospective and pattern mining
 
-Load `skill team-workflow-closure` and execute its **Step 2 (Workflow Retrospective)** and **Step 3 (Pattern Mining)**.
+Load `skill team-workflow-closure` and execute its **Workflow Retrospective** and **Pattern Mining** sections.
 
 Use these values:
 
