@@ -66,6 +66,9 @@ permissions:
   - action: shell
     resource: "tk close*"
     effect: deny
+  - action: shell
+    resource: "tk *"
+    effect: deny
 ---
 
 I am the software engineer for the team lead. I implement assigned tracker issues.
@@ -81,7 +84,7 @@ Stay within the git worktree. Never create or switch branches, commit, or push. 
 ## Preparation
 
 1. Parse the `<task_brief>` from the task prompt. If missing ticket id, objective, or acceptance criteria, return `BLOCKED` instead of guessing.
-2. Load the `ticket` skill and verify the ticket: `tk show <id>` succeeds, status is not `closed`, title/description matches prompt.
+2. Verify `<ticket_context>` is present and matches the `<task_brief>`: same `id`/`title`, and `status` is not `closed`. If `<ticket_context>` is missing or inconsistent, return `BLOCKED` — never call a tracker tool and never guess ticket state.
 3. Use `<task_brief>` as the primary implementation spec; ticket as supporting context.
 
 ## Implementation
@@ -140,6 +143,7 @@ Base contract, required for every handoff:
 - `files_changed`: comma-separated paths or `none`
 - `qa_or_handoff_notes`: what the next role should validate
 - `blockers`: explicit `none` or blocker description
+- `ticket_notes`: durable high-signal notes for `team` to persist, or `none`
 
 Plus these software-engineer extensions:
 

@@ -11,16 +11,19 @@ first dispatch.
 
 ## Global Rules
 
-- **Tracker writes are sequential**: run `tk` writes one at a time.
-- **Ticket status**: run `tk start <id>` once before first dispatching active work.
+- **Tracker writes are sequential**: run `ticket_tracker` write operations one at a time. Only `team` calls `ticket_tracker`; workers never do.
+- **Ticket status**: run `ticket_tracker` operation `start` once before first dispatching active work.
 - **Sequential default**: process one ready task at a time unless tasks are
   obviously independent and `parallel_safe=true`.
-- **Self-contained dispatch**: every worker prompt must include `<global_rules>` and
-  a complete `<task_brief>`.
+- **Self-contained dispatch**: every worker prompt must include `<global_rules>`, a
+  complete `<task_brief>`, and a `<ticket_context>` built from `team`'s own
+  `ticket_tracker show` result.
 - **Structured context**: wrap briefs in XML tags (`<repo_bootstrap>`,
-  `<invariants>`, `<memory_context>`).
-- **High-signal audit trail**: log only architectural decisions, invariants, UX
-  decisions, pivots, and blockers via `tk add-note`.
+  `<invariants>`, `<ticket_context>`, `<memory_context>`).
+- **High-signal audit trail**: after each worker handoff, `team` persists that
+  worker's `ticket_notes` (architectural decisions, invariants, UX decisions,
+  pivots, blockers) via `ticket_tracker` operation `add_note`. Workers never call
+  `add_note` themselves.
 - **No git mutations**: no agent creates or switches branches, commits, or pushes.
   All work stays uncommitted on the current branch. Review surfaces use read-only
   `git diff` only.
@@ -82,66 +85,89 @@ holds — if you cannot explain in one sentence why a specialist is needed, skip
 
 `explore` is available at any point for quick codebase research, and for dependency
 or library source verification when an API cannot be confirmed via `context7`.
-`codebase-analyst` is for repo bootstrap only — never dispatch it elsewhere.
+`codebase-analyst` is for repo bootstrap only — never dispatch it elsewhere. Repo
+bootstrap is the sole ticket-independent specialist dispatch in this workflow; every
+other specialist and worker dispatch below requires a complete, matching
+`<ticket_context>` built from `team`'s own `ticket_tracker show` result.
 
-**Find ready work.** `tk ready -T team-task` → split into UI, fast-lane,
+**Find ready work.** `ticket_tracker` operation `ready` → split into UI, fast-lane,
 domain-heavy, and standard tasks. Default to the first ready task by priority. Group
 multiple tasks only when `parallel_safe=true`, `areas_touched` don't overlap, and
-coordination is obviously simple. Before dispatching, include `<global_rules>` and a
-complete `<task_brief>` in the worker prompt, and always pass the repo bootstrap
-mechanical gate commands in `validation` or `notes`.
+coordination is obviously simple. Before dispatching, run `ticket_tracker` operation
+`show` to build `<ticket_context>`, then include `<global_rules>`, a complete
+`<task_brief>`, and `<ticket_context>` in the worker prompt, and always pass the repo
+bootstrap mechanical gate commands in `validation` or `notes`.
 
 **Domain brief** (selective — domain-heavy or underspecified tasks only).
 `invariant-analyst "Review invariants for ticket <id>: <title>"` with complete
-`<global_rules>` and `<task_brief>` including repo bootstrap and `<memory_context>`
-when present. Include brief excerpts in downstream prompts. Log durable core
-invariants: `tk add-note <id> "INVARIANTS: <summary>"`.
+`<global_rules>`, `<task_brief>`, and `<ticket_context>`, including repo bootstrap and
+`<memory_context>` when present. Include brief excerpts in downstream prompts.
+Persist durable core invariants returned in `ticket_notes` with `ticket_tracker`
+operation `add_note` using `INVARIANTS: <summary>`.
 
 **UX design** (selective — UI tasks only, skip for fast-lane).
-`ux-designer "Design ticket <id>: <title>"` with complete `<global_rules>` and
-`<task_brief>`. `READY_FOR_IMPLEMENTATION` → dispatch software-engineer;
-`NEEDS_REWORK`/`BLOCKED` → escalate.
+`ux-designer "Design ticket <id>: <title>"` with complete `<global_rules>`,
+`<task_brief>`, and `<ticket_context>`. Persist the returned `ticket_notes` with
+`ticket_tracker` operation `add_note`. `READY_FOR_IMPLEMENTATION` → dispatch
+software-engineer; `NEEDS_REWORK`/`BLOCKED` → escalate.
 
 **Implementation.** `software-engineer "Implement ticket <id>: <title>"` with
-complete `<global_rules>` and `<task_brief>` including repo bootstrap, invariant
-brief, memory context, and UX notes when present. `READY_FOR_QA` → dispatch
-validation-runner or qa-engineer; `NEEDS_REWORK`/`BLOCKED` → escalate.
+complete `<global_rules>`, `<task_brief>`, and `<ticket_context>`, including repo
+bootstrap, invariant brief, memory context, and UX notes when present. Persist
+returned `ticket_notes`. `READY_FOR_QA` → dispatch validation-runner or qa-engineer;
+`NEEDS_REWORK`/`BLOCKED` → escalate.
 
 **Validation** (selective — expensive, noisy, or server-starting validation only).
-`validation-runner "Validate ticket <id>: <title>"` with complete `<global_rules>`
-and `<task_brief>`. Sequential for `requires_server_tests=true`. `READY_FOR_QA` →
+`validation-runner "Validate ticket <id>: <title>"` with complete `<global_rules>`,
+`<task_brief>`, and `<ticket_context>`. Sequential for `requires_server_tests=true`.
+Persist returned `ticket_notes`. `READY_FOR_QA` →
 dispatch qa-engineer; `NEEDS_REWORK` → dispatch software-engineer with evidence;
 `BLOCKED` → escalate.
 
-**QA.** `qa-engineer "QA ticket <id>: <title>"` with complete `<global_rules>` and
-`<task_brief>`. Lightweight for fast-lane. Verify `mechanical_gates` are all `pass`
-or `none` — a `CLOSED` state with a failing, missing, or unrun gate is invalid, so
-treat it as `NEEDS_REWORK` regardless of what the handoff claims. `CLOSED` → Memory
-Writeback, task done; `NEEDS_REWORK` → route to software-engineer or ux-designer;
-`BLOCKED` → escalate.
+**QA.** `qa-engineer "QA ticket <id>: <title>"` with complete `<global_rules>`,
+`<task_brief>`, and `<ticket_context>`. Lightweight for fast-lane. Verify
+`mechanical_gates` are all `pass` or `none` — a `READY_TO_CLOSE` state with a failing,
+missing, or unrun gate is invalid, so treat it as `NEEDS_REWORK` regardless of what
+the handoff claims. `NEEDS_REWORK` → route to software-engineer or ux-designer;
+`BLOCKED` → escalate. `READY_TO_CLOSE` → persist QA's `ticket_notes`, then go to
+**Incremental review** below before running `ticket_tracker close` or any task-level
+Memory Writeback — closure and writeback never happen directly out of the QA stage.
 
-**Incremental review** (selective). Catching an architecture problem while one task
-is still open is far cheaper than catching it after every task has closed. Run this
-**before** the task's QA closure is accepted, when any of these is true:
+**Incremental review** (selective — runs after QA `READY_TO_CLOSE`, before close).
+Catching an architecture problem while one task is still open is far cheaper than
+catching it after every task has closed. !!CRITICAL!! Task closure and task-closure
+Memory Writeback happen only after this gate resolves `has_blockers=false` (or the
+trigger conditions below do not hold). Never run `ticket_tracker close` or Memory
+Writeback for a task while this gate is unresolved.
+
+Run `staff-engineer "Review changes for ticket <id>. review_scope=task:<id>. Run: git
+diff -- <areas_touched>"` with `<global_rules>`, the complete `<task_brief>`, and
+`<ticket_context>` for `<id>` when any of these is true:
 
 - `risk=high`
 - Memory Prime returned a `risk_history` match for a subsystem in `areas_touched`
 - the task introduces a new module, public interface, or third-party dependency
 - `staff-engineer` flagged this area in a previous wave of this epic
 
-Most tasks should skip it. Run:
-`staff-engineer "Review changes for ticket <id>. review_scope=task:<id>. Run: git diff -- <areas_touched>"`
-with `<global_rules>` and the complete `<task_brief>`.
-`has_blockers=false` → accept QA closure. `has_blockers=true` → reopen
-(`tk status <id> open`), log `tk add-note <id> "STAFF_REVIEW: <blockers>"`, and route
-back to implementation with the findings as the rework brief. Record
-`mechanical_invariant_gaps` for the epic-closure report even when there are no blockers.
+Most tasks should skip it — when none of the above hold, proceed straight to close.
+
+`context_status: blocked` → escalate per `team-workflow-dispatch` instead of
+routing on `has_blockers`; do not close or write back memory for this task.
+
+- Skipped or `has_blockers=false` → persist any returned `ticket_notes`, run
+  `ticket_tracker` operation `close` for the task, then task-level Memory Writeback,
+  task done.
+- `has_blockers=true` → persist any returned `ticket_notes`, run `ticket_tracker`
+  operation `reopen`, log `STAFF_REVIEW: <blockers>` with `add_note`, and route back
+  to implementation with the findings as the rework brief. Do not close or write
+  back memory for this task. Record `mechanical_invariant_gaps` for the
+  epic-closure report even when there are no blockers.
 
 **Wave summary.** Output the status summary below, then immediately continue.
-Check for stuck tasks with `tk ls --status=in_progress -T team-task`, verify
+Check for stuck tasks with `ticket_tracker` operation `list` and `status=in_progress`, verify
 discoverability for closed tasks, and mark wave todos complete. If unblocked tasks
-remain → start a new wave. If `tk ls --status=open -T team-task` and
-`tk ls --status=in_progress -T team-task` are both empty → staff review.
+remain → start a new wave. If `ticket_tracker` operation `list` for `status=open` and
+`status=in_progress` are both empty → staff review.
 
 ## Staff Review
 
@@ -150,14 +176,18 @@ Run when all tasks are closed.
 **Review surface**: if the worktree has unrelated changes → use a user-approved
 staged/unstaged surface. Otherwise → `git diff <base_branch>` or an epic-scoped diff.
 
-**Run**: `staff-engineer "Review changes for epic <id>. review_scope=epic. Run: <review-surface-command>"`
+**Run**: `staff-engineer "Review changes for epic <id>. review_scope=epic. Run:
+<review-surface-command>"` with `<global_rules>`, the complete `<task_brief>`, and
+`<ticket_context>` for the epic `<id>`.
 
 Instruct the reviewer to triage by size first and review large diffs in logical
 chunks, highest-risk areas first, per the `code-review` skill triage table. Tasks
 already cleared by incremental review can be reviewed for integration effects rather
 than re-reviewed line by line.
 
-- `has_blockers=false` → proceed to Epic Closure. Do **not** run `tk close <epic-id>`
+- `context_status: blocked` → escalate per `team-workflow-dispatch`; do not proceed
+  to Epic Closure until resolved.
+- `has_blockers=false` → proceed to Epic Closure. Do **not** run `ticket_tracker` operation `close` for the epic
   here — closing the epic belongs to Phase 4 and must happen after memory writeback.
 - `has_blockers=true` → create follow-up issues under the same epic and start a new wave
 

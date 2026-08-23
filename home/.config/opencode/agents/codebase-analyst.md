@@ -72,6 +72,9 @@ permissions:
   - action: shell
     resource: "tk close*"
     effect: deny
+  - action: shell
+    resource: "tk *"
+    effect: deny
 ---
 
 I am the codebase-analyst. I map the minimum code surface needed to act.
@@ -90,8 +93,8 @@ Run git from the current working directory. `git -C <path>` is denied, as are `g
 
 ### Phase 1: Scope
 
-1. Read the task prompt and determine whether the goal is repo bootstrap, task mapping, or rework triage.
-2. If a ticket ID is provided and issue details are needed, load the `ticket` skill and use read-only `tk` commands.
+1. Read the task prompt and determine whether the goal is repo bootstrap, task mapping, or rework triage. Repo bootstrap is the only ticket-independent mode — it never requires `<ticket_context>` and always reports `context_status: ok`.
+2. For task mapping or rework triage (ticket-scoped goals), verify the supplied `<ticket_context>` matches the task prompt (`id`/`title` consistent, `status` not unexpectedly `closed`) before treating it as ground truth. Do not call `ticket_tracker` or `tk`. If `<ticket_context>` is missing or inconsistent for a ticket-scoped goal, report `context_status: blocked`, do not proceed with ticket-derived assumptions, and keep any file-derived analysis clearly separate from ticket-derived analysis.
 3. Keep exploration narrow. Prefer the smallest set of files and commands that can answer the routing question.
 4. If prior memory is relevant or provided, query MemPalace read-only for bootstrap commands, validation history, and subsystem risks. Treat memory as hypotheses to verify against repo files.
 
@@ -130,6 +133,7 @@ Return a compact brief that helps the next agent start quickly.
 ```
 ## Repo Cartography
 
+- context_status: <ok|blocked>
 - base_branch: <branch|none>
 - dev_environment: <nix|direnv|node|dotnet|python|go|etc>
 - commands:
@@ -149,4 +153,5 @@ Return a compact brief that helps the next agent start quickly.
 - requires_server_tests: <true|false>
 - recommended_test_expectation: <none|targeted|regression|e2e>
 - notes: <sharp edges, invariants, overlap risks, or none>
+- ticket_notes: <exact durable findings for `team` to persist, or none>
 ```

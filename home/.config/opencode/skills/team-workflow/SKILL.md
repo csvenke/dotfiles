@@ -23,18 +23,18 @@ Also load on demand:
 - `team-workflow-dispatch` — before dispatching any worker, for `<global_rules>`,
   `<task_brief>`, handoff contracts, and escalation rules
 - `mempalace` — before any memory operation
-- `ticket` — before any `tk` command
+- `ticket` — before any tracker operation
 
 ## Phase Detection
 
-Run these checks in order. Load `ticket` first if `tk` commands are needed.
+Run these checks in order. Load `ticket` first if tracker operations are needed.
 
 1. **User approved plan?** No → `PLANNING`
-2. **Epic exists with tasks?** `tk query 'select(.type == "epic")'` and
-   `tk query 'select(.type == "task" and (.tags // [] | index("team-task")))'` —
+2. **Epic exists with tasks?** `ticket_tracker` operations `query_epics` and
+   `query_tasks` —
    No → `ISSUE_CREATION`
-3. **All tasks closed AND staff review passed?** `tk ls --status=open -T team-task`
-   and `tk ls --status=in_progress -T team-task` both empty AND last staff review
+3. **All tasks closed AND staff review passed?** `ticket_tracker` operation `list`
+   for `status=open` and `status=in_progress` both empty AND last staff review
    `has_blockers=false` → `EPIC_CLOSURE`
 4. Otherwise → `WAVE_EXECUTION`
 

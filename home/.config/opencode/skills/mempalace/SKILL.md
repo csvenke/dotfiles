@@ -26,6 +26,8 @@ Initialize with a cheap read such as `mempalace_mempalace_status`. If the read f
 
 Use before planning approval and before dispatch when relevant:
 
+In Code Mode, discover unavailable tools by calling the global `search(...)` function directly; never declare or alias a local variable named `search`.
+
 1. `mempalace_mempalace_search` with goal, ticket, file path, and subsystem keywords
 2. `mempalace_mempalace_kg_query` for known tickets, epics, subsystems, or file-area slugs
 3. `mempalace_mempalace_search` in `wing=opencode`, `room=team-retros` for workflow policy candidates
@@ -44,12 +46,12 @@ If Memory Prime surfaces a prior decision, closed epic, KG fact, or retrospectiv
 
 If the user confirms the reversal, preserve the confirmation in ticket `MEMORY:` or `REVERSAL_CONFIRMATION:` notes and downstream `<memory_context>`.
 
-If a conflict is discovered after tickets already exist, add a concise ticket note before dispatch:
+If a conflict is discovered after tickets already exist, `team` adds a concise ticket note before dispatch:
 
-```bash
-tk add-note <task-id> "MEMORY_CONFLICT: <prior fact/decision and current resolution>"
-tk add-note <task-id> "REVERSAL_CONFIRMATION: <user confirmation or none>"
-```
+Use separate `ticket_tracker` `add_note` operations (performed by `team` only) for:
+
+- `MEMORY_CONFLICT: <prior fact/decision and current resolution>`
+- `REVERSAL_CONFIRMATION: <user confirmation or none>`
 
 ## Memory Context Contract
 

@@ -73,10 +73,8 @@ self-context before running a full Memory Prime search. Skip for routine runs.
 
 ## Close Epic
 
-```bash
-tk ls --status=closed -T team-task  # confirm all workflow tasks closed
-tk close <epic-id>
-```
+1. Run `ticket_tracker` operation `list` with `status=closed` and confirm all workflow tasks are present.
+2. Run `ticket_tracker` operation `close` for `<epic-id>`.
 
 ## Final Report
 

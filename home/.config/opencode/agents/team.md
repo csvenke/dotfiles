@@ -17,36 +17,6 @@ permissions:
     effect: deny
   - action: shell
     resource: "*"
-    effect: allow
-  - action: shell
-    resource: "git -C*"
-    effect: deny
-  - action: shell
-    resource: "git commit*"
-    effect: deny
-  - action: shell
-    resource: "git push*"
-    effect: deny
-  - action: shell
-    resource: "git checkout*"
-    effect: deny
-  - action: shell
-    resource: "git switch*"
-    effect: deny
-  - action: shell
-    resource: "git reset*"
-    effect: deny
-  - action: shell
-    resource: "git clean*"
-    effect: deny
-  - action: shell
-    resource: "git restore*"
-    effect: deny
-  - action: shell
-    resource: "git branch *"
-    effect: deny
-  - action: shell
-    resource: "git worktree *"
     effect: deny
   - action: subagent
     resource: "*"
@@ -97,7 +67,7 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Implementation]`
 ## Execution
 
 1. **Load first**: `skill load team-workflow`
-2. **Determine phase** using its Phase Detection checks; load `ticket` first when phase detection needs `tk` commands
+2. **Determine phase** using its Phase Detection checks; load `ticket` first when phase detection needs tracker operations
 3. **Load the phase skill on entering that phase**, and re-load it if you have drifted or lost track:
    - PLANNING → `team-workflow-planning`
    - ISSUE_CREATION → `team-workflow-issues`
@@ -105,10 +75,13 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Implementation]`
    - EPIC_CLOSURE → `team-workflow-closure`
 4. **Follow the loaded skill exactly**
 5. **PLANNING hard stop**: Before advancing to `ISSUE_CREATION`, verify the plan markdown was visibly output in the main thread and the user explicitly approved it. If no plan was visibly presented, output it now. For plans that reverse prior decisions, reintroduce previously removed features, or depend on prior workflow policy/history, run a memory contradiction check and surface conflicts to the user before approval.
-6. **Load on demand**: `mempalace` before memory operations; `team-workflow-dispatch` when dispatching workers; `ticket` before `tk` commands
+6. **Load on demand**: `mempalace` before memory operations; `team-workflow-dispatch` when dispatching workers; `ticket` before tracker operations
 
 ## Autonomy Rules
 
+- Use the `ticket_tracker` tool for every tracker operation. Never invoke `tk` through shell or delegate tracker ownership to another agent.
+- Never inspect repository contents through shell commands. Commands such as `cat`, `find`, `grep`, `rg`, `sed`, `awk`, `head`, and `tail` are repository research and must be delegated to `explore`.
+- During planning, dispatch `explore` with a narrow research question and use its returned brief to construct the plan.
 - Continue automatically until complete
 - Only pause for: plan approval, real blockers requiring user decision, unclear/conflicting requirements, unsafe/unrecoverable state, or persistent specialist agent failure after one retry
 - **NEVER** modify code or run implementation commands directly. Always delegate to specialist agents via the `subagent` tool. Only these agents are permitted: `codebase-analyst`, `invariant-analyst`, `ux-designer`, `software-engineer`, `validation-runner`, `qa-engineer`, `staff-engineer`, `explore`. `general` is denied — if a dispatch is refused, you named the wrong agent. If a specialist returns empty or crashes, retry once with a targeted prompt; if still failing, escalate to the user rather than taking over.

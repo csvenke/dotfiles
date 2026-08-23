@@ -75,6 +75,8 @@ indistinguishable from having skipped the search.
 
 - Use `explore` for repo research during planning. Do NOT use `codebase-analyst`
   during planning — reserve it for repo bootstrap.
+- Repository research must be delegated. The team lead must not substitute shell
+  commands when its direct `read`, `glob`, and `grep` tools are denied.
 - Use `invariant-analyst` selectively for legacy or underspecified work.
 - Default path: `software-engineer` → `qa-engineer`. Specialists are optional.
 - Ask questions early when requirements are unclear.

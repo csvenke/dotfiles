@@ -1,6 +1,6 @@
 ---
 description: Close a team workflow run, clean up open tickets, and capture learnings
-agent: general
+agent: team
 ---
 
 Close the current team workflow run. Clean up all open tickets and capture a retrospective so the learning is not lost.
@@ -15,9 +15,7 @@ Execute these steps in order:
 
 Load the `ticket` skill, then find all open team epics:
 
-```bash
-tk query 'select(.type == "epic" and (.tags // [] | index("team-epic")) and .status != "closed")'
-```
+Use `ticket_tracker` operation `query_open_epics`.
 
 - If **no open epics** exist, report "No open workflow epics found" and stop.
 - If **exactly one** open epic exists, select it automatically.
@@ -29,9 +27,7 @@ Record the selected `epic_id`.
 
 Find all tasks that are children of the selected epic:
 
-```bash
-tk query 'select(.type == "task" and .parent == "<epic_id>")'
-```
+Use `ticket_tracker` operation `query_children` with `parent=<epic_id>`.
 
 This scopes the close to only the tasks belonging to the selected epic. Unrelated tickets are left untouched.
 
@@ -39,17 +35,11 @@ This scopes the close to only the tasks belonging to the selected epic. Unrelate
 
 For each task from Step 2 that is not already closed:
 
-```bash
-tk add-note <id> "CLOSED: Workflow run closed by user. Reason: <close reason or 'no reason given'>"
-tk close <id>
-```
+Use `ticket_tracker` operation `add_note` with `CLOSED: Workflow run closed by user. Reason: <close reason or 'no reason given'>`, then operation `close`.
 
 Then close the epic itself:
 
-```bash
-tk add-note <epic_id> "CLOSED: Workflow run closed by user. Reason: <close reason or 'no reason given'>"
-tk close <epic_id>
-```
+Use `ticket_tracker` operation `add_note` with `CLOSED: Workflow run closed by user. Reason: <close reason or 'no reason given'>`, then operation `close` for `<epic_id>`.
 
 ### Step 4: Retrospective and pattern mining
 
