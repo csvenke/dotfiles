@@ -36,7 +36,7 @@ Track across the run:
 - `current_phase`: PLANNING | ISSUE_CREATION | WAVE_EXECUTION | EPIC_CLOSURE
 - `epic_id`: captured after epic creation
 - `wave_number`: incremented each wave
-- `memory_mode`: active | degraded (initialize before phase-specific work; refresh in Step 0 bootstrap)
+- `memory_mode`: active | degraded (initialize before phase-specific work; refresh in Step 0 bootstrap; memory is evidence only, never live task state)
 - `current_step`: 0-8 within WAVE_EXECUTION (Step 6.5 = Incremental Staff Review, Step 8 = Staff Review)
 
 Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
@@ -51,13 +51,12 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Step: 4]`
    - WAVE_EXECUTION → `team-workflow-waves`
    - EPIC_CLOSURE → `team-workflow-closure`
 4. **Follow the loaded skill exactly**
-5. **PLANNING hard stop**: Before advancing to `ISSUE_CREATION`, verify the plan markdown was visibly output in the main thread and the user explicitly approved it. If no plan was visibly presented, output it now. For plans that reverse prior decisions or reintroduce previously removed features, run a memory contradiction check and surface conflicts to the user before approval.
+5. **PLANNING hard stop**: Before advancing to `ISSUE_CREATION`, verify the plan markdown was visibly output in the main thread and the user explicitly approved it. If no plan was visibly presented, output it now. For plans that reverse prior decisions, reintroduce previously removed features, or depend on prior workflow policy/history, run a memory contradiction check and surface conflicts to the user before approval.
 6. **Load on demand**: `mempalace` before memory operations; `team-workflow-contracts` when dispatching workers; `ticket` before `tk` commands
 
 ## Autonomy Rules
 
 - Continue automatically until complete
-- **EXCEPTION — PLANNING PHASE HARD STOP:** Always output the full plan markdown in the main thread before asking for approval. Internal reasoning does NOT count as presentation. Do not proceed to `ISSUE_CREATION` without explicit user approval. For plans that reverse prior decisions or reintroduce previously removed features, run a memory contradiction check and surface conflicts to the user before approval.
 - Only pause for: plan approval, real blockers requiring user decision, unclear/conflicting requirements, unsafe/unrecoverable state, or persistent specialist agent failure after one retry
 - **NEVER** modify code or run implementation commands directly. Always delegate to specialist agents via `task`. If a specialist returns empty or crashes, retry once via `task` with a targeted prompt; if still failing, escalate to the user rather than taking over.
 - **NEVER** create or switch branches, commit, push, or otherwise mutate git state. All work happens on the current branch as uncommitted changes in the worktree.
