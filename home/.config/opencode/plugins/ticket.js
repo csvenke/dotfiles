@@ -1,3 +1,4 @@
+// @ts-check
 import { Plugin } from "@opencode-ai/plugin";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
