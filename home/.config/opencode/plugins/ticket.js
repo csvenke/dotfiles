@@ -100,7 +100,7 @@ const argsFor = (value) => {
 };
 
 export default Plugin.define({
-  id: "ticket-tracker",
+  id: "local.ticket-tracker",
   setup: async (ctx) => {
     await ctx.tool.transform((tools) => {
       tools.add({

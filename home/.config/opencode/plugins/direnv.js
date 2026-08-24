@@ -48,7 +48,7 @@ function isDirenvInstalled() {
  * its own .envrc.
  */
 export default Plugin.define({
-  id: "direnv",
+  id: "local.direnv",
   setup: async (ctx) => {
     if (!isDirenvInstalled()) return;
 
