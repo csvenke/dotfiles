@@ -15,6 +15,9 @@ function hasCommand(input) {
   );
 }
 
+/**
+ * @returns {boolean}
+ */
 function isDirenvInstalled() {
   try {
     execFileSync("direnv", ["version"], { stdio: "ignore" });
@@ -24,29 +27,6 @@ function isDirenvInstalled() {
   }
 }
 
-/**
- * Loads the current project's direnv environment into every shell command
- * execution, so agents and subagents see the same env vars/dependencies
- * (nix shells, .envrc exports, tool versions, secrets, etc.) as an
- * interactive shell with direnv hooked in.
- *
- * Skips entirely on hosts without direnv installed (checked once at setup,
- * not per command). Whether a project actually has an allowed `.envrc` is
- * left to direnv itself: it walks upward from the shell's real working
- * directory and silently no-ops when none is found, which the plugin
- * process can't reliably replicate since it doesn't know a given tool
- * call's actual cwd.
- *
- * Matches on tool input shape (a string `command` field) rather than a
- * specific tool name/id, since the built-in shell tool's registered name
- * ("shell") differs from what OpenCode's own docs examples reference
- * ("bash"), and subagents may dispatch through the same tool under
- * different wrapping.
- *
- * Re-evaluated on every command (cheap, direnv caches its own state) so it
- * stays correct even if the agent cd's into a different project/subdir with
- * its own .envrc.
- */
 export default Plugin.define({
   id: "local.direnv",
   setup: async (ctx) => {
