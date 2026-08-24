@@ -6,8 +6,28 @@ const execFileAsync = promisify(execFile);
 
 const SAFE_TOKEN = /^[A-Za-z0-9._-]+$/;
 
+/**
+ * @typedef {Object} TicketInput
+ * @property {string} operation - Name of the operation to perform.
+ * @property {string} [id] - Ticket identifier.
+ * @property {string} [dependency] - Ticket identifier for a dependency edge.
+ * @property {string} [parent] - Parent ticket identifier.
+ * @property {string} [title] - Title for ticket creation.
+ * @property {string} [description] - Description for ticket creation.
+ * @property {string} [lane] - Lane tag to append to team tasks.
+ * @property {string} [note] - Note text to add to a ticket.
+ * @property {"open" | "in_progress" | "closed"} [status] - Status filter.
+ */
+
+/**
+ * Extract a required non-empty string field from the tool input.
+ *
+ * @param {TicketInput} value - Tool input object.
+ * @param {string} key - Field name to extract.
+ * @returns {string} The field value.
+ */
 function required(value, key) {
-  const result = value[key];
+  const result = /** @type {Record<string, unknown>} */ (value)[key];
   if (typeof result !== "string" || result.length === 0) {
     throw new Error(
       `ticket_tracker requires '${key}' for '${value.operation}'`,
@@ -16,6 +36,13 @@ function required(value, key) {
   return result;
 }
 
+/**
+ * Extract a required field and validate it as a shell-safe ticket id.
+ *
+ * @param {TicketInput} value - Tool input object.
+ * @param {string} [key="id"] - Field name holding the id.
+ * @returns {string} The validated ticket id.
+ */
 function ticketId(value, key = "id") {
   const result = required(value, key);
   if (!SAFE_TOKEN.test(result)) {
@@ -24,6 +51,14 @@ function ticketId(value, key = "id") {
   return result;
 }
 
+/**
+ * Build `tk create` arguments.
+ *
+ * @param {string} type - Ticket type (e.g. "epic" or "task").
+ * @param {string} title - Ticket title.
+ * @param {string[]} extra - Additional CLI arguments.
+ * @returns {string[]} Full argument list.
+ */
 const tkCreate = (type, title, extra) => [
   "create",
   title,
@@ -32,8 +67,20 @@ const tkCreate = (type, title, extra) => [
   ...extra,
 ];
 
+/**
+ * Build `tk query` arguments.
+ *
+ * @param {string} filter - jq filter expression.
+ * @returns {string[]} Full argument list.
+ */
 const tkQuery = (filter) => ["query", filter];
 
+/**
+ * Build the `--tags` value for a new task, optionally appending a lane tag.
+ *
+ * @param {string | undefined} lane - Optional lane tag.
+ * @returns {string} Comma-separated tags.
+ */
 function taskTags(lane) {
   if (lane === undefined) {
     return "team-task";
@@ -44,6 +91,11 @@ function taskTags(lane) {
   return `team-task,${lane}`;
 }
 
+/**
+ * Map of operation name to a builder that produces the `tk` CLI arguments.
+ *
+ * @type {Record<string, (v: TicketInput) => string[]>}
+ */
 const OPERATIONS = {
   create_epic: (v) =>
     tkCreate("epic", required(v, "title"), [
@@ -89,14 +141,20 @@ const OPERATIONS = {
 
 const OPERATION_NAMES = Object.keys(OPERATIONS);
 
+/**
+ * Resolve the tool input to the `tk` CLI argument list for its operation.
+ *
+ * @param {TicketInput} value - Tool input object.
+ * @returns {string[]} The CLI argument list.
+ */
 const argsFor = (value) => {
-  const strategy = OPERATIONS[value.operation];
+  const operation = OPERATIONS[value.operation];
 
-  if (typeof strategy !== "function") {
+  if (typeof operation !== "function") {
     throw new Error(`Unsupported ticket operation: ${value.operation}`);
   }
 
-  return strategy(value);
+  return operation(value);
 };
 
 export default Plugin.define({
@@ -124,7 +182,8 @@ export default Plugin.define({
           additionalProperties: false,
         },
         options: { codemode: true, permission: "ticket_tracker" },
-        execute: async (value, context) => {
+        execute: async (input, context) => {
+          const value = /** @type {TicketInput} */ (input);
           const session = await ctx.session.get({
             sessionID: context.sessionID,
           });
