@@ -24,10 +24,8 @@ const OPERATIONS = [
   "dependency_cycle",
 ];
 
-// Owner-only defense in depth: only the `team` agent may see or execute
-// ticket_tracker. No other agent (including `general` and any subagent) is
-// granted any operation. This is intentionally not a per-operation matrix —
-// tracker ownership is centralized in team, not distributed by role.
+// Runtime defense in depth: catalog visibility is restricted separately by
+// V2 permissions, and only the `team` agent may execute ticket_tracker.
 const OWNER_AGENT = "team";
 
 const input = {
@@ -151,7 +149,7 @@ export default Plugin.define({
         description:
           "Read and update the current repository's tk issue tracker without using shell commands.",
         input,
-        options: { codemode: false, permission: "ticket_tracker" },
+        options: { codemode: true, permission: "ticket_tracker" },
         execute: async (value, context) => {
           if (context.agent !== OWNER_AGENT) {
             throw new Error(
@@ -180,10 +178,6 @@ export default Plugin.define({
           };
         },
       });
-    });
-
-    await ctx.session.hook("context", (event) => {
-      if (event.agent !== OWNER_AGENT) delete event.tools.ticket_tracker;
     });
   },
 });

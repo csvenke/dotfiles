@@ -18,6 +18,9 @@ permissions:
   - action: shell
     resource: "*"
     effect: deny
+  - action: ticket_tracker
+    resource: "*"
+    effect: allow
   - action: subagent
     resource: "*"
     effect: deny

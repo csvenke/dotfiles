@@ -52,8 +52,10 @@ verifying acceptance and mechanical gates.
 
 ## Team Workflow Recipe
 
-Use one tool call per operation and capture each returned ticket ID before the next
-call:
+Group adjacent operations in one Code Mode `execute` call. Keep one nested
+`ticket_tracker` call per operation, await writes sequentially, and capture each
+returned ticket ID before the next dependent call. Only independent reads may use
+`Promise.all`:
 
 1. `create_epic` with the approved plan title and a short description.
 2. `create_task` for each task using the returned epic ID as `parent`.

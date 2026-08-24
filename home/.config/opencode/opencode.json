@@ -1,8 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "permission": {
-    "external_directory": "allow"
-  },
+  "permissions": [
+    {
+      "action": "external_directory",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "ticket_tracker",
+      "resource": "*",
+      "effect": "deny"
+    }
+  ],
   "autoupdate": false,
   "lsp": {
     "csharp": {
