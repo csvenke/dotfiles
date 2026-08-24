@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/tui.json",
+  "theme": {
+    "name": "nordic"
+  },
+  "session": {
+    "sidebar": "hide",
+    "scrollbar": true
+  },
+  "tabs": {
+    "layout": "horizontal",
+    "scope": "global"
+  }
+}
