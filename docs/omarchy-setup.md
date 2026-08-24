@@ -18,12 +18,12 @@ hl.config({
 **`.config/hypr/bindings.lua`**
 
 ```lua
-hl.unbind("SUPER + H")
 hl.unbind("SUPER + J")
 hl.unbind("SUPER + K")
 hl.unbind("SUPER + L")
+hl.unbind("SUPER + ALT + K")
 
--- Vim style navigation/movement.
+-- Vim style navigation/movement/resizing
 hl.bind("SUPER + H", hl.dsp.focus({ direction = "l" }), { description = "Move focus left" })
 hl.bind("SUPER + J", hl.dsp.focus({ direction = "d" }), { description = "Move focus down" })
 hl.bind("SUPER + K", hl.dsp.focus({ direction = "u" }), { description = "Move focus up" })
@@ -32,6 +32,10 @@ hl.bind("SUPER + SHIFT + H", hl.dsp.window.move({ direction = "l" }), { descript
 hl.bind("SUPER + SHIFT + J", hl.dsp.window.move({ direction = "d" }), { description = "Move window down" })
 hl.bind("SUPER + SHIFT + K", hl.dsp.window.move({ direction = "u" }), { description = "Move window up" })
 hl.bind("SUPER + SHIFT + L", hl.dsp.window.move({ direction = "r" }), { description = "Move window right" })
+o.bind("SUPER + ALT + H", "Resize window left", hl.dsp.window.resize({ x = -25, y = 0, relative = true }))
+o.bind("SUPER + ALT + J", "Resize window down", hl.dsp.window.resize({ x = 0, y = 25, relative = true }))
+o.bind("SUPER + ALT + K", "Resize window up", hl.dsp.window.resize({ x = 0, y = -25, relative = true }))
+o.bind("SUPER + ALT + L", "Resize window right", hl.dsp.window.resize({ x = 25, y = 0, relative = true }))
 ```
 
 ### keyd
