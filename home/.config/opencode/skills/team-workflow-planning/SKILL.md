@@ -1,6 +1,8 @@
 ---
 name: team-workflow-planning
 description: "Planning phase for the team workflow. Memory Prime, clarification questions, design gate, and plan presentation."
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Phase 1: Planning

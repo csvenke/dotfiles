@@ -1,6 +1,8 @@
 ---
 name: team-workflow-issues
 description: "Issue creation phase for the team workflow. Creating the epic, tasks, acceptance criteria, and dependencies."
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Phase 2: Issue Creation

@@ -1,6 +1,8 @@
 ---
 name: team-workflow-closure
 description: "Epic closure phase for the team workflow. Memory writeback, retrospective, pattern mining, and closing the epic."
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Phase 4: Epic Closure

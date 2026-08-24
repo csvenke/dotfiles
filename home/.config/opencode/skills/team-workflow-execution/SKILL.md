@@ -1,6 +1,8 @@
 ---
 name: team-workflow-execution
 description: "Wave execution phase for the team workflow. Repo bootstrap, the wave pipeline, memory loop, and staff review."
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Phase 3: Wave Execution

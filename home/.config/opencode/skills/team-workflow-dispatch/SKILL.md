@@ -1,6 +1,8 @@
 ---
 name: team-workflow-dispatch
 description: "Worker dispatch contract, handoff contracts, and escalation rules for the team workflow. Load before dispatching any worker."
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Dispatch and Escalation

@@ -1,6 +1,8 @@
 ---
 name: team-workflow
-description: "Entry point for the team workflow. Phase detection and routing to the phase skills. Always load this first."
+description: "Entry point for the team workflow. Phase detection and routing to the phase skills."
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Team Workflow
