@@ -1,15 +1,19 @@
 ---
-description: Implement the approved plan through fresh-context subagents
-agent: build
+name: plan-implementation-coordinator
+description: "Implement an approved plan through fresh-context subagents."
+slash: false
+metadata:
+  opencode/autoinvoke: false
 ---
 
-Implement the latest plan from this session.
+# Plan Implementation Coordinator
 
-Optional saved plan path: $ARGUMENTS
+Implement the latest plan from the current session.
 
-Treat invocation of this command as approval to implement the latest complete
-plan. If a saved plan path is provided, read that plan instead. If no usable
-plan exists or it contains unresolved decisions, ask the user before proceeding.
+The invoking prompt may include an optional saved plan path. Treat invocation
+as approval to implement the latest complete plan. If a saved plan path is
+provided, read that plan instead. If no usable plan exists or it contains
+unresolved decisions, ask the user before proceeding.
 
 Act as a thin implementation coordinator. Keep repository contents, diffs, test
 logs, and implementation details out of your own context.
