@@ -1,6 +1,6 @@
 ---
 name: plan-implementation-coordinator
-description: "Implement an approved plan through fresh-context subagents."
+description: "Implement an approved plan through memory-informed fresh-context subagents."
 slash: false
 metadata:
   opencode/autoinvoke: false
@@ -8,87 +8,104 @@ metadata:
 
 # Plan Implementation Coordinator
 
-Implement the latest plan from the current session.
+Use a supplied non-empty plan path; otherwise use the latest complete
+assistant-authored session plan. Invocation approves it; ask only if no unique
+usable plan exists or decisions remain unresolved. Except for reading it and
+root `mempalace.yaml`, delegate all repository work.
 
-The invoking prompt may include an optional saved plan path. Treat invocation
-as approval to implement the latest complete plan. If a saved plan path is
-provided, read that plan instead. If no usable plan exists or it contains
-unresolved decisions, ask the user before proceeding.
+## Execute
 
-Act as a thin implementation coordinator. Keep repository contents, diffs, test
-logs, and implementation details out of your own context.
+1. Normalize the plan's objective, constraints, exclusions, validation, and
+   exact acceptance criteria; assign stable `A<n>` IDs through final reporting.
+2. Split work into the fewest cohesive, independently verifiable units that fit
+   one fresh child context. Run sequentially; never parallelize worktree mutation.
+3. Use `explore` only to map paths, symbols, boundaries, and validation needed
+   for safe units. Skip it when the plan already provides safe boundaries.
+4. Once boundaries are clear, load `plan-implementation-memory` and follow it.
+   Never load shared `mempalace`.
+5. Dispatch each unit to a foreground `general`; advance dependents only after
+   valid `done`. After all units return valid `done`, dispatch a fresh `general`
+   verifier.
+6. Continue autonomously; allow one recovery and one repair/reverification.
+   Escalate only for user-only input/permission, unresolved product scope,
+   unsafe/irreversible action, or repeated failure. Ask one question with the
+   blocker, recovery, impact, and recommendation.
 
-## Coordination
+## Worker Contract
 
-1. Extract the objective, acceptance criteria, constraints, scope exclusions,
-   and validation requirements from the plan.
-2. Divide the work into the fewest independently verifiable units that fit in a
-   fresh child context. Do not split a small coherent change merely to use more
-   agents.
-3. Work sequentially by default. Never run agents that modify the worktree in
-   parallel.
-4. Use `explore` only when you need a narrow repository map to define safe task
-   boundaries. Ask for paths, symbols, boundaries, and validation commands,
-   not source listings. Skip it when a worker can investigate locally.
-5. Delegate every implementation unit to a foreground `general` subagent.
-6. After all units return `done`, delegate independent verification to a fresh
-   `general` subagent.
-7. Once started, continue autonomously through implementation, verification,
-   rework, and final reporting. Never pause for a status update, routine
-   confirmation, or a choice resolvable from the plan, repository evidence,
-   existing conventions, or the safest reversible in-scope option. Status
-   updates are informational; continue immediately after emitting one.
-   Escalate only for missing user-only input, credentials, or permissions; an
-   unanswered product or scope decision; an unsafe or irreversible action; or
-   the same failure after one focused recovery attempt. When escalating, ask
-   one concise question containing the blocker, attempted recovery, impact,
-   and recommended choice.
+Each self-contained prompt includes:
 
-Aside from reading an explicitly supplied plan file, do not use repository
-read, search, edit, or shell tools yourself. Delegate repository work.
+- the unit's objective and applicable acceptance IDs with criterion text
+- constraints, exclusions, areas, unit validation, and required dependency facts
+- plan-consistent memory constraints as repository hypotheses
+- a worktree baseline and relevant pre-existing changes; preserve unrelated work
+- the smallest correct change and targeted checks; defer expensive plan-wide
+  checks unless needed earlier
+- never create/switch branches, commit, push, reset, clean, restore, revert, or
+  otherwise mutate Git/worktree state
 
-## Implementation Dispatch
+Return only:
 
-Every implementation prompt must be self-contained and include:
+```text
+status: done | blocked
+changed: <paths this unit modified>
+preexisting: <relevant pre-existing changes or none>
+acceptance: <applicable A<n>, result, evidence>
+validation: <commands and pass/fail>
+scope_delta: <unexpected surface and why | none>
+discoveries: <durable findings | none>
+notes: <next-unit facts | none>
+```
 
-- the unit's objective and acceptance criteria
-- relevant constraints and known files or areas
-- validation expected for that unit
-- only dependency facts from earlier units that this unit needs
-- instructions to inspect the current worktree and preserve unrelated changes
-- instructions not to create branches, commit, push, reset, clean, restore, or
-  revert other work
-- instructions to make the smallest correct change and run relevant validation
+`done` requires every applicable acceptance ID and unit check to pass; otherwise
+treat it as `blocked`. Do not request diffs, source, or full logs. Recovery:
 
-Ask the worker to return only:
+- completed work with a malformed handoff: resume once for the contract only
+- failure before useful work: retry fresh once
+- partial work or `blocked`: unless escalation applies, give one fresh recovery
+  `general` the current state and full unit brief; never restart blindly
 
-- `status`: `done` or `blocked`
-- `changed`: paths changed
-- `acceptance`: criteria met or gaps
-- `validation`: commands and pass/fail results
-- `notes`: concise information needed by the next unit
+Use `explore` to remap scope deltas that materially exceed known areas, add an
+unplanned interface/dependency, or expose cross-unit coupling. Continue only if
+the expanded surface remains in-plan; otherwise ask. Memory never blocks.
 
-Do not request diffs, source listings, or full test logs in the handoff. Retry
-an empty or failed worker once with a focused prompt. Do not continue dependent
-units after `blocked`; attempt one focused recovery unless the blocker already
-requires user-only input, permission, or a product decision.
+## Verification
 
-## Final Verification
+Give a fresh `general` the normalized plan with every `A<n>`, changed paths as
+non-exhaustive hints, relevant pre-existing overlaps, all retained `M<n>`, and
+material discovery/scope-delta claims. Omit rationale and routine notes.
 
-Launch a fresh `general` subagent that has not participated in implementation.
-Give it the approved plan and cumulative changed paths as hints, not an
-exhaustive review boundary. Instruct it to:
+It must independently falsify acceptance, run required plan-wide and targeted
+checks, and inspect beyond reported paths when effects indicate. Snapshot
+worktree status before validation and compare it afterward. Never edit or clean
+up; if validation changes files, return `blocked` with before/after evidence and
+escalate without repair.
 
-- independently inspect the relevant current changes
-- check every acceptance criterion
-- run plan-required validation and targeted checks needed to cover acceptance
-- avoid modifying files
-- preserve and ignore unrelated worktree changes
-- return `pass`, `rework`, or `blocked` with concise evidence
+Return only:
 
-For `rework`, dispatch one focused `general` repair and then run a new fresh
-verification. If the same problem persists or requires a product or design
-decision, ask the user rather than expanding scope.
+```text
+verdict: pass | rework | blocked
+changed: <independently observed plan-related paths>
+acceptance: <every A<n>, result, evidence>
+validation: <commands and pass/fail>
+findings: <actionable findings | none>
+memory: <each M<n>: confirmed | contradicted | not_exercised, with evidence>
+writeback: <each claim: confirmed | rejected | not_exercised, evidence; plus at most one learning>
+residual_risks: <untested or uncertain behavior | none>
+```
 
-Finish with a concise implementation summary, changed paths, validation
-results, and any residual risks.
+`pass` is valid only when every `A<n>` and required check passes, findings are
+`none`, and verification left the worktree unchanged. Otherwise treat the
+verdict as `rework` or `blocked` according to its evidence.
+
+On `rework`, give a fresh repair `general` the normalized plan, failed IDs and
+findings, memory safeguards, cumulative changed paths, and current-worktree
+instructions. Apply the Worker Contract, then use a new verifier. Never resume
+an implementer; escalate if the problem remains or needs a product decision.
+
+## Close
+
+After valid `pass`, give `plan-implementation-memory` only confirmed writeback,
+memory feedback, and repaired-then-verified defects; never write earlier. Report
+implementation, verifier-observed paths, validation, residual risks, and one
+memory summary line.

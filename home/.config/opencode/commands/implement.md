@@ -1,5 +1,5 @@
 ---
-description: Implement the approved plan through fresh-context subagents
+description: Implement the approved plan through memory-informed fresh-context subagents
 agent: build
 ---
 
