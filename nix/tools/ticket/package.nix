@@ -25,5 +25,6 @@ stdenv.mkDerivation rec {
   meta = {
     description = "Minimal git-backed issue tracker for AI agents";
     homepage = "https://github.com/wedow/ticket";
+    mainProgram = "tk";
   };
 }

@@ -71,4 +71,7 @@ symlinkJoin {
     mempalaceCli
     mempalaceMcp
   ];
+  meta = mempalace.meta // {
+    mainProgram = "mempalace";
+  };
 }

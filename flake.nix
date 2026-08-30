@@ -33,7 +33,6 @@
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
-        "x86_64-darwin"
         "x86_64-linux"
       ];
 
@@ -47,13 +46,9 @@
           pkgs = import nixpkgs {
             inherit system;
             overlays = [
-              (final: prev: {
-                neovim = inputs.neovim.packages.${system}.default;
-                dev-cli = inputs.dev-cli.packages.${system}.default;
-                llm-cli = inputs.llm-cli.packages.${system}.default;
-              })
               (import ./nix/overlays/tmux)
               (import ./nix/overlays/fzf)
+              (import ./nix/overlays/opencode)
             ];
           };
           inherit (pkgs)
@@ -63,73 +58,73 @@
             stdenv
             ;
 
-          tools = lib.packagesFromDirectoryRecursive {
+          localTools = lib.packagesFromDirectoryRecursive {
             inherit callPackage;
             directory = ./nix/tools;
           };
 
-          homePackages =
-            with pkgs;
-            [
-              bash-completion
-              stow
-              findutils
-              fd
-              starship
-              direnv
-              nix-direnv
-              mise
-              delta
-              ripgrep
-              jq
-              httpie
-              tldr
-              wget
-              git
-              lazygit
-              curl
-              eza
-              bat
-              htop-vim
-              gh
-              fastfetch
-              nodejs
-              tmux
-              fzf
-              neovim
-              opencode
-              llm-cli
-              dev-cli
-            ]
-            ++ lib.optionals stdenv.hostPlatform.isLinux [
-              xclip
-              wl-clipboard
-            ]
-            ++ (lib.attrValues tools);
+          flakePackages = [
+            inputs.neovim.packages.${system}.default
+            inputs.llm-cli.packages.${system}.default
+            inputs.dev-cli.packages.${system}.default
+          ];
         in
         {
-          apps = {
-            bootstrap = {
-              type = "app";
-              program = "${./scripts/bootstrap.sh}";
-              meta.description = "Bootstrap dotfiles on the system";
-            };
-            eject = {
-              type = "app";
-              program = "${./scripts/eject.sh}";
-              meta.description = "Remove dotfiles completly from the system";
-            };
-            fix-broken-profile = {
-              type = "app";
-              program = "${./scripts/fix-broken-profile.sh}";
-              meta.description = "Fix broken nix profile";
-            };
-          };
-
           packages = {
             default = buildEnv {
-              name = "dotfiles";
-              paths = homePackages;
+              name = "dotfiles-${inputs.self.lastModifiedDate or "dirty"}";
+              paths =
+                with pkgs;
+                [
+                  bash-completion
+                  stow
+                  findutils
+                  fd
+                  starship
+                  direnv
+                  nix-direnv
+                  mise
+                  delta
+                  ripgrep
+                  jq
+                  httpie
+                  tldr
+                  wget
+                  git
+                  lazygit
+                  curl
+                  eza
+                  bat
+                  htop-vim
+                  gh
+                  fastfetch
+                  nodejs
+                  tmux
+                  fzf
+                  opencode
+                ]
+                ++ lib.optionals stdenv.hostPlatform.isLinux [
+                  xclip
+                  wl-clipboard
+                ]
+                ++ flakePackages
+                ++ lib.attrValues localTools;
+            };
+
+            bootstrap = pkgs.writeShellApplication {
+              name = "dotfiles-bootstrap";
+              runtimeInputs = with pkgs; [
+                git
+                jq
+                stow
+              ];
+              text = lib.readFile ./scripts/bootstrap.sh;
+            };
+
+            eject = pkgs.writeShellApplication {
+              name = "dotfiles-eject";
+              runtimeInputs = with pkgs; [ stow ];
+              text = lib.readFile ./scripts/eject.sh;
             };
           };
 

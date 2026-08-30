@@ -4,14 +4,14 @@
 
 - [nix](https://nixos.org/download)
 
-## Usage
+## Install
 
 ```bash
 nix run github:csvenke/dotfiles#bootstrap
 ```
 
-Without flakes enabled
+Without flakes enabled:
 
 ```bash
-nix run github:csvenke/dotfiles#bootstrap --extra-experimental-features 'nix-command flakes'
+nix --extra-experimental-features 'nix-command flakes' run github:csvenke/dotfiles#bootstrap
 ```
