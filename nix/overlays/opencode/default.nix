@@ -9,24 +9,24 @@ let
     makeWrapper
     ;
 
-  version = "0.0.0-beta-17927";
+  version = "0.0.0-beta-18721";
 
   perSystem = {
     x86_64-linux = {
       pkg = "cli-linux-x64";
-      hash = "sha512-sCuCbo+s0xU6vlWqTGO72URboviGaitTwi+t82q+qDZag4wotgXMppCnBNl9x/Eqwdb+AwJsoD6XYJX+fn5jVg==";
+      hash = "sha512-RWuw504xQubiWxxv5TTKR8CrlhKzdvTLo27Ke81B56rjmSNOUdWSlAoCrWKR966bUVGxC091cf3oZwzv7GvNJQ==";
     };
     aarch64-linux = {
       pkg = "cli-linux-arm64";
-      hash = "sha512-Q/MDYbAahNU7dgkvZmyNvJURBbUH6KzKFYLscbnuge3tlHfztxgjrWCbopN2eoOK0/oBsohT+q5JvY0A7kxtmw==";
+      hash = "sha512-TsntJ1ZuXPBSXOicxZNwcs4cBfYvCfY3c9ZXEO1hXvBjj8eLT13B8vBdGkSZMB86fwNgYtSxhyh5ToU0ZpVwIg==";
     };
     aarch64-darwin = {
       pkg = "cli-darwin-arm64";
-      hash = "sha512-9QXFLYAtG1V/yJHZE/umQ3xabUQXo+Vkay5HPbREFvTMMbEXcbtUXIpO63cHjyuWejY+bFJ9NSmYdCSN+6IT0g==";
+      hash = "sha512-CVu7OHGLTyeCk8tT3JKcQts6386YMjLfeqCCUXm+m4PQGs4ZrWxPcdlIxblmrY90maIwi06VV9ozstQ182VIrg==";
     };
     x86_64-darwin = {
       pkg = "cli-darwin-x64";
-      hash = "sha512-JJfO4E5XiR98p4/+5eYS4UyZt6q2Qy7mnMwxAke+xPWiXzajRTMc3wcq7vWH65+ylWmB01iJ6tKvXxdEEnLaSw==";
+      hash = "sha512-wR87aGg62oGWDyXhd34NvbAG/6B51kQa1fjM9ZblSD8IC0faQLDtKb1gXe2/RABrXhcPAMfkrgC1ZMVHAaFz9w==";
     };
   };
 
