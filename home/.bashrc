@@ -297,16 +297,14 @@ _git_worktree_add() {
   cd "$worktree_path" || return
 }
 
-_git_worktree_clone() {
+_git_worktree_clone() (
   local url="$1"
   local path="${url##*/}"
-  local original_dir="$PWD"
 
   mkdir "$path"
   cd "$path" || return
-  git clone --bare "$url" .git || return
-
-  git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+  git clone --bare \
+    --config "remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*" "$url" .git
   git fetch origin
 
   _git_worktree_setup_repo
@@ -316,10 +314,8 @@ _git_worktree_clone() {
 
   git worktree add --lock "$main_branch"
   _git_worktree_setup_worktree "$main_branch"
-  (cd "$main_branch" && git push -u origin "$main_branch")
-
-  cd "$original_dir" || return
-}
+  git -C "$main_branch" push -u origin "$main_branch"
+)
 
 _git_worktree_init() {
   local name="$1"
