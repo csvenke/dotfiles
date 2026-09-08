@@ -102,6 +102,7 @@
                   tmux
                   fzf
                   opencode
+                  markitdown
                 ]
                 ++ lib.optionals stdenv.hostPlatform.isLinux [
                   xclip
