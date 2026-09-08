@@ -13,6 +13,7 @@
     }
   ],
   "autoupdate": false,
+  "skills": ["~/.nix-profile/share/opencode/skills"],
   "lsp": {
     "csharp": {
       "disabled": true
