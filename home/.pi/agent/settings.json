@@ -1,0 +1,17 @@
+{
+  "theme": "system",
+  "defaultProvider": "github-copilot",
+  "defaultModel": "kimi-k3",
+  "defaultThinkingLevel": "high",
+  "tuiMode": "fullscreen",
+  "hideThinkingBlock": false,
+  "lastChangelogVersion": "1.0.3",
+  "enableSkillCommands": false,
+  "showCacheMissNotices": true,
+  "treeFilterMode": "user-only",
+  "defaultTools": ["+codemode"],
+  "skills": [
+    "~/.nix-profile/share/mempalace/skills",
+    "~/.nix-profile/share/archify/skills"
+  ]
+}

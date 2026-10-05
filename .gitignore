@@ -11,3 +11,4 @@
 !.claude/settings.json
 !AGENTS.md
 result
+.pi/**/*

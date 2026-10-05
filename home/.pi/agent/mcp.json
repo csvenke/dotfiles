@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "description": "Up-to-date documentation for libraries and frameworks"
+    },
+    "mempalace": {
+      "command": "mempalace-mcp",
+      "description": "MemPalace workflow memory: palace, knowledge graph, prime/writeback"
+    }
+  }
+}

@@ -49,6 +49,7 @@
               (import ./nix/overlays/tmux)
               (import ./nix/overlays/fzf)
               (import ./nix/overlays/opencode)
+              (import ./nix/overlays/pi-coding-agent)
             ];
           };
           inherit (pkgs)
@@ -102,6 +103,7 @@
                   tmux
                   fzf
                   opencode
+                  pi-coding-agent
                   markitdown
                 ]
                 ++ lib.optionals stdenv.hostPlatform.isLinux [

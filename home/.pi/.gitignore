@@ -1,0 +1,20 @@
+# Secrets
+agent/auth.json
+agent/mcp-auth.json
+
+# Runtime state
+agent/models-store.json
+agent/mcp-cache.json
+agent/run-history.jsonl
+agent/trust.json
+agent/sessions
+agent/mcp.log*
+agent/missions
+agent/worktrees
+agent/chains
+agent/agent-plugin-data
+agent/pi-subagents/
+
+# Installed extension deps
+agent/npm
+agent/extensions/**/node_modules
