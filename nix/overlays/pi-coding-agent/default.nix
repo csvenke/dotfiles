@@ -9,6 +9,25 @@ let
     makeWrapper
     ;
 
+  # Registry tarball URL for an npm package. Scoped packages (@scope/name)
+  # publish their tarball under the unscoped name.
+  npmTarballUrl =
+    pname: version:
+    "https://registry.npmjs.org/${pname}/-/${lib.last (lib.splitString "/" pname)}-${version}.tgz";
+
+  fetchNpmPackage =
+    {
+      pname,
+      version,
+      hash,
+    }:
+    fetchurl {
+      url = npmTarballUrl pname version;
+      inherit hash;
+    };
+
+  # Build a pi extension from its npm tarball, vendoring any pinned deps
+  # into node_modules.
   mkPiExtension =
     {
       pname,
@@ -21,24 +40,18 @@ let
       deps ? [ ],
     }:
     let
-      depSrcs = map (
-        dep:
-        dep
-        // {
-          src = fetchurl {
-            url = "https://registry.npmjs.org/${dep.pname}/-/${lib.last (lib.splitString "/" dep.pname)}-${dep.version}.tgz";
-            inherit (dep) hash;
-          };
-        }
-      ) deps;
+      installDep = dep: ''
+        dep_tmp=$(mktemp -d)
+        tar -xzf ${fetchNpmPackage dep} -C "$dep_tmp"
+        mkdir -p "$out/node_modules/$(dirname "${dep.pname}")"
+        cp -r "$dep_tmp/package" "$out/node_modules/${dep.pname}"
+        rm -rf "$dep_tmp"
+      '';
     in
     stdenvNoCC.mkDerivation {
       inherit pname version;
 
-      src = fetchurl {
-        url = "https://registry.npmjs.org/${pname}/-/${pname}-${version}.tgz";
-        inherit hash;
-      };
+      src = fetchNpmPackage { inherit pname version hash; };
 
       sourceRoot = "package";
 
@@ -46,13 +59,7 @@ let
         runHook preInstall
         mkdir -p $out
         cp -r ${lib.concatStringsSep " " files} $out/
-        ${lib.concatMapStringsSep "\n" (dep: ''
-          dep_tmp=$(mktemp -d)
-          tar -xzf ${dep.src} -C "$dep_tmp"
-          mkdir -p "$out/node_modules/$(dirname "${dep.pname}")"
-          cp -r "$dep_tmp/package" "$out/node_modules/${dep.pname}"
-          rm -rf "$dep_tmp"
-        '') depSrcs}
+        ${lib.concatMapStringsSep "\n" installDep deps}
         runHook postInstall
       '';
 
@@ -61,86 +68,8 @@ let
       };
     };
 
-  pi-direnv = mkPiExtension {
-    pname = "pi-direnv";
-    version = "0.1.0";
-    hash = "sha512-N+njfllbcKvd5qbtSMS1nP5QTSaqVZSmo8gQk8TCgWefPQidcg+FG6cY79HIJggS9RiI4FjhGyhVX8DY9kcuIA==";
-    files = [
-      "package.json"
-      "index.ts"
-      "README.md"
-    ];
-    description = "Auto-load direnv environment at pi session start";
-    homepage = "https://github.com/edmundmiller/dotfiles/tree/main/pi-packages/pi-direnv";
-  };
-
-  pi-goal-x = mkPiExtension {
-    pname = "pi-goal-x";
-    version = "0.32.3";
-    hash = "sha512-Jip/7p+yuOx/+ckV6IQDr+WhlVvXVw16aR9HMWadc5itciABHdt4HU0Gi3pJU7gJdnB1W3yjdcq6hMwVo/6YIw==";
-    files = [
-      "package.json"
-      "README.md"
-      "extensions"
-    ];
-    description = "Adds /goal to pi: conversational goal planning, persistent progress, and a completion auditor";
-    homepage = "https://github.com/tmonk/pi-goal-x";
-  };
-
-  pi-subagents = mkPiExtension {
-    pname = "pi-subagents";
-    version = "0.76.0";
-    hash = "sha512-r1uoi43ysqbi2MJOGAnJWMbF3o2xBwaWI7/pwJHgGaenv/JqGEmtt5YHYWoq8JRvlhVCquTnrtFeB7e0apLlOQ==";
-    files = [
-      "package.json"
-      "README.md"
-      "LICENSE"
-      "index.js"
-      "src"
-      "skills"
-      "prompts"
-      "agents"
-      "inspector-runner.mjs"
-      "async-retention-discovery-worker.mjs"
-      "runner-peer-loader.mjs"
-      "runner-peer-preload.mjs"
-    ];
-    deps = [
-      {
-        pname = "jiti";
-        version = "2.7.0";
-        hash = "sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==";
-      }
-      {
-        pname = "yaml";
-        version = "2.8.3";
-        hash = "sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==";
-      }
-      {
-        pname = "acorn";
-        version = "8.18.0";
-        hash = "sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==";
-      }
-      {
-        pname = "undici";
-        version = "8.10.2";
-        hash = "sha512-/y4/bH9YNU5hi9NIrpOuvGXFcxrj3CMrV+/AYpowAYTpHn8gX/XPFjNy766FPoYY0miQhdW977JFWKGNhBdwyQ==";
-      }
-      {
-        pname = "@js-temporal/polyfill";
-        version = "0.5.1";
-        hash = "sha512-hloP58zRVCRSpgDxmqCWJNlizAlUgJFqG2ypq79DCvyv9tHjRYMDOcPFjzfl/A1/YxDvRCZz8wvZvmapQnKwFQ==";
-      }
-      {
-        pname = "jsbi";
-        version = "4.3.2";
-        hash = "sha512-9fqMSQbhJykSeii05nxKl4m6Eqn2P6rOlYiS+C5Dr/HPIU/7yZxu5qzbs40tgaFORiw2Amd0mirjxatXYMkIew==";
-      }
-    ];
-    description = "Pi extension for single-agent delegation and scripted multi-agent workflows";
-    homepage = "https://github.com/nicobailon/pi-subagents";
-  };
-
+  # pi-web-access ships an npm lockfile, so it builds its node_modules with
+  # importNpmLock instead of mkPiExtension's vendored-tarball deps.
   pi-web-access =
     let
       version = "0.37.0";
@@ -175,12 +104,7 @@ let
       };
     };
 
-  piExtensions = [
-    pi-direnv
-    pi-goal-x
-    pi-subagents
-    pi-web-access
-  ];
+  piExtensions = map mkPiExtension (import ./extensions.nix) ++ [ pi-web-access ];
 
   pi-latest = prev.pi-coding-agent.overrideAttrs (old: rec {
     version = "1.0.3";
@@ -198,11 +122,18 @@ let
       hash = "sha256-SpbadDFtPdwn+H2TXDl1TGAI+ejb6dbRvALZoUIvx3c=";
     };
 
-    modelData = prev.fetchurl {
-      url = "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-${version}.tgz";
+    # Model catalog shipped in the pi-ai npm package
+    modelData = fetchNpmPackage {
+      pname = "@earendil-works/pi-ai";
+      inherit version;
       hash = "sha256-3YmV+x3zyj4r0DMFO9LCi0DES7f1PCU1eMpoCCYR4O4=";
     };
   });
+
+  # One --extension flag per bundled extension
+  extensionFlags = lib.concatMapStringsSep " \\\n          " (
+    ext: ''--add-flags "--extension ${ext}"''
+  ) piExtensions;
 in
 {
   pi-coding-agent = symlinkJoin {
@@ -212,9 +143,7 @@ in
     postBuild = ''
       rm $out/bin/pi
       makeWrapper ${lib.getExe pi-latest} $out/bin/pi \
-        ${lib.concatMapStringsSep " \\\n          " (
-          ext: ''--add-flags "--extension ${ext}"''
-        ) piExtensions}
+        ${extensionFlags}
     '';
     meta = pi-latest.meta // {
       description = "pi-coding-agent with bundled extensions";
