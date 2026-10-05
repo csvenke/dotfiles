@@ -27,10 +27,10 @@ stdenvNoCC.mkDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin $out/share/opencode/skills
-    unzip -q $src -d $out/share/opencode/skills
+    mkdir -p $out/bin $out/share/archify/skills
+    unzip -q $src -d $out/share/archify/skills
     makeWrapper ${nodejs}/bin/node $out/bin/archify \
-      --add-flags $out/share/opencode/skills/archify/bin/archify.mjs
+      --add-flags $out/share/archify/skills/archify/bin/archify.mjs
 
     runHook postInstall
   '';

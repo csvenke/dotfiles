@@ -13,7 +13,7 @@
     }
   ],
   "autoupdate": false,
-  "skills": ["~/.nix-profile/share/opencode/skills"],
+  "skills": ["~/.nix-profile/share/archify/skills"],
   "lsp": {
     "csharp": {
       "disabled": true
