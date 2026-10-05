@@ -5,6 +5,7 @@
   python3,
   python3Packages,
   fetchFromGitHub,
+  stdenvNoCC,
 }:
 
 let
@@ -63,6 +64,38 @@ let
       exec python -m mempalace.mcp_server "$@"
     '';
   };
+
+  mempalaceSkills = stdenvNoCC.mkDerivation {
+    pname = "mempalace-skills";
+    version = mempalace.version;
+
+    src = mempalace.src;
+
+    dontBuild = true;
+
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/share/mempalace/skills
+      cp -r skills/. $out/share/mempalace/skills/
+
+      runHook postInstall
+    '';
+
+    doInstallCheck = true;
+    installCheckPhase = ''
+      runHook preInstallCheck
+
+      test -f $out/share/mempalace/skills/mempalace/SKILL.md
+      test -f $out/share/mempalace/skills/mempalace-recall/SKILL.md
+
+      runHook postInstallCheck
+    '';
+
+    meta = mempalace.meta // {
+      description = "MemPalace agent skills";
+    };
+  };
 in
 
 symlinkJoin {
@@ -70,6 +103,7 @@ symlinkJoin {
   paths = [
     mempalaceCli
     mempalaceMcp
+    mempalaceSkills
   ];
   meta = mempalace.meta // {
     mainProgram = "mempalace";
