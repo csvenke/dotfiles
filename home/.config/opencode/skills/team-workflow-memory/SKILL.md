@@ -1,5 +1,5 @@
 ---
-name: mempalace
+name: team-workflow-memory
 description: "Shared MemPalace protocol for workflow memory prime, conflict gates, context blocks, writeback, KG facts, and degraded-mode behavior."
 ---
 

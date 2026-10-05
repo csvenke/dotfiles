@@ -12,11 +12,11 @@ Enter after staff review passes (`has_blockers=false`). Staff review happens in
 
 ## Memory Writeback
 
-Capture epic-level durable outcomes. Load the `mempalace` skill, then:
+Capture epic-level durable outcomes. Load the `team-workflow-memory` skill, then:
 
 1. Use Memory Writeback rules for workflow-level durable text in `wing=opencode`
 2. Use project/domain target rules for project durable text, checking existing
-   taxonomy/rooms first per the `mempalace` skill
+   taxonomy/rooms first per the `team-workflow-memory` skill
 3. Use canonical KG relationships and slug rules for durable relationship facts
 4. Invalidate stale facts before adding replacements when the epic supersedes prior memory
 5. Write any `mechanical_invariant_gaps` reported by `staff-engineer` as durable
@@ -25,12 +25,12 @@ Capture epic-level durable outcomes. Load the `mempalace` skill, then:
    produces.
 6. If a durable fact generalizes from a project/domain wing into an `opencode`
    workflow policy (or the reverse), link them with
-   `mempalace_mempalace_create_tunnel` per the `mempalace` Cross-Wing Tunnels guidance.
+   `mempalace_mempalace_create_tunnel` per the `team-workflow-memory` Cross-Wing Tunnels guidance.
 7. Run a dry-run `mempalace_mempalace_sync` for the project wing (no `apply`). If it
    reports meaningful drift, mention it in the Final Report as a suggestion; never
    pass `apply=true` without explicit user confirmation.
 
-If `memory_mode=degraded`, use the `mempalace` degraded-mode retry behavior
+If `memory_mode=degraded`, use the `team-workflow-memory` degraded-mode retry behavior
 (including `mempalace_mempalace_reconnect`).
 
 ## Workflow Retrospective
@@ -45,7 +45,7 @@ Skip for routine successful runs with no reusable lesson.
 ## Pattern Mining (`memory_mode=active`)
 
 Extract reusable patterns from the retrospective into KG triples. Apply the canonical
-relationships and KG slug rules from the `mempalace` skill to every fact.
+relationships and KG slug rules from the `team-workflow-memory` skill to every fact.
 
 **If `policy_candidate` is non-empty:**
 

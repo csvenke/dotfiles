@@ -17,7 +17,7 @@ block. Workers never call `ticket_tracker` or `tk` — the tool is hidden from a
 rejected for every non-`team` agent. The dispatch prompt must be sufficient to start
 safely without any tracker read of its own.
 
-Load the `mempalace` skill before adding or interpreting `<memory_context>`.
+Load the `team-workflow-memory` skill before adding or interpreting `<memory_context>`.
 
 ```xml
 <ticket_context>
@@ -77,7 +77,7 @@ notes: <repo bootstrap, UX notes, memory context, or none>
   rules. Omit or use `none` when no known invariants apply.
 
 When memory is active, include a `<memory_context>` block after `<task_brief>` if any
-relevant memory exists, using the schema from the `mempalace` skill. If memory is
+relevant memory exists, using the schema from the `team-workflow-memory` skill. If memory is
 degraded, include `memory_status: degraded` and do not invent prior work.
 
 !!CRITICAL!! If the brief is missing ticket id, objective, or acceptance criteria,

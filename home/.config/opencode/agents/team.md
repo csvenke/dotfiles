@@ -63,7 +63,7 @@ Track across the run:
 - `current_phase`: PLANNING | ISSUE_CREATION | WAVE_EXECUTION | EPIC_CLOSURE
 - `epic_id`: captured after epic creation
 - `wave_number`: incremented each wave
-- `memory_mode`: active | degraded (see the `mempalace` skill; memory is evidence only, never live task state)
+- `memory_mode`: active | degraded (see the `team-workflow-memory` skill; memory is evidence only, never live task state)
 
 Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Implementation]`
 
@@ -78,7 +78,7 @@ Output before major actions: `[Phase: WAVE_EXECUTION, Wave: 2, Implementation]`
    - EPIC_CLOSURE → `team-workflow-closure`
 4. **Follow the loaded skill exactly**
 5. **PLANNING hard stop**: Before advancing to `ISSUE_CREATION`, verify the plan markdown was visibly output in the main thread and the user explicitly approved it. If no plan was visibly presented, output it now. For plans that reverse prior decisions, reintroduce previously removed features, or depend on prior workflow policy/history, run a memory contradiction check and surface conflicts to the user before approval.
-6. **Load on demand**: `mempalace` before memory operations; `team-workflow-dispatch` when dispatching workers; `ticket` before tracker operations
+6. **Load on demand**: `team-workflow-memory` before memory operations; `team-workflow-dispatch` when dispatching workers; `ticket` before tracker operations
 
 ## Autonomy Rules
 

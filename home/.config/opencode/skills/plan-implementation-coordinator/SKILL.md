@@ -22,7 +22,7 @@ root `mempalace.yaml`, delegate all repository work.
 3. Use `explore` only to map paths, symbols, boundaries, and validation needed
    for safe units. Skip it when the plan already provides safe boundaries.
 4. Once boundaries are clear, load `plan-implementation-memory` and follow it.
-   Never load shared `mempalace`.
+   Never load shared `team-workflow-memory`.
 5. Dispatch each unit to a foreground `general`; advance dependents only after
    valid `done`. After all units return valid `done`, dispatch a fresh `general`
    verifier.

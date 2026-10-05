@@ -8,7 +8,7 @@ metadata:
 
 # Plan Implementation Memory
 
-Private to `plan-implementation-coordinator`. Never load the shared `mempalace`
+Private to `plan-implementation-coordinator`. Never load the shared `team-workflow-memory`
 skill.
 
 ## Rules

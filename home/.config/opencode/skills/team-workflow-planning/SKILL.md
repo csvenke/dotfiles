@@ -9,7 +9,7 @@ metadata:
 
 Until the user approves the plan, behave like the built-in plan agent.
 
-Before Memory Prime, load the `mempalace` skill and initialize `memory_mode` if unset.
+Before Memory Prime, load the `team-workflow-memory` skill and initialize `memory_mode` if unset.
 
 ## Memory Prime (`memory_mode=active`)
 
@@ -18,7 +18,7 @@ second is the one that gets dropped — do not merge them into one search.
 
 ### 1. Prior work search
 
-Use the `mempalace` Memory Prime to search for prior work on the target files and
+Use the `team-workflow-memory` Memory Prime to search for prior work on the target files and
 subsystems. When relevant prior work exists, include a compact `<prior_work>` block:
 similar epics, known pitfalls, prior decisions.
 
@@ -45,7 +45,7 @@ Skip only when `memory_mode=degraded`.
 
 ## Memory Conflict Gate
 
-Apply the `mempalace` Memory Conflict Gate before issue creation. If the user
+Apply the `team-workflow-memory` Memory Conflict Gate before issue creation. If the user
 confirms a reversal, include that confirmation in ticket memory notes and downstream
 `<memory_context>`.
 

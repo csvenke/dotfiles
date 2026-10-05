@@ -32,13 +32,13 @@ first dispatch.
 
 ## Memory Loop
 
-Load the `mempalace` skill before memory operations.
+Load the `team-workflow-memory` skill before memory operations.
 
-**Memory Prime** (before dispatch, `memory_mode=active`): use the `mempalace` Memory
+**Memory Prime** (before dispatch, `memory_mode=active`): use the `team-workflow-memory` Memory
 Prime with ticket id/title, scope terms, epic id, and known subsystem or file-area
-slugs. Build a compact `<memory_context>` using the `mempalace` schema and include it
+slugs. Build a compact `<memory_context>` using the `team-workflow-memory` schema and include it
 in downstream prompts. If memory shows a contradiction not approved during planning,
-apply the `mempalace` Memory Conflict Gate before dispatch.
+apply the `team-workflow-memory` Memory Conflict Gate before dispatch.
 
 **Risk History Escalation** (`memory_mode=active`): memory that only informs is
 wasted. When Memory Prime returns a `risk_history` fact for a subsystem in the task's
@@ -55,17 +55,17 @@ warrant different responses.
 Do not escalate on generic or unrelated risk history. Escalate only when the recorded
 risk maps to a subsystem this task actually touches.
 
-**Memory Writeback** (on task closure, `memory_mode=active`): use the `mempalace`
+**Memory Writeback** (on task closure, `memory_mode=active`): use the `team-workflow-memory`
 Memory Writeback rules. Write workflow-level task outcomes to `wing=opencode`,
 `room=task-outcomes`; write durable project facts, invariants, risks, or decisions to
-the project/domain target selected by the `mempalace` skill.
+the project/domain target selected by the `team-workflow-memory` skill.
 
-Skip memory operations in `degraded` mode per the `mempalace` skill. Note
+Skip memory operations in `degraded` mode per the `team-workflow-memory` skill. Note
 `memory_status=degraded` in handoffs.
 
 ## Repo Bootstrap (once per run)
 
-Refresh MemPalace availability using the `mempalace` skill. When
+Refresh MemPalace availability using the `team-workflow-memory` skill. When
 `memory_mode=active`, use Memory Prime for prior repo bootstrap and risk memory. Pass
 prior memory to `codebase-analyst` as hypotheses to verify, not as source of truth.
 

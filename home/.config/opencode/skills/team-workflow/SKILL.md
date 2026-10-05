@@ -24,7 +24,7 @@ Also load on demand:
 
 - `team-workflow-dispatch` — before dispatching any worker, for `<global_rules>`,
   `<task_brief>`, handoff contracts, and escalation rules
-- `mempalace` — before any memory operation
+- `team-workflow-memory` — before any memory operation
 - `ticket` — before any tracker operation
 
 ## Phase Detection
@@ -53,7 +53,7 @@ Announce each phase entry and load its skill in the same turn:
 
 ## Memory Mode
 
-Load the `mempalace` skill for memory-mode initialization, degraded-mode behavior,
+Load the `team-workflow-memory` skill for memory-mode initialization, degraded-mode behavior,
 and all read/write protocols. Initialize before phase-specific work, refresh at repo
 bootstrap, and include the current mode in downstream prompts.
 
