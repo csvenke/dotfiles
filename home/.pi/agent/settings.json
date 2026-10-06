@@ -4,7 +4,7 @@
   "defaultModel": "kimi-k3",
   "defaultThinkingLevel": "high",
   "tuiMode": "fullscreen",
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "lastChangelogVersion": "1.0.3",
   "enableSkillCommands": false,
   "showCacheMissNotices": true,
@@ -13,5 +13,11 @@
   "skills": [
     "~/.nix-profile/share/mempalace/skills",
     "~/.nix-profile/share/archify/skills"
-  ]
+  ],
+  "subagents": {
+    "agentOverrides": {
+      "worker": { "model": "github-copilot/gpt-5.6-luna", "thinking": "low" },
+      "scout": { "model": "github-copilot/gpt-5.6-luna", "thinking": "low" }
+    }
+  }
 }

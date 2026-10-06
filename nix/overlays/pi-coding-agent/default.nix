@@ -141,10 +141,45 @@ let
     homepage = "https://github.com/nicobailon/pi-subagents";
   };
 
+  pi-web-access =
+    let
+      version = "0.37.0";
+      nodeModules = prev.importNpmLock.buildNodeModules {
+        npmRoot = ./pi-web-access;
+        nodejs = prev.nodejs;
+      };
+    in
+    stdenvNoCC.mkDerivation {
+      inherit version;
+      pname = "pi-web-access";
+
+      src = fetchurl {
+        url = "https://registry.npmjs.org/pi-web-access/-/pi-web-access-${version}.tgz";
+        hash = "sha512-Je7D5ghQi9dpN0KhpFMuHYwKy0oBvpNrNR7zuTzSyCRsIJDC5in8yGz/3yItxvWYHF1W+q2Sq190nyaLkoWhgg==";
+      };
+
+      sourceRoot = "package";
+
+      installPhase = ''
+        runHook preInstall
+        mkdir -p $out
+        cp -r package.json dist README.md LICENSE $out/
+        cp -rL ${nodeModules}/node_modules $out/node_modules
+        runHook postInstall
+      '';
+
+      meta = {
+        description = "Web search, URL fetching, GitHub repo cloning, PDF extraction, and YouTube/video understanding for pi";
+        homepage = "https://github.com/nicobailon/pi-web-access";
+        license = lib.licenses.mit;
+      };
+    };
+
   piExtensions = [
     pi-direnv
     pi-goal-x
     pi-subagents
+    pi-web-access
   ];
 
   pi-latest = prev.pi-coding-agent.overrideAttrs (old: rec {
