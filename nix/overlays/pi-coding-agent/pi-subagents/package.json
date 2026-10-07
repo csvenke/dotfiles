@@ -1,0 +1,11 @@
+{
+  "name": "pi-subagents",
+  "version": "0.76.0",
+  "dependencies": {
+    "jiti": "2.7.0",
+    "yaml": "2.8.3",
+    "acorn": "8.18.0",
+    "undici": "8.10.2",
+    "@js-temporal/polyfill": "0.5.1"
+  }
+}
