@@ -5,11 +5,6 @@
       "action": "external_directory",
       "resource": "*",
       "effect": "allow"
-    },
-    {
-      "action": "ticket_tracker",
-      "resource": "*",
-      "effect": "deny"
     }
   ],
   "autoupdate": false,
@@ -17,11 +12,6 @@
     "~/.nix-profile/share/mempalace/skills",
     "~/.nix-profile/share/archify/skills"
   ],
-  "lsp": {
-    "csharp": {
-      "disabled": true
-    }
-  },
   "mcp": {
     "servers": {
       "context7": {
