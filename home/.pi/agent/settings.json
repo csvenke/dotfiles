@@ -1,8 +1,7 @@
 {
   "theme": "system",
   "defaultProvider": "github-copilot",
-  "defaultModel": "gpt-6-luna",
-  "enabledModels": ["github-copilot/gpt-6-luna", "github-copilot/kimi-k3"],
+  "defaultModel": "kimi-k3",
   "defaultThinkingLevel": "high",
   "tuiMode": "fullscreen",
   "hideThinkingBlock": true,
