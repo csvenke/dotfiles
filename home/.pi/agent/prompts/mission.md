@@ -23,8 +23,8 @@ Announce phases as `[Phase: NAME — detail]`.
 
 ## Phase 1 — PLAN
 
-1. **Memory**: codemode `mempalace_search` + `mempalace_kg_query` for the goal,
-   likely files, prior decisions, and gotchas.
+1. **Memory**: follow the `mempalace-recall` skill, scoped to this repo's
+   wing, for the goal, likely files, prior decisions, and gotchas.
 2. **Recon**: yourself for familiar areas; for unfamiliar or research-heavy
    territory, parallel `scout`s, each with a distinct question. Recon must
    yield the exact gate commands (lint, typecheck, tests, build) — never
