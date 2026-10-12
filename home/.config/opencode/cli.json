@@ -11,9 +11,5 @@
   "tabs": {
     "layout": "horizontal",
     "scope": "global"
-  },
-  "prompt": {
-    "image_preview": true
-  },
-  "animations": true
+  }
 }

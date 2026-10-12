@@ -8,6 +8,7 @@ let
     autoPatchelfHook
     makeWrapper
     unzip
+    wayland
     ;
 
   version = "2.0.27";
@@ -35,6 +36,13 @@ let
     perSystem.${stdenv.hostPlatform.system}
       or (throw "opencode: unsupported system ${stdenv.hostPlatform.system}");
 
+  # The TUI's native clipboard host dlopens libwayland-client.so.0 at runtime
+  # (Wayland data-control protocol for image paste). The patched nix glibc does
+  # not search system lib paths, so expose the nix wayland lib explicitly.
+  waylandFlags = lib.optionalString stdenv.hostPlatform.isLinux "--prefix LD_LIBRARY_PATH : ${
+    lib.makeLibraryPath [ wayland ]
+  } ";
+
   src = fetchurl {
     url = "https://opencode.ai/files/bin/${version}/${system.pkg}";
     hash = system.hash;
@@ -59,7 +67,7 @@ in
       runHook preInstall
       install -Dm755 opencode $out/bin/opencode
       wrapProgram $out/bin/opencode \
-        --run 'export OPENCODE_DB="''${OPENCODE_DB:-$HOME/.local/share/opencode/opencode2.db}"'
+        ${waylandFlags}--run 'export OPENCODE_DB="''${OPENCODE_DB:-$HOME/.local/share/opencode/opencode2.db}"'
       runHook postInstall
     '';
 
