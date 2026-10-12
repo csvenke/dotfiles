@@ -53,6 +53,35 @@ let
       '';
     };
 
+  # Build a pi extension from a local source tree (an unpacked package
+  # directory in this repo), vendoring runtime dependencies from its package-lock.json
+  mkLocalPiExtension =
+    { npmRoot }:
+    let
+      manifest = lib.importJSON "${npmRoot}/package.json";
+      nodeModules = importNpmLock.buildNodeModules {
+        inherit npmRoot nodejs;
+        derivationArgs.npmInstallFlags = [ "--omit=dev" ];
+      };
+    in
+    stdenvNoCC.mkDerivation {
+      pname = manifest.name;
+      inherit (manifest) version;
+      src = lib.cleanSourceWith {
+        src = npmRoot;
+        filter = name: _type: !(baseNameOf name == "node_modules");
+      };
+      installPhase = ''
+        runHook preInstall
+        mkdir -p $out
+        cp -r . $out/
+        if [ -d ${nodeModules}/node_modules ]; then
+          cp -rL ${nodeModules}/node_modules $out/node_modules
+        fi
+        runHook postInstall
+      '';
+    };
+
   # One `--extension` flag per extension, line-continued for embedding in a
   # makeWrapper invocation.
   extensionFlags =
@@ -63,6 +92,7 @@ in
   inherit
     fetchNpmPackage
     mkPiExtension
+    mkLocalPiExtension
     extensionFlags
     ;
 }
