@@ -35,22 +35,22 @@ let
   ];
 
   pi-pinned = pi-coding-agent.overrideAttrs (old: rec {
-    version = "1.0.3";
+    version = "1.1.0";
     src = fetchFromGitHub {
       owner = "earendil-works";
       repo = "pi";
       tag = "v${version}";
-      hash = "sha256-2SfC8zEf6emG1sDG1J7hjjSBt+3hFIz1/TcwBLa/hRU=";
+      hash = "sha256-lwjspkMGrW+8Fl/yBEDEFsHZJA57OKOhmVQmi6zfej4=";
     };
     npmDeps = fetchNpmDeps {
       inherit src;
       name = "pi-coding-agent-${version}-npm-deps";
-      hash = "sha256-SpbadDFtPdwn+H2TXDl1TGAI+ejb6dbRvALZoUIvx3c=";
+      hash = "sha256-GOh5WG+rRgzoy/yVHY5PoEKJZGQcEGhISrDDJxkP8W4=";
     };
     modelData = fetchNpmPackage {
       pname = "@earendil-works/pi-ai";
       inherit version;
-      hash = "sha256-3YmV+x3zyj4r0DMFO9LCi0DES7f1PCU1eMpoCCYR4O4=";
+      hash = "sha256-bKqzPOxXSA7QLFf+N0KKAwp3zCoGYoFLQ1pc+JMq2Ck=";
     };
   });
 in
