@@ -12,3 +12,6 @@
 !AGENTS.md
 result
 .pi/**/*
+
+# Dev-time extension dependencies
+nix/overlays/**/node_modules

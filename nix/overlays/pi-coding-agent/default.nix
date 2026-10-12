@@ -14,27 +14,36 @@ let
   inherit (callPackage ./utils.nix { })
     fetchNpmPackage
     mkPiExtension
+    mkLocalPiExtension
     extensionFlags
     ;
 
   # After bumping a plugin version, update the hash and regenerate the lock:
   #   (cd nix/overlays/pi-coding-agent/<pname> && npm install --package-lock-only)
-  piExtensions = map mkPiExtension [
-    {
-      npmRoot = ./pi-direnv;
-      hash = "sha512-N+njfllbcKvd5qbtSMS1nP5QTSaqVZSmo8gQk8TCgWefPQidcg+FG6cY79HIJggS9RiI4FjhGyhVX8DY9kcuIA==";
-    }
-    {
-      npmRoot = ./pi-subagents;
-      hash = "sha512-r1uoi43ysqbi2MJOGAnJWMbF3o2xBwaWI7/pwJHgGaenv/JqGEmtt5YHYWoq8JRvlhVCquTnrtFeB7e0apLlOQ==";
-    }
-    {
-      npmRoot = ./pi-web-access;
-      hash = "sha512-Je7D5ghQi9dpN0KhpFMuHYwKy0oBvpNrNR7zuTzSyCRsIJDC5in8yGz/3yItxvWYHF1W+q2Sq190nyaLkoWhgg==";
-    }
-  ];
+  piExtensions =
+    map mkPiExtension [
+      {
+        npmRoot = ./pi-direnv;
+        hash = "sha512-N+njfllbcKvd5qbtSMS1nP5QTSaqVZSmo8gQk8TCgWefPQidcg+FG6cY79HIJggS9RiI4FjhGyhVX8DY9kcuIA==";
+      }
+      {
+        npmRoot = ./pi-subagents;
+        hash = "sha512-r1uoi43ysqbi2MJOGAnJWMbF3o2xBwaWI7/pwJHgGaenv/JqGEmtt5YHYWoq8JRvlhVCquTnrtFeB7e0apLlOQ==";
+      }
+      {
+        npmRoot = ./pi-web-access;
+        hash = "sha512-Je7D5ghQi9dpN0KhpFMuHYwKy0oBvpNrNR7zuTzSyCRsIJDC5in8yGz/3yItxvWYHF1W+q2Sq190nyaLkoWhgg==";
+      }
+    ]
+    ++ [
+      # Local-source extensions (not published to npm). Once a package is
+      # published, move it into the mkPiExtension list above with its
+      # registry tarball hash.
+      (mkLocalPiExtension { npmRoot = ./pi-chess-puzzles; })
+    ];
 
   pi-pinned = pi-coding-agent.overrideAttrs (old: rec {
+    # Keep pi-chess-puzzles/package.json devDependencies in sync with this version.
     version = "1.0.3";
     src = fetchFromGitHub {
       owner = "earendil-works";
@@ -42,6 +51,10 @@ let
       tag = "v${version}";
       hash = "sha256-2SfC8zEf6emG1sDG1J7hjjSBt+3hFIz1/TcwBLa/hRU=";
     };
+    # Measure DCS sequences (SIXEL, tmux passthrough) as zero-width so
+    # tmux-wrapped kitty image lines don't break pi's width accounting.
+    # Remove when upstream handles DCS in ansiCodeLength.
+    patches = (old.patches or [ ]) ++ [ ./patches/pi-tui-dcs-width.patch ];
     npmDeps = fetchNpmDeps {
       inherit src;
       name = "pi-coding-agent-${version}-npm-deps";

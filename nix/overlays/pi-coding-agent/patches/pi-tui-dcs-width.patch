@@ -1,0 +1,35 @@
+--- a/packages/tui/src/utils.ts
++++ b/packages/tui/src/utils.ts
+@@ -449,7 +449,7 @@
+ 	return width;
+ }
+ 
+-/** Length of the ANSI/OSC/APC escape sequence starting at `pos`, or 0 if there is none. */
++/** Length of the ANSI/OSC/APC/DCS escape sequence starting at `pos`, or 0 if there is none. */
+ function ansiCodeLength(str: string, pos: number): number {
+ 	if (pos >= str.length || str.charCodeAt(pos) !== 0x1b) return 0;
+ 
+@@ -477,6 +477,23 @@
+ 		}
+ 		return 0;
+ 	}
++
++	// DCS sequence: ESC P ... ST (ESC \)
++	// Used for SIXEL graphics and tmux passthrough. In tmux passthrough form
++	// (ESC P tmux; ... ST) every inner ESC byte is doubled, so skip ESC ESC
++	// pairs while looking for the ST terminator.
++	if (next === "P") {
++		for (let j = pos + 2; j < str.length; j++) {
++			const c = str.charCodeAt(j);
++			if (c !== 0x1b) continue;
++			if (str[j + 1] === "\x1b") {
++				j++;
++				continue;
++			}
++			if (str[j + 1] === "\\") return j + 2 - pos;
++		}
++		return 0;
++	}
+ 
+ 	return 0;
+ }
