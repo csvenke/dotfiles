@@ -1,5 +1,5 @@
 // @ts-check
-import { Plugin } from "@opencode-ai/plugin";
+import { Plugin } from "@opencode/plugin";
 import { execFileSync } from "node:child_process";
 
 const DIRENV_EXPORT = `eval "$(direnv export bash 2>/dev/null)" 2>/dev/null`;

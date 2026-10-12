@@ -10,24 +10,24 @@ let
     unzip
     ;
 
-  version = "2.0.6";
+  version = "2.0.27";
 
   perSystem = {
     x86_64-linux = {
       pkg = "opencode-linux-x64.tar.gz";
-      hash = "sha256-gzADIT4VUmbAc64/GeKmPQJ7nWaovJpGEOycnUs2nI0=";
+      hash = "sha256-lDdyz/MDGbgUxJ/oQFjxEht0tsu10ns4JL7GLyrey5o=";
     };
     aarch64-linux = {
       pkg = "opencode-linux-arm64.tar.gz";
-      hash = "sha256-wHS+xv0FJWqqRFJamYZBhibgBFmUQ38w6Cs+zgkpGdg=";
+      hash = "sha256-KNtFn6mcNYK5aOOc7MxEJUwVJJIFbUDNK8VIZp1oqrc=";
     };
     aarch64-darwin = {
       pkg = "opencode-darwin-arm64.zip";
-      hash = "sha256-VlIVGKp/XKJQ0aNtx/hnTVUGZFqQJtSLAHaXuQIWITw=";
+      hash = "sha256-ORsQYdw/H0OUt/0ZUTsub/EvMXOe4S8ziAUG7W7gCLw=";
     };
     x86_64-darwin = {
       pkg = "opencode-darwin-x64.zip";
-      hash = "sha256-tZ6hFNUYgGwF8TxQbt8kRsUw9ihaBU/Jr0hYFsSmPfc=";
+      hash = "sha256-uTOVslfdKpfCs2hxEbPVAYbbOH5PWY6BouszC+ac4uI=";
     };
   };
 
