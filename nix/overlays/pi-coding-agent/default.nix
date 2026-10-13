@@ -3,8 +3,6 @@ final: prev:
 let
   inherit (prev)
     lib
-    fetchFromGitHub
-    fetchNpmDeps
     makeWrapper
     symlinkJoin
     callPackage
@@ -12,7 +10,6 @@ let
     ;
 
   inherit (callPackage ./utils.nix { })
-    fetchNpmPackage
     mkPiExtension
     extensionFlags
     ;
@@ -33,37 +30,17 @@ let
       hash = "sha512-Je7D5ghQi9dpN0KhpFMuHYwKy0oBvpNrNR7zuTzSyCRsIJDC5in8yGz/3yItxvWYHF1W+q2Sq190nyaLkoWhgg==";
     }
   ];
-
-  pi-pinned = pi-coding-agent.overrideAttrs (old: rec {
-    version = "1.1.0";
-    src = fetchFromGitHub {
-      owner = "earendil-works";
-      repo = "pi";
-      tag = "v${version}";
-      hash = "sha256-lwjspkMGrW+8Fl/yBEDEFsHZJA57OKOhmVQmi6zfej4=";
-    };
-    npmDeps = fetchNpmDeps {
-      inherit src;
-      name = "pi-coding-agent-${version}-npm-deps";
-      hash = "sha256-GOh5WG+rRgzoy/yVHY5PoEKJZGQcEGhISrDDJxkP8W4=";
-    };
-    modelData = fetchNpmPackage {
-      pname = "@earendil-works/pi-ai";
-      inherit version;
-      hash = "sha256-bKqzPOxXSA7QLFf+N0KKAwp3zCoGYoFLQ1pc+JMq2Ck=";
-    };
-  });
 in
 {
   pi-coding-agent = symlinkJoin {
     name = "pi-coding-agent";
-    paths = [ pi-pinned ];
+    paths = [ pi-coding-agent ];
     nativeBuildInputs = [ makeWrapper ];
     postBuild = ''
       rm $out/bin/pi
-      makeWrapper ${lib.getExe pi-pinned} $out/bin/pi \
+      makeWrapper ${lib.getExe pi-coding-agent} $out/bin/pi \
         ${extensionFlags piExtensions}
     '';
-    meta = pi-pinned.meta;
+    meta = pi-coding-agent.meta;
   };
 }
