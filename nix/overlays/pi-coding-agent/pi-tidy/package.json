@@ -1,0 +1,20 @@
+{
+  "name": "pi-tidy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit -p .",
+    "prepare": "effect-tsgo patch"
+  },
+  "dependencies": {
+    "effect": "4.0.2"
+  },
+  "devDependencies": {
+    "@effect/tsgo": "0.51.1",
+    "@earendil-works/pi-coding-agent": "1.0.3",
+    "@earendil-works/pi-tui": "1.0.3",
+    "@types/node": "26.6.4",
+    "typescript": "7.0.2"
+  }
+}

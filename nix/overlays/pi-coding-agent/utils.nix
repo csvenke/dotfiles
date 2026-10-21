@@ -1,60 +1,55 @@
 {
   lib,
-  fetchurl,
+  fetchFromGitHub,
   importNpmLock,
   stdenvNoCC,
   nodejs,
 }:
 
 let
-  # Registry tarball URL for an npm package. Scoped packages (@scope/name)
-  # publish their tarball under the unscoped name.
-  npmTarballUrl =
-    pname: version:
-    "https://registry.npmjs.org/${pname}/-/${lib.last (lib.splitString "/" pname)}-${version}.tgz";
-
-  # Fetch the registry tarball of an npm package.
-  fetchNpmPackage =
+  mkGitHubPiExtension =
     {
       pname,
-      version,
+      version ? lib.substring 0 8 rev,
+      owner,
+      repo,
+      rev ? "v${version}",
       hash,
+      rootDir ? "",
     }:
-    fetchurl {
-      url = npmTarballUrl pname version;
-      inherit hash;
-    };
-
-  # Build a pi extension from its npm tarball, vendoring its dependencies
-  # from the package-lock.json in npmRoot.
-  mkPiExtension =
-    { npmRoot, hash }:
     let
-      manifest = lib.importJSON "${npmRoot}/package.json";
-      nodeModules = importNpmLock.buildNodeModules { inherit npmRoot nodejs; };
+      src = fetchFromGitHub {
+        inherit
+          owner
+          repo
+          rev
+          hash
+          rootDir
+          ;
+      };
+      hasNpmLock = lib.pathExists (src + "/package-lock.json");
+      nodeModules = importNpmLock.buildNodeModules {
+        npmRoot = src;
+        inherit nodejs;
+        derivationArgs.npmInstallFlags = [ "--omit=dev" ];
+      };
     in
     stdenvNoCC.mkDerivation {
-      pname = manifest.name;
-      inherit (manifest) version;
-      src = fetchNpmPackage {
-        pname = manifest.name;
-        inherit (manifest) version;
-        inherit hash;
-      };
-      sourceRoot = "package";
+      inherit pname version src;
+      dontUnpack = true;
       installPhase = ''
         runHook preInstall
         mkdir -p $out
-        cp -r . $out/
-        if [ -d ${nodeModules}/node_modules ]; then
-          cp -rL ${nodeModules}/node_modules $out/node_modules
-        fi
+        cp -r ${src}/. $out/
+        ${lib.optionalString hasNpmLock ''
+          if [ -d ${nodeModules}/node_modules ]; then
+            cp -rL ${nodeModules}/node_modules $out/node_modules
+          fi
+        ''}
         runHook postInstall
       '';
     };
 
-  # Build a pi extension from a local source tree (an unpacked package
-  # directory in this repo), vendoring runtime dependencies from its package-lock.json
   mkLocalPiExtension =
     { npmRoot }:
     let
@@ -82,16 +77,14 @@ let
       '';
     };
 
-  # One `--extension` flag per extension, line-continued for embedding in a
-  # makeWrapper invocation.
+  # Line-continued for embedding in a makeWrapper invocation.
   extensionFlags =
     extensions:
     lib.concatMapStringsSep " \\\n    " (ext: ''--add-flags "--extension ${ext}"'') extensions;
 in
 {
   inherit
-    fetchNpmPackage
-    mkPiExtension
+    mkGitHubPiExtension
     mkLocalPiExtension
     extensionFlags
     ;

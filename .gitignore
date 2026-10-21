@@ -12,3 +12,4 @@
 !AGENTS.md
 result
 .pi/**/*
+**/node_modules
