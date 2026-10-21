@@ -48,7 +48,6 @@
             overlays = [
               (import ./nix/overlays/tmux)
               (import ./nix/overlays/fzf)
-              (import ./nix/overlays/opencode)
               (import ./nix/overlays/pi-coding-agent)
             ];
           };
