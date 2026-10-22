@@ -545,6 +545,14 @@ fi
 if _has_cmd "tmux"; then
   alias t='[ -n "$TMUX" ] || tmux new -A -s default'
   alias z='[ -n "$TMUX" ] || tmux new -A -s default'
+
+  if [ -n "$TMUX" ]; then
+    for _pc_i in "${!PROMPT_COMMAND[@]}"; do
+      [[ ${PROMPT_COMMAND[_pc_i]} == *'\033]0;'* ]] && unset -v "PROMPT_COMMAND[_pc_i]"
+    done
+    unset _pc_i
+    PROMPT_COMMAND+=('printf "\033]0;terminal\007"')
+  fi
 fi
 
 if _has_cmd "dev"; then
