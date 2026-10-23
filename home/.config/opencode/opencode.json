@@ -7,6 +7,7 @@
       "effect": "allow"
     }
   ],
+  "plugins": ["@madsoftwaredev/opencode-direnv@0.1.2"],
   "skills": [
     "~/.nix-profile/share/mempalace/skills",
     "~/.nix-profile/share/archify/skills"
