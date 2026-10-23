@@ -7,7 +7,6 @@
       "effect": "allow"
     }
   ],
-  "autoupdate": false,
   "skills": [
     "~/.nix-profile/share/mempalace/skills",
     "~/.nix-profile/share/archify/skills"
