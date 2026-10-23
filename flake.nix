@@ -130,6 +130,39 @@
             };
           };
 
+          devShells =
+            let
+              pi-tidy-node-modules = pkgs.buildNpmPackage {
+                pname = "pi-tidy-node-modules";
+                version = "0.1.0";
+                src = ./nix/overlays/pi-coding-agent/pi-tidy;
+                npmDeps = pkgs.importNpmLock { npmRoot = ./nix/overlays/pi-coding-agent/pi-tidy; };
+                npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+                dontNpmBuild = true;
+                installPhase = /* bash */ ''
+                  runHook preInstall
+                  mkdir -p "$out/lib"
+                  cp -R node_modules "$out/lib/node_modules"
+                  runHook postInstall
+                '';
+              };
+
+              dev-node-modules = pkgs.symlinkJoin {
+                name = "dev-node-modules";
+                paths = [
+                  "${pi-tidy-node-modules}/lib/node_modules"
+                ];
+              };
+            in
+            {
+              default = pkgs.mkShell {
+                packages = [ pkgs.nodejs ];
+                shellHook = /* bash */ ''
+                  ln -sfn "${dev-node-modules}" ./node_modules
+                '';
+              };
+            };
+
           treefmt.config = {
             projectRootFile = "flake.nix";
             programs.nixfmt.enable = true;
