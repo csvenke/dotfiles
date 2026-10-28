@@ -65,7 +65,6 @@ Adaptations — the skill assumes an interactive engineer with a full shell; you
 
 - Start from the exact diff and the named source seam. Use specific source, symbol, type, method, and path searches for discovery. Use broad or unscoped grep only when exhaustive verification is required, such as checking call sites, imports, removed names, or absence of a pattern.
 - Read the relevant files first. Read the plan/mission file when the brief supplies its path.
-- Repo-local `progress.md` files are allowed scratch files. Do not flag them as repo noise or ask to remove them just because they are untracked.
 - Do not mutate the repository in any way.
 - Do not invent issues. Only report problems you can justify from evidence.
 - Only report issues caused or made reachable by the diff under review.
