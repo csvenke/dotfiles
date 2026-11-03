@@ -4,6 +4,7 @@ let
   inherit (prev)
     lib
     fetchFromGitHub
+    fetchNpmDeps
     fetchurl
     makeWrapper
     symlinkJoin
@@ -45,7 +46,7 @@ let
     })
   ];
 
-  pi-pinned = pi-coding-agent.overrideAttrs (old: {
+  pi-pinned = pi-coding-agent.overrideAttrs (old: rec {
     version = "1.3.0";
     src = fetchFromGitHub {
       owner = "earendil-works";
@@ -53,7 +54,11 @@ let
       tag = "v1.3.0";
       hash = "sha256-AsutbwnjiwwLkB5tqLW+1GdGZyLmXsU0W+SNdNhJu7U=";
     };
-    npmDepsHash = "sha256-+gFyvrhkCsF99oNvs0gBmLXnDW0hWnZI/wFId7UbI6Q=";
+    npmDeps = fetchNpmDeps {
+      inherit src;
+      name = "pi-coding-agent-${version}-npm-deps";
+      hash = "sha256-+gFyvrhkCsF99oNvs0gBmLXnDW0hWnZI/wFId7UbI6Q=";
+    };
     modelData = fetchurl {
       url = "https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-1.3.0.tgz";
       hash = "sha256-U0PhY5vzQ73DNE3zrWwxwFpQtoutB6xrzhCJDUtrimE=";
