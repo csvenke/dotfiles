@@ -22,14 +22,14 @@ let
 
   mempalace = pythonPackages.buildPythonPackage rec {
     pname = "mempalace";
-    version = "3.7.1";
+    version = "3.11.0";
     format = "pyproject";
 
     src = fetchFromGitHub {
       owner = "MemPalace";
       repo = "mempalace";
       rev = "v${version}";
-      hash = "sha256-XlEjuVKARzh94xB4oZLAkgffDcaScgGqL5SUIxh968Q=";
+      hash = "sha256-flBz0bAL3X6dSTNedyKXnKSSonrb1kJQpy0XtjNyq6I=";
     };
 
     nativeBuildInputs = with pythonPackages; [
@@ -72,7 +72,7 @@ let
     name = "mempalace-mcp";
     runtimeInputs = [ pythonWithMemPalace ];
     text = ''
-      exec python -m mempalace.mcp_server "$@"
+      exec ${pythonWithMemPalace}/bin/mempalace-mcp "$@"
     '';
   };
 
@@ -99,6 +99,7 @@ let
 
       test -f $out/share/mempalace/skills/mempalace/SKILL.md
       test -f $out/share/mempalace/skills/mempalace-recall/SKILL.md
+      test -f $out/share/mempalace/skills/mempalace-task/SKILL.md
 
       runHook postInstallCheck
     '';
