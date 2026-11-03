@@ -3,13 +3,24 @@
   symlinkJoin,
   writeShellApplication,
   python3,
-  python3Packages,
   fetchFromGitHub,
   stdenvNoCC,
 }:
 
 let
-  mempalace = python3Packages.buildPythonPackage rec {
+  python = python3.override {
+    packageOverrides = final: prev: {
+      posthog = prev.posthog.override {
+        # PostHog 7.71.0 is marked broken with MCP 2.x.
+        # MCP is only a PostHog test dependency here.
+        mcp = prev.mcp_1;
+      };
+    };
+  };
+
+  pythonPackages = python.pkgs;
+
+  mempalace = pythonPackages.buildPythonPackage rec {
     pname = "mempalace";
     version = "3.7.1";
     format = "pyproject";
@@ -21,14 +32,14 @@ let
       hash = "sha256-XlEjuVKARzh94xB4oZLAkgffDcaScgGqL5SUIxh968Q=";
     };
 
-    nativeBuildInputs = with python3Packages; [
+    nativeBuildInputs = with pythonPackages; [
       pythonRelaxDepsHook
       hatchling
     ];
 
     pythonRelaxDeps = [ "chromadb" ];
 
-    propagatedBuildInputs = with python3Packages; [
+    propagatedBuildInputs = with pythonPackages; [
       chromadb
       huggingface-hub
       tokenizers
@@ -47,7 +58,7 @@ let
     };
   };
 
-  pythonWithMemPalace = python3.withPackages (_: [ mempalace ]);
+  pythonWithMemPalace = python.withPackages (_: [ mempalace ]);
 
   mempalaceCli = writeShellApplication {
     name = "mempalace";
