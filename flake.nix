@@ -41,7 +41,7 @@
       ];
 
       perSystem =
-        { system, ... }:
+        { system, self', ... }:
         let
           pkgs = import nixpkgs {
             inherit system;
@@ -70,6 +70,10 @@
           ];
         in
         {
+          checks = {
+            default = self'.packages.default;
+          };
+
           packages = {
             default = buildEnv {
               name = "dotfiles-${inputs.self.lastModifiedDate or "dirty"}";
