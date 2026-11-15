@@ -41,7 +41,7 @@ npm_runner() {
   fi
 
   while IFS= read -r scriptName; do
-    echo "npm run $scriptName"
+    printf 'npm run %q\n' "$scriptName"
   done <<<"$scriptNames"
 }
 
@@ -50,18 +50,18 @@ dotnet_runner() {
     return 1
   fi
 
-  project_dirs=$(find . -type f -name "*.csproj" -exec dirname {} \; | sort -u | sed 's#^\./##')
+  project_dirs=$(find . -type f -name "*.csproj" -printf '%h\n' | sort -u | sed 's#^\./##')
 
   if [ -z "$project_dirs" ]; then
     return 1
   fi
 
   while IFS= read -r project_dir; do
-    echo "dotnet run --project $project_dir"
+    printf 'dotnet run --project %q\n' "$project_dir"
   done <<<"$project_dirs"
 
   while IFS= read -r project_dir; do
-    echo "dotnet watch --project $project_dir"
+    printf 'dotnet watch --project %q\n' "$project_dir"
   done <<<"$project_dirs"
 }
 

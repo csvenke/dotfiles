@@ -22,9 +22,9 @@ writeShellApplication {
     TIMESTAMP=$(date +%Y%m%d_%H%M%S)
     FILE_NAME="recording_$TIMESTAMP"
 
-    asciinema rec --overwrite "$FILE_NAME".cast \
-      && agg --font-dir "$FONT_DIR" --font-family "$FONT_FAMILY" --theme "$THEME" "$FILE_NAME".cast "$FILE_NAME".gif
-    gifsicle --lossy=80 -k 128 -O2 -Okeep-empty "$FILE_NAME".gif -o "$FILE_NAME".gif 
+    asciinema rec --overwrite "$FILE_NAME".cast
+    agg --font-dir "$FONT_DIR" --font-family "$FONT_FAMILY" --theme "$THEME" "$FILE_NAME".cast "$FILE_NAME".gif
+    gifsicle --batch --lossy=80 -k 128 -O2 -Okeep-empty "$FILE_NAME".gif
     rm "$FILE_NAME".cast
   '';
 }

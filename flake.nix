@@ -150,19 +150,12 @@
                   runHook postInstall
                 '';
               };
-
-              dev-node-modules = pkgs.symlinkJoin {
-                name = "dev-node-modules";
-                paths = [
-                  "${pi-tidy-node-modules}/lib/node_modules"
-                ];
-              };
             in
             {
               default = pkgs.mkShell {
                 packages = [ pkgs.nodejs ];
                 shellHook = /* bash */ ''
-                  ln -sfn "${dev-node-modules}" ./node_modules
+                  ln -sfn "${pi-tidy-node-modules}/lib/node_modules" ./node_modules
                 '';
               };
             };

@@ -10,7 +10,7 @@ if [ ! -d "$DOTFILES_PATH" ]; then
 fi
 
 echo "dotfiles: removing packages"
-nix profile remove dotfiles
+nix profile remove dotfiles || echo "dotfiles: package not installed, skipping"
 
 echo "dotfiles: removing symlinks"
 stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --delete .

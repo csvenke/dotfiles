@@ -23,7 +23,7 @@ let
   mempalace = pythonPackages.buildPythonPackage rec {
     pname = "mempalace";
     version = "3.11.0";
-    format = "pyproject";
+    pyproject = true;
 
     src = fetchFromGitHub {
       owner = "MemPalace";
@@ -32,14 +32,11 @@ let
       hash = "sha256-flBz0bAL3X6dSTNedyKXnKSSonrb1kJQpy0XtjNyq6I=";
     };
 
-    nativeBuildInputs = with pythonPackages; [
-      pythonRelaxDepsHook
-      hatchling
-    ];
+    build-system = with pythonPackages; [ hatchling ];
 
     pythonRelaxDeps = [ "chromadb" ];
 
-    propagatedBuildInputs = with pythonPackages; [
+    dependencies = with pythonPackages; [
       chromadb
       huggingface-hub
       tokenizers
@@ -52,7 +49,7 @@ let
 
     meta = {
       description = "AI memory system";
-      homepage = "https://github.com/milla-jovovich/mempalace";
+      homepage = "https://github.com/MemPalace/mempalace";
       license = lib.licenses.mit;
       maintainers = [ ];
     };
@@ -70,7 +67,6 @@ let
 
   mempalaceMcp = writeShellApplication {
     name = "mempalace-mcp";
-    runtimeInputs = [ pythonWithMemPalace ];
     text = ''
       exec ${pythonWithMemPalace}/bin/mempalace-mcp "$@"
     '';

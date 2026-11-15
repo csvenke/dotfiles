@@ -8,27 +8,26 @@ _source_if_exists() {
 }
 
 _has_cmd() {
-  command -v "$1" &>/dev/null || return 1
-  return 0
+  command -v "$1" &>/dev/null
 }
 
 _detect_system() {
   if [ -f /etc/os-release ]; then
-    grep "^ID" /etc/os-release | cut -d"=" -f2 | tr -d '""'
+    (source /etc/os-release && echo "$ID $ID_LIKE")
   else
     uname | tr "[:upper:]" "[:lower:]"
   fi
 }
 
 _update_system() {
-  case "$(_detect_system)" in
-  "arch")
+  case " $(_detect_system) " in
+  *" arch "*)
     sudo pacman -Syu
     ;;
-  "ubuntu")
+  *" ubuntu "* | *" debian "*)
     sudo apt update && sudo apt upgrade
     ;;
-  "darwin")
+  *" darwin "*)
     brew update && brew upgrade
     ;;
   *)
@@ -59,7 +58,7 @@ _git_all_branches() {
 }
 
 _git_find_branch() {
-  _git_all_branches | fzf | xclip -selection clipboard
+  _git_all_branches | fzf | _clipboard_copy
 }
 
 _git_push_current_branch() {
@@ -120,7 +119,7 @@ _git_switch_main_branch() {
 
 _git_rebase_branch() {
   git fetch origin
-  git rebase -i "$(git merge-base origin/HEAD "$(_git_main_branch)")"
+  git rebase -i "$(git merge-base HEAD "origin/$(_git_main_branch)")"
 }
 
 _git_add_all() {
@@ -177,12 +176,14 @@ _git_worktree_run_repo_hook() {
   fi
 }
 
-_git_worktree_setup_repo() {
-  mkdir -p .shared
+_git_worktree_write_hook_sample() {
   mkdir -p .hooks
 
-  if [ ! -f ".hooks/after-worktree-add.sh.sample" ]; then
-    cat >".hooks/after-worktree-add.sh.sample" <<'EOF'
+  if [ -f ".hooks/after-worktree-add.sh.sample" ]; then
+    return 1
+  fi
+
+  cat >".hooks/after-worktree-add.sh.sample" <<'EOF'
 #!/usr/bin/env bash
 # This hook is executed after a new worktree is created.
 # To enable this hook, rename this file to "after-worktree-add.sh".
@@ -194,8 +195,12 @@ _git_worktree_setup_repo() {
 #     npm ci
 #   fi
 EOF
-    chmod +x ".hooks/after-worktree-add.sh.sample"
-  fi
+  chmod +x ".hooks/after-worktree-add.sh.sample"
+}
+
+_git_worktree_setup_repo() {
+  mkdir -p .shared
+  _git_worktree_write_hook_sample
 
   if _has_cmd "nix"; then
     local create_shared_envrc="true"
@@ -229,22 +234,8 @@ _git_worktree_migrate() {
   fi
 
   mkdir -p .shared
-  mkdir -p .hooks
 
-  if [ ! -f ".hooks/after-worktree-add.sh.sample" ]; then
-    cat >".hooks/after-worktree-add.sh.sample" <<'EOF'
-#!/usr/bin/env bash
-# This hook is executed after a new worktree is created.
-# To enable this hook, rename this file to "after-worktree-add.sh".
-#
-# The hook runs from inside the new worktree directory.
-#
-# Example:
-#   if [ -f "package-lock.json" ]; then
-#     npm ci
-#   fi
-EOF
-    chmod +x ".hooks/after-worktree-add.sh.sample"
+  if _git_worktree_write_hook_sample; then
     echo "Created .hooks/after-worktree-add.sh.sample"
   fi
 
@@ -375,8 +366,17 @@ _eza_list_files() {
   command eza --icons --colour=auto --sort=type --group-directories-first "$@"
 }
 
-_xclip_copy() {
-  xclip -selection clipboard
+_clipboard_copy() {
+  if [ -n "$WAYLAND_DISPLAY" ] && _has_cmd "wl-copy"; then
+    wl-copy
+  elif _has_cmd "xclip"; then
+    xclip -selection clipboard
+  elif _has_cmd "pbcopy"; then
+    pbcopy
+  else
+    echo "clipboard: no copy command found" >&2
+    return 1
+  fi
 }
 
 _mempalace-init() {
@@ -392,7 +392,7 @@ _mempalace-init() {
     git checkout -- .gitignore 2>/dev/null || true
   fi
 
-  mempalace mine "$(pwd)" --wing "$wing" || return 1
+  mempalace mine "$path" --wing "$wing" || return 1
   mempalace compress --wing "$wing" || return 1
 }
 
@@ -439,7 +439,10 @@ alias update-system="_update_system"
 alias src="_reload_configs"
 
 for data_dir in ${XDG_DATA_DIRS//:/ }; do
-  _source_if_exists "$data_dir/bash-completion/bash_completion"
+  if test -r "$data_dir/bash-completion/bash_completion"; then
+    source "$data_dir/bash-completion/bash_completion"
+    break
+  fi
 done
 
 if [ -d "$HOME/.config/dotfiles" ]; then
@@ -494,9 +497,7 @@ if _has_cmd "fuser"; then
   alias killport='fuser -k -n tcp'
 fi
 
-if _has_cmd "xclip"; then
-  alias copy='_xclip_copy'
-fi
+alias copy='_clipboard_copy'
 
 if _has_cmd "bat"; then
   alias cat='_bat_cat'
@@ -511,7 +512,6 @@ if _has_cmd "nvim"; then
 fi
 
 if _has_cmd "direnv"; then
-  export DIRENV_LOG_FORMAT=
   export DIRENV_WARN_TIMEOUT=1m
 
   eval "$(direnv hook bash)"
