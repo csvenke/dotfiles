@@ -58,7 +58,16 @@ Put the following in `/etc/keyd/default.conf`
 [main]
 
 # Maps capslock to escape when pressed and super when held.
-capslock = overload(super, esc)
+capslock = overload(meta, esc)
+```
+
+### mise
+
+Disable Omarchy's default mise tools so nix tools take precedence. Run outside pi, then log out and back in.
+
+```bash
+omarchy-mise-default-tools disable
+rm -rf ~/.local/share/mise/installs ~/.cache/mise
 ```
 
 ## Machine specific
