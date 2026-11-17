@@ -15,7 +15,7 @@ else
   exit 1
 fi
 
-stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --restow .
+stow -v --dir="$DOTFILES_PATH/home" --target="$HOME" --adopt --restow .
 
 profile_json="$(nix profile list --json)"
 if jq -e '.elements | has("dotfiles")' <<<"$profile_json" &>/dev/null; then
