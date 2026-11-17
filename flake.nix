@@ -49,6 +49,7 @@
               (import ./nix/overlays/tmux)
               (import ./nix/overlays/fzf)
               (import ./nix/overlays/pi-coding-agent)
+              (import ./nix/overlays/herdr)
             ];
           };
           inherit (pkgs)
@@ -104,6 +105,7 @@
                   fastfetch
                   nodejs
                   tmux
+                  herdr
                   fzf
                   opencode
                   pi-coding-agent

@@ -1,0 +1,84 @@
+onboarding = false
+
+[theme]
+name = "nord"
+auto_switch = false
+
+[theme.custom]
+panel_bg = "#242933"
+sidebar_bg = "#1E222A"
+surface_dim = "#191D24"
+surface0 = "#242933"
+surface1 = "#3B4252"
+overlay0 = "#4C566A"
+overlay1 = "#60728A"
+subtext0 = "#8B95A7"
+active_row_bg = "#2E3440"
+selection_bg = "#32333F"
+text = "#BBC3D4"
+accent = "#81A1C1"
+red = "#BF616A"
+green = "#A3BE8C"
+yellow = "#EBCB8B"
+blue = "#81A1C1"
+mauve = "#B48EAD"
+peach = "#D08770"
+teal = "#8FBCBB"
+
+[terminal]
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+space"
+split_vertical = "prefix+v"
+split_horizontal = "prefix+s"
+settings = "prefix+comma"
+open_notification_target = "prefix+shift+o"
+
+navigate_workspace_up = "k"
+navigate_workspace_down = "j"
+navigate_pane_up = "shift+k"
+navigate_pane_down = "shift+j"
+
+[[keys.command]]
+key = "prefix+o"
+type = "plugin_action"
+command = "csvenke.dev.open"
+description = "open project"
+
+[ui]
+prompt_new_tab_name = false
+tab_bar_position = "top"
+hide_tab_bar_when_single_tab = true
+pane_gaps = false
+pane_outer_borders = false
+pane_scrollbars = false
+sidebar_collapsed_mode = "hidden"
+
+[ui.sidebar.spaces]
+rows = [
+  [
+    "state_icon",
+    "workspace",
+  ],
+  [
+    { token = "branch", fg = "#81A1C1", bold = false },
+    "git_status",
+  ],
+]
+
+[ui.sidebar.agents]
+rows = [
+  [
+    "state_icon",
+    "machine",
+    "workspace",
+    "tab",
+  ],
+  [
+    { token = "agent", fg = "#81A1C1", bold = false, dim = false },
+  ],
+]
+
+[ui.toast]
+delivery = "herdr"
