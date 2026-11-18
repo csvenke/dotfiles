@@ -2,6 +2,28 @@ gui:
   showRandomTip: false
   showCommandLog: false
   switchTabsWithPanelJumpKeys: true
+  theme:
+    activeBorderColor: ["#88C0D0", bold]
+    inactiveBorderColor: ["#434C5E"]
+    searchingActiveBorderColor: ["#EBCB8B", bold]
+    optionsTextColor: ["#81A1C1"]
+    selectedLineBgColor: ["#2E3440"]
+    inactiveViewSelectedLineBgColor: ["#222630"]
+    cherryPickedCommitFgColor: ["#88C0D0"]
+    cherryPickedCommitBgColor: ["#3B4252"]
+    markedBaseCommitFgColor: ["#EBCB8B"]
+    markedBaseCommitBgColor: ["#3B4252"]
+    unstagedChangesColor: ["#BF616A"]
+    defaultFgColor: ["#D8DEE9"]
 git:
   diffRenderers:
-    - command: delta --dark --paging=never
+    - command: >-
+        delta --dark --paging=never
+        --syntax-theme=Nord
+        --plus-style="syntax #2E3D33"
+        --minus-style="syntax #3D2A2E"
+        --plus-emph-style="syntax #3A5040"
+        --minus-emph-style="syntax #563238"
+        --line-numbers-plus-style="#A3BE8C"
+        --line-numbers-minus-style="#BF616A"
+        --hunk-header-style="#60728A"
