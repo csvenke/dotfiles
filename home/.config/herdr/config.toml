@@ -34,11 +34,18 @@ split_vertical = "prefix+v"
 split_horizontal = "prefix+s"
 settings = "prefix+comma"
 open_notification_target = "prefix+shift+o"
+new_workspace = ""
 
 navigate_workspace_up = "k"
 navigate_workspace_down = "j"
 navigate_pane_up = "shift+k"
 navigate_pane_down = "shift+j"
+
+[[keys.command]]
+key = "prefix+shift+n"
+type = "shell"
+command = "\"$HERDR_BIN_PATH\" workspace create --cwd \"$HOME\" --focus"
+description = "new workspace in $HOME"
 
 [[keys.command]]
 key = "prefix+o"
