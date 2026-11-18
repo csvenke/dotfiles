@@ -18,10 +18,21 @@ hl.config({
 **`.config/hypr/bindings.lua`**
 
 ```lua
+hl.unbind("SUPER + H")
 hl.unbind("SUPER + J")
 hl.unbind("SUPER + K")
 hl.unbind("SUPER + L")
+hl.unbind("SUPER + SHIFT + H")
+hl.unbind("SUPER + SHIFT + J")
+hl.unbind("SUPER + SHIFT + K")
+hl.unbind("SUPER + SHIFT + L")
+hl.unbind("SUPER + ALT + H")
+hl.unbind("SUPER + ALT + J")
 hl.unbind("SUPER + ALT + K")
+hl.unbind("SUPER + ALT + L")
+hl.unbind("SUPER + ALT + K")
+hl.unbind("ALT + SPACE") -- Omarchy dictation toggle
+hl.unbind("ALT + Alt_R") -- Omarchy dictation push-to-talk
 
 -- Vim style navigation/movement/resizing
 hl.bind("SUPER + H", hl.dsp.focus({ direction = "l" }), { description = "Move focus left" })
@@ -54,6 +65,8 @@ Put the following in `/etc/keyd/default.conf`
 [ids]
 
 *
+# Exclude my zsa voyager
+-3297:1977
 
 [main]
 
@@ -61,9 +74,17 @@ Put the following in `/etc/keyd/default.conf`
 capslock = overload(meta, esc)
 ```
 
+Voyager excluded: keyd turns RightSuper into LeftSuper.
+
+### superwhisper
+
+```bash
+superwhisper shortcuts set hold "RightSuper"
+```
+
 ### mise
 
-Disable Omarchy's default mise tools so nix tools take precedence. Run outside pi, then log out and back in.
+Disable Omarchy's default mise tools.
 
 ```bash
 omarchy-mise-default-tools disable
