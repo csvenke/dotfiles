@@ -4,6 +4,7 @@ let
   inherit (prev)
     lib
     jq
+    coreutils
     symlinkJoin
     writeShellApplication
     writeShellScript
@@ -20,6 +21,16 @@ let
     name = "herdr-dev-agent-tab";
     runtimeInputs = [ jq ];
     text = lib.readFile ./plugins/dev/agent-tab.sh;
+  };
+
+  herdr-dev-home = writeShellApplication {
+    name = "herdr-dev-home";
+    runtimeInputs = [
+      jq
+      coreutils
+      herdr-dev-open
+    ];
+    text = lib.readFile ./plugins/dev/home.sh;
   };
 
   herdr-dev-picker = writeShellScript "herdr-dev-picker" ''
@@ -39,6 +50,12 @@ let
     title = "Open project"
     contexts = ["workspace"]
     command = ["${herdr-dev-picker}"]
+
+    [[actions]]
+    id = "home"
+    title = "Open home project"
+    contexts = ["workspace"]
+    command = ["${lib.getExe herdr-dev-open}", "--home"]
 
     [[panes]]
     id = "picker"
@@ -60,12 +77,21 @@ let
   pluginDirs = [ "${devPlugin}/share/herdr/plugins/dev" ];
 
   wrapper = writeShellScript "herdr" ''
+    herdr=${lib.getExe prev.herdr}
     if [ "$#" -eq 0 ]; then
+      fresh=1
+      if "$herdr" status server 2>/dev/null | grep -q '^status: running'; then
+        fresh=
+      fi
       for plugin in ${lib.escapeShellArgs pluginDirs}; do
-        ${lib.getExe prev.herdr} plugin link "$plugin" >/dev/null 2>&1 || true
+        "$herdr" plugin link "$plugin" >/dev/null 2>&1 || true
       done
+      if [ -n "$fresh" ]; then
+        HERDR_BIN_PATH="$herdr" ${lib.getExe herdr-dev-home} </dev/null >/dev/null 2>&1 &
+        disown
+      fi
     fi
-    exec ${lib.getExe prev.herdr} "$@"
+    exec "$herdr" "$@"
   '';
 in
 {

@@ -53,6 +53,12 @@ type = "plugin_action"
 command = "csvenke.dev.open"
 description = "open project"
 
+[[keys.command]]
+key = "prefix+d"
+type = "plugin_action"
+command = "csvenke.dev.home"
+description = "open dotfiles"
+
 [ui]
 prompt_new_tab_name = false
 tab_bar_position = "top"
