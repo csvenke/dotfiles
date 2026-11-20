@@ -16,7 +16,7 @@ fresh="$(jq -r 'if length == 1 and .[0].tab_count == 1 and .[0].pane_count == 1
 if [ -n "$fresh" ]; then
   label="$("$herdr" tab list | jq -r --arg ws "$fresh" \
     'first(.result.tabs[] | select(.workspace_id == $ws) | .label) // empty')"
-  [[ "$label" =~ ^[0-9]+$ ]] || fresh=""
+  [[ $label =~ ^[0-9]+$ ]] || fresh=""
 fi
 
 if [ -n "$fresh" ]; then
