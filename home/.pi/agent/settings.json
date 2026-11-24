@@ -1,5 +1,5 @@
 {
-  "theme": "system",
+  "theme": "nordic",
   "defaultProvider": "github-copilot",
   "defaultModel": "kimi-k3",
   "defaultThinkingLevel": "high",
